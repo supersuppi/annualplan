@@ -1,0 +1,10 @@
+#Angular-Eclipse IDE
+ap-client/node_modules
+
+#Server-IDE
+ap-server/.mnv
+ap-server/.settings
+ap-server/target
+ap-server/.project
+ap-server/idea/
+
