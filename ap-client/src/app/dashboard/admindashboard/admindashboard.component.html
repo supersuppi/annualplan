@@ -1,3 +1,18 @@
-<p>
-  admindashboard works!
-</p>
+<app-header></app-header>
+<div class="page-content">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="sidebar content-box">
+        <ul class="nav">
+          <li><a style="cursor: pointer" (click)="onShowDashboard()">Dashboard</a></li>
+          <li><a style="cursor: pointer" (click)="onShowProfile()">Profile</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-10">
+        <div class="sidebar content-box">
+          <router-outlet></router-outlet>
+        </div>
+    </div>
+  </div>
+</div>

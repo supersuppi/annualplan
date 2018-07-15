@@ -1,0 +1,32 @@
+.page-content {
+    .row {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        margin-top: 30px;
+    }
+
+    .content-box{
+        display: block;
+        margin-bottom: 30px;
+        background: #eff0f3;
+        border-radius: 10px;
+        padding: 10px;
+        border-left: 1px solid #eee;
+        border-top: 1px solid #eee;
+        border-right: 2px solid #eee;
+        border-bottom: 2px solid #eee;
+
+
+    }
+}
+
+.nav {
+    li {
+        position: relative;
+        display: block;
+        margin: 0;
+        border-bottom: 1px dashed #cec7c7;
+        width: 100%;
+        padding: 10px;
+    }
+}
