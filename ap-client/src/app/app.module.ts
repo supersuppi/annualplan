@@ -12,6 +12,7 @@ import { DropdownDirective } from './shared/dropdown.directive';
 import { RegisterdashboardComponent } from './dashboard/admindashboard/registerdashboard/registerdashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { RolesService } from './services/roles.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [RolesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

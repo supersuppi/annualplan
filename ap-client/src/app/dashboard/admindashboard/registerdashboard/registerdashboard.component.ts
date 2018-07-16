@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { emailValidator } from '../../../shared/validators/username-validator';
 import { contactValidator } from '../../../shared/validators/contact-validator';
 import { Roles } from "../../../models/roles-model";
+import { RolesService } from '../../../services/roles.service';
 
 function dropdownValidator (formControl : FormGroup) {
   console.log("Dropdown value is :"+formControl.value);
@@ -19,7 +20,7 @@ export class RegisterdashboardComponent implements OnInit {
   userRegisterGroup : FormGroup;
   roles: Roles[];
   
-  constructor() { 
+  constructor(private rolesService : RolesService) { 
   }
 
   ngOnInit() {
@@ -37,6 +38,7 @@ export class RegisterdashboardComponent implements OnInit {
       'contact': new FormControl(null,[Validators.required, contactValidator]),
       'userRole': new FormControl(null, [dropdownValidator])
     });
+    this.rolesService.getUserRoles();
   }
 
   registerUser() {
