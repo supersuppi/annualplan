@@ -1,3 +1,86 @@
-<p>
-  profile works!
-</p>
+<div class="row">
+    <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+      <label for="email">Email Address:</label>
+      <input type="text" class="form-control" value="abc@xyz.com" disabled>
+    </div>
+</div>
+
+<form [formGroup]="userProfileGroup">
+
+    <div>
+      <span class="bolderText">Change Password</span>
+      <p>Password should be of 6-20 characters, atleast 1 Uppercase alphabet, atleast 1 Lowercase alphabet,</p>
+      <p>alteast 1 number, atleast 1 of special characters @#$% . </p>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <label for="oldPassword">Current Password:</label>
+        <input type="password" formControlName="oldPassword" class="form-control">
+        <span  
+            *ngIf="!userProfileGroup.get('oldPassword').valid  
+                && userProfileGroup.get('oldPassword').touched"
+                  class="help-block"> Current password does not match</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <label for="newPassword">New Password:</label>
+        <input type="password" formControlName="newPassword" class="form-control">
+        <span  
+            *ngIf="!userProfileGroup.get('newPassword').valid  
+                && userProfileGroup.get('newPassword').touched"
+                  class="help-block"> Please enter a valid password</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <label for="confirmPwd">Confirm Password:</label>
+        <input type="password" formControlName="confirmPwd" class="form-control">
+        <span *ngIf="userProfileGroup.hasError('validConfirmPassword') 
+          && userProfileGroup.get('confirmPwd').touched" class="help-block">Passwords do not match</span>
+      </div>
+    </div>
+
+    <div>
+        <span class="bolderText">Edit Profile</span>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <label for="firstname">First Name:</label>
+        <input type="text" formControlName="firstName" class="form-control">
+        <span  
+            *ngIf="!userProfileGroup.get('firstName').valid  
+                && userProfileGroup.get('firstName').touched"
+                  class="help-block"> Please enter first name</span>
+      </div>
+      <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <label for="lastName">Last Name:</label>
+        <input type="text" formControlName="lastName" class="form-control">
+        <span  
+            *ngIf="!userProfileGroup.get('lastName').valid  
+                && userProfileGroup.get('lastName').touched"
+                  class="help-block"> Please enter last name</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <label for="contact">Contact:</label>
+        <input type="text" formControlName="contact" class="form-control">
+        <span  
+            *ngIf="!userProfileGroup.get('contact').valid  
+                && userProfileGroup.get('contact').touched"
+                  class="help-block"> Please enter first name</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit"
+    [disabled]="!userProfileGroup.valid">Save Profile</button>
+
+    <button  class="btn btn-danger" type="reset" (click)="resetChanges()">Cancel</button>
+
+  </form>
+
