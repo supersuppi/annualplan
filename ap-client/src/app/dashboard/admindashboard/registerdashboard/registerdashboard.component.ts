@@ -3,6 +3,12 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { emailValidator } from '../../../shared/validators/username-validator';
 import { contactValidator } from '../../../shared/validators/contact-validator';
 import { Roles } from "../../../models/roles-model";
+
+function dropdownValidator (formControl : FormGroup) {
+  console.log("Dropdown value is :"+formControl.value);
+  return formControl.value !== null ? null : { invalidValue: true };
+}
+
 @Component({
   selector: 'app-registerdashboard',
   templateUrl: './registerdashboard.component.html',
@@ -29,7 +35,7 @@ export class RegisterdashboardComponent implements OnInit {
       'lastName': new FormControl(null, [Validators.required]),
       'email': new FormControl(null,[Validators.required, emailValidator]),
       'contact': new FormControl(null,[Validators.required, contactValidator]),
-      'userRole': new FormControl(null)
+      'userRole': new FormControl(null, [dropdownValidator])
     });
   }
 
