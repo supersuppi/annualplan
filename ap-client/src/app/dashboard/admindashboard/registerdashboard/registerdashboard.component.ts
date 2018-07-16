@@ -11,18 +11,19 @@ import { Roles } from "../../../models/roles-model";
 export class RegisterdashboardComponent implements OnInit {
 
   userRegisterGroup : FormGroup;
+  roles: Roles[];
   
   constructor() { 
-    let roles = [
+  }
+
+  ngOnInit() {
+    this.roles = [
       new Roles(1,"CATEGORY MANAGER"), 
       new Roles(2,"E-COM"), 
       new Roles(3,"MARKETING"), 
       new Roles(4,"ORDER"), 
       new Roles(5,"VENDOR")
     ];
-  }
-
-  ngOnInit() {
     this.userRegisterGroup = new FormGroup({
       'firstName': new FormControl(null, [Validators.required]),
       'lastName': new FormControl(null, [Validators.required]),
