@@ -67,7 +67,7 @@ public class Product {
     @Column(name = "marketing_mandatory_description")
     private String marketingMandatoryDescription;
 
-    @Column(name = "marketing supplier legal name")
+    @Column(name = "marketing_supplier_legal_name")
     private String marketingSupplierLegalName;
 
     @Column(name = "pharmacist_only")

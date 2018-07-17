@@ -47,7 +47,8 @@
             <br>
             <select name="userRole" formControlName="userRole">
               <option [ngValue]="null" disabled>Choose your profile</option>
-              <option *ngFor="let role of roles" [ngValue]="role.roleId">{{role.roleName}}</option>
+              <!-- Observable data is fetched using async pipe-->
+              <option *ngFor="let role of rolesOb | async" [ngValue]="role.roleId">{{role.roleName}}</option>
             </select>
             <br>
             <span *ngIf="!userRegisterGroup.get('userRole').valid  

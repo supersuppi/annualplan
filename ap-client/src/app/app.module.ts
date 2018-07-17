@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -13,6 +13,8 @@ import { RegisterdashboardComponent } from './dashboard/admindashboard/registerd
 import { ProfileComponent } from './profile/profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RolesService } from './services/roles.service';
+import { HttpRequestInterceptor } from './shared/interceptors/httpRequestInterceptors';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,13 @@ import { RolesService } from './services/roles.service';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [RolesService],
+  providers: [RolesService, UserService,
+    // Adding request header interceptors.
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass: HttpRequestInterceptor,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

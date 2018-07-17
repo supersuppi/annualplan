@@ -4,6 +4,8 @@ import { emailValidator } from '../../../shared/validators/username-validator';
 import { contactValidator } from '../../../shared/validators/contact-validator';
 import { Roles } from "../../../models/roles-model";
 import { RolesService } from '../../../services/roles.service';
+import { Observable } from 'rxjs';
+import { UserService } from '../../../services/user.service';
 
 function dropdownValidator (formControl : FormGroup) {
   console.log("Dropdown value is :"+formControl.value);
@@ -18,19 +20,15 @@ function dropdownValidator (formControl : FormGroup) {
 export class RegisterdashboardComponent implements OnInit {
 
   userRegisterGroup : FormGroup;
-  roles: Roles[];
+  rolesOb: Observable<Roles[]>;
   
-  constructor(private rolesService : RolesService) { 
-  }
+  constructor(private rolesService : RolesService,
+    private userService : UserService) {}
 
   ngOnInit() {
-    this.roles = [
-      new Roles(1,"CATEGORY MANAGER"), 
-      new Roles(2,"E-COM"), 
-      new Roles(3,"MARKETING"), 
-      new Roles(4,"ORDER"), 
-      new Roles(5,"VENDOR")
-    ];
+    //Roles to be assigned to the user.
+    this.rolesOb = this.rolesService.getUserRoles();
+
     this.userRegisterGroup = new FormGroup({
       'firstName': new FormControl(null, [Validators.required]),
       'lastName': new FormControl(null, [Validators.required]),
@@ -38,11 +36,11 @@ export class RegisterdashboardComponent implements OnInit {
       'contact': new FormControl(null,[Validators.required, contactValidator]),
       'userRole': new FormControl(null, [dropdownValidator])
     });
-    this.rolesService.getUserRoles();
+
   }
 
   registerUser() {
-    console.log("Register is clicked");
+    this.userService.registerUser(this.userRegisterGroup.value).subscribe();
   }
 
 }
