@@ -1,11 +1,14 @@
 package com.gxh.apserver.entity;
 
-import lombok.Data;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.Collection;
 
 @Getter
 @Setter
@@ -20,6 +23,4 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private Collection<User> users;
 }

@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 export class RolesService{
 
     private roles : Roles[];
-    private rolesUrl = "http://localhost:8008/apserver/role/";
+    private rolesUrl = "http://localhost:8008/apserver/user/role/";
 
     constructor(private http: HttpClient) {}
 
