@@ -11,14 +11,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "brand")
 public class Brand {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name",length=100)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

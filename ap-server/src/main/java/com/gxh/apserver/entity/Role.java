@@ -15,12 +15,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "role")
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name",length=20)
     private String name;
-
 }

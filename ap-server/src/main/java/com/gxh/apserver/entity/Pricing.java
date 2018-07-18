@@ -15,48 +15,48 @@ public class Pricing {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "price_list_cost")
-    private int priceListCost;
+    @Column(name = "price_list_cost",length=6)
+    private Float priceListCost;
 
-    @Column(name = "price_list_terms_%")
-    private float priceListTermPercent;
+    @Column(name = "price_list_terms_%",length=6)
+    private Float priceListTermPercent;
 
-    @Column(name = "gdc_cost")
-    private int GDCCost;
+    @Column(name = "gdc_cost",length=6)
+    private Float GDCCost;
 
-    @Column(name = "gdc_markUp_%")
-    private float GDCMarkUpPercent;
+    @Column(name = "gdc_markUp_%",length=6)
+    private Float GDCMarkUpPercent;
 
-    @Column(name = "gdc_sell_cost")
-    private int GDCSellCost;
+    @Column(name = "gdc_sell_cost",length=6)
+    private Float GDCSellCost;
 
-    @Column(name = "direct_cost")
-    private int directCost;
+    @Column(name = "direct_cost",length=6)
+    private Float directCost;
 
-    @Column(name = "tier1_price")
-    private int tier1Price;
+    @Column(name = "tier1_price",length=6)
+    private Float tier1Price;
 
-    @Column(name = "tier1_margin_$")
-    private int tier1Margin;
+    @Column(name = "tier1_margin_$",length=6)
+    private Float tier1Margin;
 
-    @Column(name = "tier1_margin_%")
-    private float tier1MarginPercent;
+    @Column(name = "tier1_margin_%",length=6)
+    private Float tier1MarginPercent;
 
-    @Column(name = "tier2_price")
-    private int tier2Price;
+    @Column(name = "tier2_price",length=6)
+    private Float tier2Price;
 
-    @Column(name = "tier2_margin_$")
-    private int tier2Margin;
+    @Column(name = "tier2_margin_$",length=6)
+    private Float tier2Margin;
 
-    @Column(name = "tier2_margin_%")
-    private float tier2MarginPercent;
+    @Column(name = "tier2_margin_%",length=6)
+    private Float tier2MarginPercent;
 
-    @Column(name = "tier3_price")
-    private int tier3Price;
+    @Column(name = "tier3_price",length=6)
+    private Float tier3Price;
 
-    @Column(name = "tier3_margin_$")
-    private int tier3Margin;
+    @Column(name = "tier3_margin_$",length=6)
+    private Float tier3Margin;
 
-    @Column(name = "tier3_margin_%")
-    private float tier3MarginPercent;
+    @Column(name = "tier3_margin_%",length=6)
+    private Float tier3MarginPercent;
 }

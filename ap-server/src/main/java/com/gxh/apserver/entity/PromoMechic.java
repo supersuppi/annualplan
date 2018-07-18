@@ -9,14 +9,12 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "promo_mechanic")
-public class PromoMechanic {
-    private static final long serialVersionUID = 1L;
-
+public class PromoMechic {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name",length=50)
     private String name;
 }

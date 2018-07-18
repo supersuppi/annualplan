@@ -10,16 +10,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "promo_group")
 public class PromoGroup {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name",length=30)
     private String name;
 
     @Column(name = "GXHID")
-    private String GXHID;
+    private Long GXHID;
 }

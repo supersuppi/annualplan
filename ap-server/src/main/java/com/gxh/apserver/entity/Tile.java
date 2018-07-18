@@ -10,8 +10,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tile")
 public class Tile {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

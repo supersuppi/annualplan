@@ -20,19 +20,18 @@ import com.gxh.apserver.serviceImpl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/user")
-public class UserController<T> {
+public class UserController extends BaseController {
 	
 	@Autowired
 	private UserService userService;
 	
 	@GetMapping(value="/role")
 	public ResponseEntity<Collection<Role>> getUserRoles(){
-		
 		return new ResponseEntity<Collection<Role>>(userService.getAllRoles(), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/register")
-	public ResponseEntity<T> registerUser(@RequestBody UserRequestModel body){
+	public ResponseEntity registerUser(@RequestBody UserRequestModel body){
 		
 		User user = userService.getUserFromRequestBody(body);
 		

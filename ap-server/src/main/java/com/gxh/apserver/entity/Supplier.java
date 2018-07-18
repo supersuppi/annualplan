@@ -10,20 +10,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "supplier")
 public class Supplier {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
     @Column(name = "vendor_ax_code")
-    private String vendorAXCode;
+    private Long vendorAXCode;
 
-    @Column(name = "supplier_captain")
+    @Column(name = "supplier_captain",length=50)
     private String supplierCaptain;
 
-    @Column(name = "supplier")
+    @Column(name = "supplier",length=100)
     private String supplier;
-
 }

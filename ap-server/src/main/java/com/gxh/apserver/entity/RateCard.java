@@ -10,20 +10,20 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ratecard")
 public class RateCard {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "code")
+    @Column(name = "name",length=100)
+    private String name;
+
+    @Column(name = "code",length=4)
     private String code;
 
-    @Column(name = "max_tile_allocation")
-    private int maxTileAllocation;
+    @Column(name = "max_tile_allocation",length=2)
+    private Integer maxTileAllocation;
 
-    @Column(name = "rc_dollar")
-    private int rateCardDollar;
-
+    @Column(name = "rc_dollar",length=6)
+    private Float rateCardDollar;
 }

@@ -10,20 +10,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "barcode")
 public class Barcode {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
     @Column(name = "barcode1")
-    private String barcode1;
+    private Long barcode1;
 
     @Column(name = "barcode2")
-    private String barcode2;
+    private Long barcode2;
 
     @Column(name = "barcode3")
-    private String barcode3;
-
+    private Long barcode3;
 }

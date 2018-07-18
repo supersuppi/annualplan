@@ -10,19 +10,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "category")
 public class Category {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "category")
+    @Column(name = "category",length=50)
     private String category;
 
-    @Column(name = "sub_category")
+    @Column(name = "sub_category",length=50)
     private String subCategory;
 
-    @Column(name = "department")
+    @Column(name = "department",length=50)
     private String department;
 }

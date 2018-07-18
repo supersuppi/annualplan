@@ -10,13 +10,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "offer_callout")
 public class OfferCallOut {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name",length=50)
     private String name;
 }
