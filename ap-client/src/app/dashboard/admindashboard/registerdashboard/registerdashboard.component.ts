@@ -6,6 +6,7 @@ import { Roles } from "../../../models/roles-model";
 import { RolesService } from '../../../services/roles.service';
 import { Observable } from 'rxjs';
 import { UserService } from '../../../services/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 function dropdownValidator (formControl : FormGroup) {
   console.log("Dropdown value is :"+formControl.value);
@@ -23,11 +24,12 @@ export class RegisterdashboardComponent implements OnInit {
   rolesOb: Observable<Roles[]>;
   
   constructor(private rolesService : RolesService,
-    private userService : UserService) {}
+    private userService : UserService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    //Roles to be assigned to the user.
-    this.rolesOb = this.rolesService.getUserRoles();
+    
+    //Data['roles'] , the name 'roles' is from  roles : RoleDropdownResolver in routing module.
+    this.rolesOb = this.activatedRoute.snapshot.data['roles'];
 
     this.userRegisterGroup = new FormGroup({
       'firstName': new FormControl(null, [Validators.required]),

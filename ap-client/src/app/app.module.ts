@@ -15,6 +15,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { RolesService } from './services/roles.service';
 import { HttpRequestInterceptor } from './shared/interceptors/httpRequestInterceptors';
 import { UserService } from './services/user.service';
+import { RoleDropdownResolver } from './route-guards/roles-dropdown-resolve';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { UserService } from './services/user.service';
       provide:HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
       multi: true
-    }],
+    }, RoleDropdownResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
