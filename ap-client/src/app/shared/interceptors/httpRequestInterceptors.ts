@@ -1,7 +1,7 @@
 import { HttpInterceptor, HttpEvent, HttpRequest, HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { request } from "http";
+
 /**
  * This class basically adds headers to all the request sent.
  */
