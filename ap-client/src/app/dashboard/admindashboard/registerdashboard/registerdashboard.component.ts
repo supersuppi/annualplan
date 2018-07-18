@@ -35,8 +35,8 @@ export class RegisterdashboardComponent implements OnInit {
       'firstName': new FormControl(null, [Validators.required]),
       'lastName': new FormControl(null, [Validators.required]),
       'email': new FormControl(null,[Validators.required, emailValidator]),
-      'contact': new FormControl(null,[Validators.required, contactValidator]),
-      'userRole': new FormControl(null, [dropdownValidator])
+      'phone': new FormControl(null,[Validators.required, contactValidator]),
+      'roleId': new FormControl(null, [dropdownValidator])
     });
 
   }

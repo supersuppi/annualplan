@@ -1,20 +1,17 @@
 import { Roles } from "./roles-model";
 
 export class User {
-    public firstName: string;
-    public lastName: string;
-    public emailAddress: string;
-    public contact: number;
+    public email: string;
     public role: Roles;
+    public password: string;
+    public active: number;
 
-    constructor(firstName: string, lastName: string, emailAddress:string,
-        contact: number, role: Roles) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.emailAddress = emailAddress;
-            this.contact = contact;
+    constructor( email:string, role: Roles, password:string,
+        active:number) {
+            this.email = email;
+            this.password = password;
+            this.active = active;
             this.role = role;
     }
-
 
 }

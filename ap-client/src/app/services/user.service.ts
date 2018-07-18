@@ -10,9 +10,10 @@ export class UserService {
 
     constructor(private httpClient : HttpClient) {}
 
-    registerUser(user : Object) : Observable<any>{
-        let jsonBody = JSON.stringify(user); 
-        return this.httpClient.post<any>(this.userUrl+"/register", user,
+    registerUser(userRegisterFormValues : Object) : Observable<any>{
+
+        let jsonBody = JSON.stringify(userRegisterFormValues); 
+        return this.httpClient.post<any>(this.userUrl+"/register", jsonBody,
         {
             observe: "body"
         });

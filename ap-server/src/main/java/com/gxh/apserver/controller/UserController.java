@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gxh.apserver.entity.Role;
-import com.gxh.apserver.entity.User;
+import com.gxh.apserver.entity.UserContact;
 import com.gxh.apserver.exceptions.EmailAlreadyExistException;
 import com.gxh.apserver.model.UserRequestModel;
 import com.gxh.apserver.service.interfaces.UserService;
-import com.gxh.apserver.serviceImpl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/user")
@@ -31,12 +30,12 @@ public class UserController extends BaseController {
 	}
 	
 	@PostMapping(value="/register")
-	public ResponseEntity registerUser(@RequestBody UserRequestModel body){
+	public ResponseEntity<?> registerUser(@RequestBody UserRequestModel body){
 		
-		User user = userService.getUserFromRequestBody(body);
+		UserContact userContact = userService.getUserFromRequestBody(body);
 		
 		try {
-			userService.registerUser(user);
+			userService.registerUser(userContact);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 		} catch (EmailAlreadyExistException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();

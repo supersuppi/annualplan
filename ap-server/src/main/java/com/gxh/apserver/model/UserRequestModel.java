@@ -1,7 +1,5 @@
 package com.gxh.apserver.model;
 
-import com.gxh.apserver.entity.Role;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +15,12 @@ public class UserRequestModel {
 
     private int active; 
     
-    private Role role;
+    private Long roleId;
     
     private String firstName;
     
     private String lastName;
+    
+    private Long phone;
 
 }
