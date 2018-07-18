@@ -2,8 +2,6 @@ package com.gxh.apserver.entity;
 
 import javax.persistence.*;
 
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
