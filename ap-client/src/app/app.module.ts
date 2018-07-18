@@ -17,6 +17,7 @@ import { UserService } from './services/user.service';
 import { RoleDropdownResolver } from './route-guards/roles-dropdown-resolve';
 import { SupplierComponent } from './supplier/supplier.component';
 import { ManagerComponent } from './manager/manager.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ManagerComponent } from './manager/manager.component';
     RegisterdashboardComponent,
     ProfileComponent,
     SupplierComponent,
-    ManagerComponent
+    ManagerComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

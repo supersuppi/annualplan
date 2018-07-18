@@ -7,12 +7,14 @@ import { RegisterdashboardComponent } from "./dashboard/admindashboard/registerd
 import { ProfileComponent } from "./profile/profile.component";
 import { SupplierComponent } from './supplier/supplier.component';
 import { ManagerComponent } from './manager/manager.component';
+import { HomeComponent } from './home/home.component';
 
 import { RoleDropdownResolver } from "./route-guards/roles-dropdown-resolve";
 
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
     { path: 'login', component: LoginComponent },
+    { path: 'home', component: HomeComponent },
     { path: 'supplier', component: SupplierComponent },
     { path: 'manager', component: ManagerComponent },
     { path: 'admin', component: AdmindashboardComponent,children: [
