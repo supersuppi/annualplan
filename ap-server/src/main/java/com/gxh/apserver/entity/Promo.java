@@ -16,28 +16,25 @@ public class Promo {
     private Long id;
 
     @Column(name = "vendor_code")
-    private String vendorCode;
+    private Long vendorCode;
 
-    @Column(name = "rate_card_code")
+    @Column(name = "rate_card_code",length = 5)
     private String rateCardCode;
 
-    @Column(name = "dual_mailer_number")
+    @Column(name = "dual_mailer_number",length = 5)
     private String dualMailerNumber;
 
     @Column(name = "value")
-    private int value;
+    private Integer value;
 
-    @Column(name = "dollar_value")
-    private int dollarValue;
+    @Column(name = "dollar_value",length = 4)
+    private Float dollarValue;
 
     @Column(name = "supplier_yearly_budget")
     private String supplierearlyBudget;
 
     @Column(name = "space_allocation")
-    private int spaceAllocation;
-
-    @Column(name = "ratecard_id")
-    private int ratecardID;
+    private Integer spaceAllocation;
 
     @Column(name = "mailer_id")
     private int mailerID;
@@ -57,28 +54,28 @@ public class Promo {
     @Column(name = "gxh_id")
     private Long GXHID;
 
-    @Column(name = "banner")
+    @Column(name = "banner",length = 50)
     private String banner;
 
     @Column(name = "discount_amount")
-    private Long discountAmount;
+    private Float discountAmount;
 
-    @Column(name = "promo_cost")
-    private Long promoCost;
+    @Column(name = "promo_cost", length = 4)
+    private Float promoCost;
 
-    @Column(name = "member_promo_cost")
-    private Long memberPromoCost;
+    @Column(name = "member_promo_cost", length = 4)
+    private Float memberPromoCost;
 
-    @Column(name = "rebate")
+    @Column(name = "rebate", length = 50)
     private String rebate;
 
-    @Column(name = "comments")
+    @Column(name = "comments", length = 100)
     private String comments;
 
-    @Column(name = "promoRRP")
+    @Column(name = "promoRRP", length = 50)
     private String promoRRP;
 
-    @Column(name = "living_reward")
+    @Column(name = "living_reward", length = 50)
     private String livingReward;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -100,4 +97,9 @@ public class Promo {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     private Supplier supplier;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ratecard_id", referencedColumnName = "id")
+    private RateCard rateCard;
+
 }

@@ -18,8 +18,9 @@ public class Supplier {
     @Column(name = "vendor_ax_code")
     private Long vendorAXCode;
 
-    @Column(name = "supplier_captain",length=50)
-    private String supplierCaptain;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "supplier_captain_id", referencedColumnName = "id")
+    private User supplierCaptain;
 
     @Column(name = "supplier",length=100)
     private String supplier;
