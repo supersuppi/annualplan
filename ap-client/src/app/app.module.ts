@@ -11,11 +11,12 @@ import { HeaderComponent } from './header/header.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { RegisterdashboardComponent } from './dashboard/admindashboard/registerdashboard/registerdashboard.component';
 import { ProfileComponent } from './profile/profile.component';
-import { NavbarComponent } from './navbar/navbar.component';
 import { RolesService } from './services/roles.service';
 import { HttpRequestInterceptor } from './shared/interceptors/httpRequestInterceptors';
 import { UserService } from './services/user.service';
 import { RoleDropdownResolver } from './route-guards/roles-dropdown-resolve';
+import { SupplierComponent } from './supplier/supplier.component';
+import { ManagerComponent } from './manager/manager.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RoleDropdownResolver } from './route-guards/roles-dropdown-resolve';
     DropdownDirective,
     RegisterdashboardComponent,
     ProfileComponent,
-    NavbarComponent
+    SupplierComponent,
+    ManagerComponent
   ],
   imports: [
     BrowserModule,
