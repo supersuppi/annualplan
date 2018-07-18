@@ -3,6 +3,7 @@ package com.gxh.apserver.serviceImpl;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gxh.apserver.entity.Role;
@@ -27,6 +28,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserContactsRepository userContactsRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	public Collection<Role> getAllRoles() {
 		return rolesRepository.findAll();
 	}
@@ -39,6 +43,7 @@ public class UserServiceImpl implements UserService{
 		
 		User user = new User();
 		user.setEmail(requestBody.getEmail());
+		user.setPassword(passwordEncoder.encode("Test@123"));
 		user.setRole(role);
 		
 		UserContact userContact = new UserContact();
