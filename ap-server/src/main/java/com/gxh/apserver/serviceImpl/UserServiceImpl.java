@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.gxh.apserver.entity.Role;
 import com.gxh.apserver.entity.User;
+import com.gxh.apserver.entity.UserContact;
 import com.gxh.apserver.exceptions.EmailAlreadyExistException;
 import com.gxh.apserver.model.UserRequestModel;
 import com.gxh.apserver.repository.interfaces.RolesRepository;
+import com.gxh.apserver.repository.interfaces.UserContactsRepository;
 import com.gxh.apserver.repository.interfaces.UserRepository;
 import com.gxh.apserver.service.interfaces.UserService;
 
@@ -22,30 +24,39 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private UserContactsRepository userContactsRepository;
+	
 	public Collection<Role> getAllRoles() {
 		return rolesRepository.findAll();
 	}
 	
 	@Override
-	public User getUserFromRequestBody(UserRequestModel requestBody) {
+	public UserContact getUserFromRequestBody(UserRequestModel requestBody) {
+		
+		Role role = new Role();
+		role.setId(requestBody.getRoleId());
 		
 		User user = new User();
-		user.setFirstName(requestBody.getFirstName());
-		user.setLastName(requestBody.getLastName());
 		user.setEmail(requestBody.getEmail());
-		user.setPassword(requestBody.getPassword());
-		user.setRole(requestBody.getRole());
+		user.setRole(role);
 		
-		return user;
+		UserContact userContact = new UserContact();
+		userContact.setFirstName(requestBody.getFirstName());
+		userContact.setLastName(requestBody.getLastName());
+		userContact.setPhone(requestBody.getPhone());
+		userContact.setUser(user);
+		
+		return userContact;
 	}
 	
-	public void registerUser(User user) throws EmailAlreadyExistException {
+	public void registerUser(UserContact userContact) throws EmailAlreadyExistException {
 		
-		if(isUserEmailAddressUnique(user.getEmail())) {
+		if(isUserEmailAddressUnique(userContact.getUser().getEmail())) {
 			throw new EmailAlreadyExistException("Email address already exist");
 		}
 		
-		userRepository.save(user);
+		userContactsRepository.save(userContact);
 	}
 
 	@Override
