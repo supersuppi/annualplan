@@ -10,19 +10,24 @@ import { ManagerComponent } from './manager/manager.component';
 import { HomeComponent } from './home/home.component';
 
 import { RoleDropdownResolver } from "./route-guards/roles-dropdown-resolve";
+import { RoleGuardService } from "./route-guards/auth-guard-roles";
 
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
     { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent },
+    { path: 'home', component: HomeComponent, canActivate: [RoleGuardService]},
     { path: 'supplier', component: SupplierComponent },
     { path: 'manager', component: ManagerComponent },
-    { path: 'admin', component: AdmindashboardComponent,children: [
-        {path: 'register', component: RegisterdashboardComponent, resolve:{
-            roles : RoleDropdownResolver
-        }},
-        {path: 'profile', component: ProfileComponent},
-    ]}
+    { path: 'admin', component: AdmindashboardComponent, canActivate: [RoleGuardService],
+        children: [
+            {path: 'register', component: RegisterdashboardComponent, resolve:{
+                roles : RoleDropdownResolver
+            } },
+            {path: 'profile', component: ProfileComponent}
+        ], data: {
+            expectedRole: 'ROLE_ADMIN'
+        }
+    }
 ];
 
 @NgModule({

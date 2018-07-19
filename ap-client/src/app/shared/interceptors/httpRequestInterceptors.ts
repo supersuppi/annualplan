@@ -10,14 +10,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        // TODO once security is placed on backend we can use this interceptor
-        // if(localStorage.getItem('validUser') === 'true') {
-        //     request = request.clone({
-        //         setHeaders: {
-        //             Authorization: localStorage.getItem('authHeader')
-        //         }
-        //     });
-        // }
+        if(localStorage.getItem('validUser') === 'true') {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: localStorage.getItem('token')
+                }
+            });
+        }
 
         request = request.clone({
             setHeaders: {

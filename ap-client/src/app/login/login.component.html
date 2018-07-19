@@ -12,21 +12,27 @@
                       </div>
                       <div class="card-body">
                         <form [formGroup]="userLoginGroup" (ngSubmit)="onLogin()">
-                              <div class="form-group">
+                            <div class="form-group">
                                 <label for="email">Email Address:</label>
                                 <input type="email" id="email" formControlName="email" class="form-control" >
                                 <span  
                                 *ngIf="!userLoginGroup.get('email').valid  && userLoginGroup.get('email').touched"
-                                class="help-block"> Please enter a valid username</span>
-                              </div>
-                              <div class="form-group">
+                                class="alert-danger"> Please enter a valid username</span>
+                            </div>
+                            <div class="form-group">
                                 <label for="password">Password:</label>
                                 <input type="password" id="password" formControlName="password" class="form-control" >
                                 <span  
                                 *ngIf="!userLoginGroup.get('password').valid  && userLoginGroup.get('password').touched"
-                                class="help-block"> Please enter a valid password</span>
-                              </div>
-                              <button type="submit" class="btn btn-success btn-lg float-right" [disabled]="!userLoginGroup.valid">Login</button>
+                                class="alert-danger"> Please enter a valid password</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-lg float-right" 
+                                [disabled]="!userLoginGroup.valid">Login</button>
+                            
+                            <span *ngIf="invalidCreds"  
+                                class="alert-danger"> Username or password does not match.</span>
+
                           </form>
                       </div>
                       <!--/card-block-->

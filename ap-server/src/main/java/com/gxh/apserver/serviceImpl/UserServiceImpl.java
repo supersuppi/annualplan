@@ -1,15 +1,22 @@
 package com.gxh.apserver.serviceImpl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gxh.apserver.config.JWTTokenProvider;
 import com.gxh.apserver.entity.Role;
 import com.gxh.apserver.entity.User;
 import com.gxh.apserver.entity.UserContact;
+import com.gxh.apserver.exceptions.CustomException;
 import com.gxh.apserver.exceptions.EmailAlreadyExistException;
+import com.gxh.apserver.exceptions.InvalidEmailPasswordException;
 import com.gxh.apserver.model.UserRequestModel;
 import com.gxh.apserver.repository.interfaces.RolesRepository;
 import com.gxh.apserver.repository.interfaces.UserContactsRepository;
@@ -30,6 +37,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JWTTokenProvider jwtTokenProvider;
 	
 	public Collection<Role> getAllRoles() {
 		return rolesRepository.findAll();
@@ -60,8 +73,8 @@ public class UserServiceImpl implements UserService{
 		if(isUserEmailAddressUnique(userContact.getUser().getEmail())) {
 			throw new EmailAlreadyExistException("Email address already exist");
 		}
-		
 		userContactsRepository.save(userContact);
+		
 	}
 
 	@Override
@@ -70,8 +83,23 @@ public class UserServiceImpl implements UserService{
 		if(userRepository.countByEmail(emailAddress) > 0) {
 			return true;
 		}
-		
 		return false;
+		
+	}
+
+	@Override
+	public String loginUser(String emailAddress, String password)
+			throws CustomException, InvalidEmailPasswordException {
+		
+		try {
+			User user = userRepository.findByEmail(emailAddress);
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(emailAddress, password));
+			return jwtTokenProvider.generateJwtToken(emailAddress, user.getRole());
+		} catch (AuthenticationException e) {
+			throw new InvalidEmailPasswordException("Email or password does not match");
+		} catch (UnsupportedEncodingException e) {
+			throw new CustomException(e.getMessage()); 
+		}
 	}
 
 }

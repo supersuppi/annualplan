@@ -7,5 +7,7 @@ import com.gxh.apserver.entity.User;
 public interface UserRepository extends CrudRepository<User, Long>{
 
 	public int countByEmail(String emailAddress);
+
+	public User findByEmail(String emailAddress);
 	
 }

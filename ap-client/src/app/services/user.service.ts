@@ -19,6 +19,15 @@ export class UserService {
         });
     }
 
+    loginUser(userLoginFormValues : Object) : Observable<any>{
+
+        let jsonBody = JSON.stringify(userLoginFormValues); 
+        return this.httpClient.post<any>(this.userUrl+"/login", jsonBody,
+        {
+            observe: "response"
+        });
+    }
+
     getUserProfile () {
         this.httpClient.get(this.userUrl);
     }

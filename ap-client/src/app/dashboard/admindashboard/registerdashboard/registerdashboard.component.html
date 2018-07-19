@@ -7,7 +7,7 @@
         <span  
             *ngIf="!userRegisterGroup.get('firstName').valid  
                 && userRegisterGroup.get('firstName').touched"
-                  class="help-block"> Please enter first name</span>
+                  class="alert-danger"> Please enter first name</span>
       </div>
       <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
           <label for="lastName">Last Name:</label>
@@ -15,7 +15,7 @@
           <span  
               *ngIf="!userRegisterGroup.get('lastName').valid  
                   && userRegisterGroup.get('lastName').touched"
-                    class="help-block"> Please enter last name</span>
+                    class="alert-danger"> Please enter last name</span>
         </div>
     </div>
 
@@ -26,7 +26,7 @@
           <span  
               *ngIf="!userRegisterGroup.get('email').valid  
                   && userRegisterGroup.get('email').touched"
-                    class="help-block"> Please enter a valid Email Address</span>
+                    class="alert-danger"> Please enter a valid Email Address</span>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
           <span  
               *ngIf="!userRegisterGroup.get('phone').valid  
                   && userRegisterGroup.get('phone').touched"
-                    class="help-block"> Please enter valid phone number</span>
+                    class="alert-danger"> Please enter valid phone number</span>
         </div>
     </div>
 
@@ -47,13 +47,12 @@
             <br>
             <select name="userRole" formControlName="roleId">
               <option [ngValue]="null" disabled>Choose your profile</option>
-              <!-- Observable data is fetched using async pipe-->
               <option *ngFor="let role of rolesOb" [ngValue]="role.id">{{role.name}}</option>
             </select>
             <br>
             <span *ngIf="!userRegisterGroup.get('roleId').valid  
                     && userRegisterGroup.get('roleId').touched"
-                      class="help-block"> Please select a role</span>
+                      class="alert-danger"> Please select a role</span>
           </div>
       </div>
 

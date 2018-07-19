@@ -18,6 +18,9 @@ import { RoleDropdownResolver } from './route-guards/roles-dropdown-resolve';
 import { SupplierComponent } from './supplier/supplier.component';
 import { ManagerComponent } from './manager/manager.component';
 import { HomeComponent } from './home/home.component';
+import { RoleGuardService } from './route-guards/auth-guard-roles';
+import { AuthService } from './services/auth.service';
+import { JwtHelper } from './helper/JWTHelper';
 
 @NgModule({
   declarations: [
@@ -45,7 +48,7 @@ import { HomeComponent } from './home/home.component';
       provide:HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
       multi: true
-    }, RoleDropdownResolver],
+    }, RoleDropdownResolver, RoleGuardService, AuthService, JwtHelper],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

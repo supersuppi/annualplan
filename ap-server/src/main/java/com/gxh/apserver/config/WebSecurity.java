@@ -1,8 +1,10 @@
 package com.gxh.apserver.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +22,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	
 	private BCryptPasswordEncoder passwordEncoder;
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private JWTTokenProvider jwtTokenProvider;
 	
 	public WebSecurity(BCryptPasswordEncoder passwordEncoder, 
 			UserDetailsService userDetailsService) {
@@ -45,15 +50,21 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	 */
 	public void configure(HttpSecurity http) throws Exception{
 		http.csrf()
-			.disable().cors().and().authorizeRequests()
-			.antMatchers(HttpMethod.POST, "/**").permitAll()
+			.disable().cors().and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and().authorizeRequests()
+			.antMatchers(HttpMethod.POST,"/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/**").permitAll()
 			.anyRequest()
-			.authenticated()
-			.and()
-			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-			.addFilter(new JWTAuthorizationFilter(authenticationManager()))
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			.authenticated();
+		//TODO add filter for every request.
+//			.and()
+//			.addFilter(new JWTAuthorizationFilter(authenticationManager()));
+		
+//		http.apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
+//			.and()
+//			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+//			.addFilter(new JWTAuthorizationFilter(authenticationManager()))
 	}
 	
 	@Bean
@@ -62,5 +73,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		return source;
 	}
+	
+    @Bean
+    public AuthenticationManager customAuthenticationManager() throws Exception {
+        return authenticationManager();
+    }
 	
 }
