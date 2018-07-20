@@ -1,6 +1,5 @@
 package com.gxh.apserver.config;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.gxh.apserver.entity.Role;
+import com.gxh.apserver.exceptions.CustomException;
 import com.gxh.apserver.exceptions.SessionExpiredException;
 
 import io.jsonwebtoken.Claims;
@@ -21,13 +21,17 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+/**
+ * Provides Token , authenticate and validate the tokens.
+ *
+ */
 @Component
 public class JWTTokenProvider {
 	
 	@Autowired
 	private UserDetailsSecurityConfig detailsSecurityConfig;
 	
-	public String generateJwtToken(String emailAddress, Role role) throws UnsupportedEncodingException {
+	public String generateJwtToken(String emailAddress, Role role){
 		
 		String userRole = "ROLE_"+role.getName();
 		
@@ -39,7 +43,7 @@ public class JWTTokenProvider {
 				.setClaims(claims)
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET.getBytes("UTF-8"))
+				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
 				.compact();
 		
 		return token;
@@ -64,13 +68,13 @@ public class JWTTokenProvider {
 		return null;
 	}
 	
-	public boolean validateToken(String token) throws SessionExpiredException{
+	public boolean validateToken(String token) throws SessionExpiredException, CustomException{
 		try {
 			Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token);
 			return true;
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new SessionExpiredException("Expired or invalid JWT token");
-		}
+		} 
 	}
 
 }

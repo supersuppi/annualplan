@@ -4,44 +4,50 @@ import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.GenericFilterBean;
 
+import com.gxh.apserver.exceptions.CustomException;
 import com.gxh.apserver.exceptions.SessionExpiredException;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
+/**
+ * 
+ * Filter class to validate the token from request header.
+ *
+ */
+public class JWTAuthorizationFilter extends GenericFilterBean {
 
+	@Autowired
 	private JWTTokenProvider jwtTokenProvider;
 	
-//	public JWTAuthorizationFilter(JWTTokenProvider jwtTokenProvider) {
-//		this.jwtTokenProvider = jwtTokenProvider;
-//	}
-	
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
-		super(authenticationManager);
+	public JWTAuthorizationFilter(JWTTokenProvider jwtTokenProvider) {
+		this.jwtTokenProvider = jwtTokenProvider;
 	}
 
+	/**
+	 * Filters for request received from external source.
+	 */
 	@Override
-	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
-			FilterChain filterChain) throws IOException, ServletException{
-		
-		String token = jwtTokenProvider.resolveToken(req);
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+				
+		String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 		
 		try {
 			if(token != null && jwtTokenProvider.validateToken(token)) {
 		      Authentication auth = token != null ? jwtTokenProvider.getAuthentication(token) : null;
 		      SecurityContextHolder.getContext().setAuthentication(auth);
-		      filterChain.doFilter(req, res);
 			}
-		} catch (SessionExpiredException e) {
+			chain.doFilter(request, response);
+		} catch (SessionExpiredException | CustomException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 }

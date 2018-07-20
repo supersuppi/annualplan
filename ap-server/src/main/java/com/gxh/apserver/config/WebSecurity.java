@@ -3,7 +3,6 @@ package com.gxh.apserver.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +15,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * 
+ * Security configuration class providing Inmemoryauthentication using BcryptPassword,
+ * configure the filters and authorization for the requests.
+ *
+ */
 @EnableWebSecurity
 @Configuration
 public class WebSecurity extends WebSecurityConfigurerAdapter{
@@ -51,22 +56,23 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	public void configure(HttpSecurity http) throws Exception{
 		http.csrf()
 			.disable().cors().and()
+			// Creation of tokens is 'stateless' 
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().authorizeRequests()
-			.antMatchers(HttpMethod.POST,"/**").permitAll()
-			.antMatchers(HttpMethod.GET, "/**").permitAll()
+			// Allow '/user/login' without authentication.
+			.antMatchers("/user/login").permitAll()
 			.anyRequest()
-			.authenticated();
-		//TODO add filter for every request.
-//			.and()
-//			.addFilter(new JWTAuthorizationFilter(authenticationManager()));
-		
-//		http.apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
-//			.and()
-//			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-//			.addFilter(new JWTAuthorizationFilter(authenticationManager()))
+			.authenticated()
+			.and()
+			// Filter for validating request token before processing each request.
+			.apply(new JWTTokenFilterConfigurer(jwtTokenProvider));
 	}
 	
+	/**
+	 * 
+	 *  Ui is running on port 4200 and server is on port 8008,
+	 *  to enable communication between them we need to include CORS configuration.
+	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

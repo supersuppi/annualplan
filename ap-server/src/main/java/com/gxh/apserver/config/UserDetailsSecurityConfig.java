@@ -16,6 +16,7 @@ public class UserDetailsSecurityConfig implements UserDetailsService{
 	@Autowired
 	private UserRepository userRepository;
 
+	@SuppressWarnings("unused")
 	@Override
 	public UserDetails loadUserByUsername(String emailAddress) throws UsernameNotFoundException {
 		
@@ -24,19 +25,20 @@ public class UserDetailsSecurityConfig implements UserDetailsService{
 		
 		SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userRole);
 		
-		if (user == null) {
+		if (user != null) {
+			return org.springframework.security.core.userdetails.User
+					.withUsername(emailAddress)
+					.password(user.getPassword())
+					.authorities(grantedAuthority)
+			        .accountExpired(false)//
+			        .accountLocked(false)//
+			        .credentialsExpired(false)//
+			        .disabled(false)//
+			        .build();
+		} else {
 			throw new UsernameNotFoundException("User with '" + emailAddress + "' not found");
 		}
 		
-		return org.springframework.security.core.userdetails.User
-				.withUsername(emailAddress)
-				.password(user.getPassword())
-				.authorities(grantedAuthority)
-		        .accountExpired(false)//
-		        .accountLocked(false)//
-		        .credentialsExpired(false)//
-		        .disabled(false)//
-		        .build();
 	}
 
 }

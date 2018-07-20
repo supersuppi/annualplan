@@ -1,6 +1,5 @@
 package com.gxh.apserver.serviceImpl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,9 +96,7 @@ public class UserServiceImpl implements UserService{
 			return jwtTokenProvider.generateJwtToken(emailAddress, user.getRole());
 		} catch (AuthenticationException e) {
 			throw new InvalidEmailPasswordException("Email or password does not match");
-		} catch (UnsupportedEncodingException e) {
-			throw new CustomException(e.getMessage()); 
-		}
+		} 
 	}
 
 }
