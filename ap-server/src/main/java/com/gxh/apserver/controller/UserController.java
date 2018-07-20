@@ -50,11 +50,11 @@ public class UserController extends BaseController {
 	}
 	
 	@PostMapping(value="/login")
-	public ResponseEntity<?> loginUser(HttpServletRequest req, HttpServletResponse res,
-			@RequestBody UserRequestModel body) {
+	public ResponseEntity<?> loginUser(HttpServletResponse res,
+			@RequestBody UserRequestModel payload) {
 		
 		try {
-			String token = userService.loginUser(body.getEmail(), body.getPassword());
+			String token = userService.loginUser(payload.getEmail(), payload.getPassword());
 			
 			res.addHeader("access-control-expose-headers", "Authorization");
 			res.addHeader(SecurityConstants.BEARER_STRING, SecurityConstants.TOKEN_PREFIX + token);

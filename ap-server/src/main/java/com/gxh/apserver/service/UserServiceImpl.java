@@ -1,4 +1,4 @@
-package com.gxh.apserver.serviceImpl;
+package com.gxh.apserver.service;
 
 import java.util.Collection;
 
