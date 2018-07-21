@@ -2,7 +2,6 @@ package com.gxh.apserver.controller;
 
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gxh.apserver.config.SecurityConstants;
 import com.gxh.apserver.entity.Role;
-import com.gxh.apserver.entity.User;
 import com.gxh.apserver.entity.UserContact;
 import com.gxh.apserver.exceptions.CustomException;
 import com.gxh.apserver.exceptions.EmailAlreadyExistException;
 import com.gxh.apserver.exceptions.InvalidEmailPasswordException;
 import com.gxh.apserver.model.UserRequestModel;
+import com.gxh.apserver.security.SecurityConstants;
 import com.gxh.apserver.service.interfaces.UserService;
 
 @RestController

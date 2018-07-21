@@ -1,6 +1,5 @@
 package com.gxh.apserver.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.gxh.apserver.config.JWTTokenProvider;
 import com.gxh.apserver.entity.Role;
 import com.gxh.apserver.entity.User;
 import com.gxh.apserver.entity.UserContact;
@@ -22,6 +20,7 @@ import com.gxh.apserver.model.UserRequestModel;
 import com.gxh.apserver.repository.interfaces.RolesRepository;
 import com.gxh.apserver.repository.interfaces.UserContactsRepository;
 import com.gxh.apserver.repository.interfaces.UserRepository;
+import com.gxh.apserver.security.JWTTokenProvider;
 import com.gxh.apserver.service.interfaces.UserService;
 
 @Service

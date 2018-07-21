@@ -21,4 +21,6 @@ public interface UserService {
 	
 	public String loginUser(String username, String password) throws CustomException, InvalidEmailPasswordException;
 
+	public UserContact getUserProfile(String emailAddress);
+
 }
