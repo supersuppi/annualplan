@@ -1,4 +1,4 @@
-package com.gxh.apserver.config;
+package com.gxh.apserver.security;
 
 import java.io.IOException;
 

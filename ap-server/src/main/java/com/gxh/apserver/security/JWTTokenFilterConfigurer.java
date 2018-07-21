@@ -1,4 +1,4 @@
-package com.gxh.apserver.config;
+package com.gxh.apserver.security;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

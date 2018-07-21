@@ -1,5 +1,7 @@
 package com.gxh.apserver.config;
 
+import com.gxh.apserver.security.JWTTokenFilterConfigurer;
+import com.gxh.apserver.security.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,7 +62,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().authorizeRequests()
 			// Allow '/user/login' without authentication.
-			.antMatchers("/user/login").permitAll()
+			.antMatchers("/user/login").permitAll().antMatchers("/promotion/hello").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
