@@ -21,6 +21,7 @@ import { HomeComponent } from './home/home.component';
 import { RoleGuardService } from './route-guards/auth-guard-roles';
 import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
+import { Ng2SmartTableModule } from 'ng2-smart-table'; // 3rd party table
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { JwtHelper } from './helper/JWTHelper';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    Ng2SmartTableModule
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.
