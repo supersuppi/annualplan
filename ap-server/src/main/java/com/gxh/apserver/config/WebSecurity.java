@@ -3,6 +3,7 @@ package com.gxh.apserver.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,6 +62,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 			.and().authorizeRequests()
 			// Allow '/user/login' without authentication.
 			.antMatchers("/user/login").permitAll()
+			//TODO remove this code during prod , this is to bypass security
+//			.antMatchers(HttpMethod.POST, "/**").permitAll()
+//			.antMatchers(HttpMethod.GET, "/**").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()

@@ -5,7 +5,7 @@
     </div>
 </div>
 
-<form [formGroup]="userProfileGroup">
+<form [formGroup]="userProfileGroup" (ngSubmit)="onProfileSubmit()">
 
     <div>
       <span class="bolderText">Change Password</span>

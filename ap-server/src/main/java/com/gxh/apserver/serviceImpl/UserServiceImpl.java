@@ -1,6 +1,8 @@
 package com.gxh.apserver.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +46,12 @@ public class UserServiceImpl implements UserService{
 	private JWTTokenProvider jwtTokenProvider;
 	
 	public Collection<Role> getAllRoles() {
-		return rolesRepository.findAll();
+		
+		Collection<Role> roles = (rolesRepository.findAll()).stream()
+			.filter(role -> !role.getName().equalsIgnoreCase("ADMIN"))
+			.collect(Collectors.toList());
+		
+		return roles;
 	}
 	
 	@Override
@@ -97,6 +104,15 @@ public class UserServiceImpl implements UserService{
 		} catch (AuthenticationException e) {
 			throw new InvalidEmailPasswordException("Email or password does not match");
 		} 
+	}
+
+	@Override
+	public UserContact getUserProfile(String emailAddress) {
+		
+		User user = userRepository.findByEmail(emailAddress);
+		UserContact userContact = userContactsRepository.findByUser(user);
+		
+		return userContact;
 	}
 
 }

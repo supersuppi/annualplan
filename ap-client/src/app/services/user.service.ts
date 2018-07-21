@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { User } from "../models/user-model";
 import { Observable } from "rxjs";
+import { UserContact } from "../models/user-contact-model";
 
 @Injectable()
 export class UserService {
@@ -28,7 +29,14 @@ export class UserService {
         });
     }
 
-    getUserProfile () {
-        this.httpClient.get(this.userUrl);
+    getUserProfile(emailAddress: string)  {
+        return this.httpClient.get(this.userUrl+"/profile/"+emailAddress).subscribe(
+            (response: HttpResponse<UserContact>) => {
+                console.log(response);
+            },
+            err => { 
+
+            }
+        );
     }
 }

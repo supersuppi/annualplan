@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gxh.apserver.config.SecurityConstants;
 import com.gxh.apserver.entity.Role;
+import com.gxh.apserver.entity.User;
 import com.gxh.apserver.entity.UserContact;
 import com.gxh.apserver.exceptions.CustomException;
 import com.gxh.apserver.exceptions.EmailAlreadyExistException;
@@ -67,4 +69,13 @@ public class UserController extends BaseController {
 		}
 		
 	}
+	
+	@GetMapping(value="/profile/{email}")
+	public ResponseEntity<UserContact> userProfile(@PathVariable("email") String emailAddress ) {
+		
+		UserContact userContact = userService.getUserProfile(emailAddress);
+		
+		return new ResponseEntity<UserContact>(userContact, HttpStatus.OK);
+	}
+	
 }
