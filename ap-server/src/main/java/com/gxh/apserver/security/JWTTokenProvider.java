@@ -1,10 +1,11 @@
-package com.gxh.apserver.config;
+package com.gxh.apserver.security;
 
 import java.util.Arrays;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.gxh.apserver.config.UserDetailsSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
