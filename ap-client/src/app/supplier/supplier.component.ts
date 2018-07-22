@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-supplier',
@@ -12,10 +12,18 @@ export class SupplierComponent implements OnInit {
 
   constructor() { }
 
+  myEvent(event) {
+    console.log("Confrim cliecked");
+    console.log(this.data);
+  }
+
+
   ngOnInit() {
 
     this.settings = {
-      actions : {
+      mode: 'inline',// for event to emit
+      actions : 
+      {
         columnTitle:'Actions',
         position:'right',
         add:false,
