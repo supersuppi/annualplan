@@ -21,6 +21,7 @@ import { HomeComponent } from './home/home.component';
 import { RoleGuardService } from './route-guards/auth-guard-roles';
 import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
+import { ProfileDataResolver } from './route-guards/profile-resolve';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import { JwtHelper } from './helper/JWTHelper';
       provide:HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
       multi: true
-    }, RoleDropdownResolver, RoleGuardService, AuthService, JwtHelper],
+    }, RoleDropdownResolver, RoleGuardService, AuthService, JwtHelper, ProfileDataResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

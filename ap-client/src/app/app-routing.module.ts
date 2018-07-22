@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 
 import { RoleDropdownResolver } from "./route-guards/roles-dropdown-resolve";
 import { RoleGuardService } from "./route-guards/auth-guard-roles";
+import { ProfileDataResolver } from "./route-guards/profile-resolve";
 
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -23,7 +24,9 @@ const appRoute : Routes= [
             {path: 'register', component: RegisterdashboardComponent, resolve:{
                 roles : RoleDropdownResolver
             } },
-            {path: 'profile', component: ProfileComponent}
+            {path: 'profile', component: ProfileComponent, resolve: {
+                profile : ProfileDataResolver
+            }}
         ], data: {
             expectedRole: 'ROLE_ADMIN'
         }

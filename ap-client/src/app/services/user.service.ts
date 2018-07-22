@@ -3,6 +3,7 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { User } from "../models/user-model";
 import { Observable } from "rxjs";
 import { UserContact } from "../models/user-contact-model";
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class UserService {
@@ -29,14 +30,7 @@ export class UserService {
         });
     }
 
-    getUserProfile(emailAddress: string)  {
-        return this.httpClient.get(this.userUrl+"/profile/"+emailAddress).subscribe(
-            (response: HttpResponse<UserContact>) => {
-                console.log(response);
-            },
-            err => { 
-
-            }
-        );
+    getUserProfile(emailAddress: string): Observable<UserContact> {
+        return this.httpClient.get<UserContact>(this.userUrl+"/profile/"+emailAddress);
     }
 }
