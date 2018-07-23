@@ -21,11 +21,8 @@ import { HomeComponent } from './home/home.component';
 import { RoleGuardService } from './route-guards/auth-guard-roles';
 import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
-<<<<<<< HEAD
 import { ProfileDataResolver } from './route-guards/profile-resolve';
-=======
-import { Ng2SmartTableModule } from 'ng2-smart-table'; // 3rd party table
->>>>>>> 89ca9b0121bef3d75216eac04da736691b6d11d7
+import { NgxDatatableModule } from '@swimlane/ngx-datatable'; // external library
 
 @NgModule({
   declarations: [
@@ -46,7 +43,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table'; // 3rd party table
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    Ng2SmartTableModule
+    NgxDatatableModule
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.

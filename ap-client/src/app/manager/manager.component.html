@@ -1,3 +1,31 @@
-<p>
-  manager works!
-</p>
+<div>
+  <ngx-datatable
+    [rows]="rows"
+    [columns]="columns"
+    [selectionType]="'cell'"
+    (select)="onSelect($event)"
+    (activate)="onActivate($event)">
+
+    <!-- Need to check this code , to enable editing -->
+  <div *ngFor="let column of columns; let i = index">
+    <ngx-datatable-column name="{{column.name}}">
+      <ng-template ngx-datatable-cell-template let-rowIndex="i" let-value="value" let-row="row">
+        <span
+          title="Double click to edit"
+          (dblclick)="editing[i + '-name'] = true"
+          *ngIf="!editing[i + '-name']">
+          {{value}}
+        </span>
+        <input
+          autofocus
+          (blur)="updateValue($event, 'name', i)"
+          *ngIf="editing[i+ '-name']"
+          type="text"
+          [value]="value"
+        />
+      </ng-template>
+    </ngx-datatable-column>
+  </div>
+
+  </ngx-datatable>
+</div>
