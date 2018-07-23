@@ -1,0 +1,36 @@
+.container {
+
+    h5 {
+        color: red;
+    }
+
+    span {
+        &.column {
+            padding-right: 10px;
+        }
+    }
+
+    img {
+        width: 250px;
+        height: 250px;
+        padding: 10px;
+        
+        &.imgWithDropdown {
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+}
+
+.imgCaption {
+    padding-left: 20px;
+}
+
+.dropdownCaption {
+    select {
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 100%;
+    }
+}
