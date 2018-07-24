@@ -22,7 +22,6 @@ import { RoleGuardService } from './route-guards/auth-guard-roles';
 import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
 import { ProfileDataResolver } from './route-guards/profile-resolve';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable'; // external library
 
 @NgModule({
   declarations: [
@@ -42,8 +41,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable'; // external librar
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule,
-    NgxDatatableModule
+    HttpClientModule
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.
