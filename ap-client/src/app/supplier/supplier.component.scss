@@ -1,0 +1,17 @@
+/* Column widths are based on these cells */
+.row-package {
+    width: 40%;
+  }
+  .row-code {
+    width: 20%;
+  }
+  .row-rate {
+    width: 20%;
+  }
+  .row-dm {
+    width: 10%;
+  }
+
+table th {
+    width: auto !important;
+}
