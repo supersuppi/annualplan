@@ -1,10 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="">GXH Annual Planner</a>
 
-    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex" *ngIf="loggedInUser">
         <li class="dropdown" appDropdown>
             <a style="cursor: pointer;" class="dropdown-toggle textcolor" role="button">Hi, User<span class="caret"></span></a>
             <ul class="dropdown-menu">
+                <li><a style="cursor: pointer;" (click)="onShowDashboard()">My Dashboard</a></li>
                 <li><a style="cursor: pointer;" (click)="onShowProfile()">Profile</a></li>
                 <li><a style="cursor: pointer;" (click)="onLogout()">Logout</a></li>
             </ul>

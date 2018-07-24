@@ -17,6 +17,9 @@ const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
     { path: 'login', component: LoginComponent },
     { path: 'home', component: HomeComponent, canActivate: [RoleGuardService]},
+    {path: 'profile', component: ProfileComponent, resolve: {
+        profile : ProfileDataResolver
+    }},
     { path: 'supplier', component: SupplierComponent },
     { path: 'manager', component: ManagerComponent },
     { path: 'admin', component: AdmindashboardComponent, canActivate: [RoleGuardService],

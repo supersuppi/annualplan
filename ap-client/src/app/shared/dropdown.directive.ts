@@ -11,4 +11,10 @@ export class DropdownDirective {
     this.isOpen = !this.isOpen;
   }
 
+  @HostListener('mouseleave') onMouseLeave() {
+    if (this.isOpen) {
+      this.isOpen = !this.isOpen;
+    }
+  }
+
 }

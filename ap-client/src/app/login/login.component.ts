@@ -31,13 +31,17 @@ export class LoginComponent implements OnInit {
     console.log("Login clicked");
     this.userService.loginUser(this.userLoginGroup.value).subscribe(
       (response: HttpResponse<any>) => {
-        localStorage.setItem('validUser', 'true');
-        localStorage.setItem('token', response.headers.get('Authorization'));
-        this.router.navigate(['/admin/register']);
+        this.storeUserInLocalStorage(response);
+        this.router.navigate(['/home']);
       }, error => {
         this.invalidCreds = true;
       }
     );
+  }
+
+  storeUserInLocalStorage(response: any) {
+    localStorage.setItem('validUser', 'true');
+    localStorage.setItem('token', response.headers.get('Authorization'));
   }
 
 }
