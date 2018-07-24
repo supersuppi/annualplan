@@ -1,3 +1,51 @@
-<p>
-  home works!
-</p>
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+        <h5>My Dashboard</h5>
+      <!-- Image components -->
+      <div class="row">
+
+        <span class="column">
+          <img src="../../assets/images/pieChart.png" alt="pie-chart">
+          <figcaption class="imgCaption"><a  [routerLink]="['/supplier']">Active Promotion</a></figcaption>
+        </span>
+        <span  class="column">
+          <img src="../../assets/images/barChart.png" alt="bar-chart">
+          <figcaption class="imgCaption">Budget vs Actual</figcaption>
+        </span>
+        <span  class="column">
+          <img src="../../assets/images/calendar.png" alt="calendar" class="imgWithDropdown">
+          <figcaption class="dropdownCaption">
+              <select name="" id="">
+                  <option value="all">All</option>
+                  <option value="2018">2018</option>
+                  <option value="2017">2017</option>
+              </select>
+          </figcaption>
+        </span>
+        <span  class="column">
+          <img src="../../assets/images/tags.png" alt="tags" class="imgWithDropdown">
+          <figcaption class="dropdownCaption">
+              <select name="" id="">
+                  <option value="all">All</option>
+                  <option value="test1">Test1</option>
+                  <option value="test2">Test2</option>
+              </select>
+          </figcaption>
+        </span>
+
+      </div>
+      <br>
+      <!-- Inbox Component -->
+      <h5> Inbox</h5>
+      <div class="row">
+        <table>
+          
+        </table>
+      </div>
+      <div class="row">
+        Place holder!!
+      </div>
+    </div>
+  </div>
+</div>
