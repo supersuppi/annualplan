@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div>
   <ngx-datatable
     [rows]="rows"
@@ -30,4 +31,53 @@
   </ngx-datatable>
 </div>
 
+=======
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Package</th>
+                <th scope="col">Code</th>
+                <th scope="col">Rate</th>
+                <th scope="col">DM1</th>
+                <th scope="col">DM2</th>
+                <th scope="col">DM3</th>
+                <th scope="col">DM4</th>
+                <th scope="col">DM5</th>
+                <th scope="col">DM6</th>
+                <th scope="col">DM7</th>
+                <th scope="col">DM8</th>
+                <th scope="col">DM9</th>
+                <th scope="col">DM10</th>
+                <th scope="col">DM11</th>
+                <th scope="col">DM12</th>
+                <th scope="col">DM13</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              <tr *ngFor="let row of rows">
 
+                <td><p>{{row.pname}}</p></td>
+                <td><p>{{row.pcode}}</p></td>
+                <td><p>{{row.prate}}$</p></td>
+
+                <td *ngFor="let dm of row.dualmailers;let i = index">
+                  <input *ngIf="!row.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="row.isEditable"/>
+                  <p *ngIf="row.isEditable" (dblclick)="editDM(i)">{{dm.value}}</p>
+                </td>
+                <td>
+                  <button class="btn btn-primary btn-sm" (click)="row.isEditable=!row.isEditable" *ngIf="row.isEditable">Edit</button>
+                  <button class="btn btn-primary btn-sm" *ngIf="!row.isEditable" (click)="row.isEditable=!row.isEditable">Save</button>
+                </td>
+              </tr>
+            </tbody>
+         </table>
+    </div>
+>>>>>>> 82001f8665caec21d02934c194ea41b204261f64
+
+    <button type="button" class="btn btn-success" (click)="saveTable($event)">Save</button>
+
+ </div>

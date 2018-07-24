@@ -6,39 +6,82 @@ import { Component, OnInit, ViewChild } from '@angular/core';
   styleUrls: ['./supplier.component.scss']
 })
 export class SupplierComponent implements OnInit {
+  closeResult;
 
   rows = [
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { 
+      pname:"Package Name",
+      pcode:"DC1",
+      prate:"150",
+      isEditable:true,
+      dualmailers: [
+        {
+          id:'DCDM1',
+          value:0,
+        },
+        {
+          id:'DCDM2',
+          value:0
+        },
+        {
+          id:'DCDM3',
+          value:0
+        },
+        {
+          id:'DCDM4',
+          value:0
+        },
+        {
+          id:'DCDM5',
+          value:0
+        },
+        {
+          id:'DCDM6',
+          value:0
+        },
+        {
+          id:'DCDM7',
+          value:0,
+        },
+        {
+          id:'DCDM8',
+          value:0
+        },
+        {
+          id:'DCDM9',
+          value:0
+        },
+        {
+          id:'DCDM10',
+          value:0
+        },
+        {
+          id:'DCDM11',
+          value:0
+        },
+        {
+          id:'DCDM12',
+          value:0
+        },
+        {
+          id:'DCDM13',
+          value:0
+        }
+      ],
+    } 
   ];
-  columns = [
-    { name: 'name' },
-    { name: 'Gender' },
-    { name: 'Company' }
-  ];
-  selected: any[] = [];
-  editing = {};
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
 
-  onSelect(event) {
-    console.log('Event: select', event, this.selected);
+  editDM(id) {
+    console.log(this.rows[0].dualmailers[id]);
   }
 
-  onActivate(event) {
-    console.log('Event: activate', event.row);
-  }
-
-  updateValue(event, cell, rowIndex) {
-    console.log('inline editing rowIndex', rowIndex)
-    this.editing[rowIndex + '-' + cell] = false;
-    this.rows[rowIndex][cell] = event.target.value;
-    this.rows = [...this.rows];
-    console.log('UPDATED!', this.rows[rowIndex][cell]);
+  saveTable() {
+    console.log(this.rows);
   }
 
 }
