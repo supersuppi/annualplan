@@ -20,6 +20,9 @@ public class PromotionLevelRateCard {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "promo_id")
+    private Long promoID;
+
     @Column(name = "ratecard_id")
     private Long rateCard;
 
