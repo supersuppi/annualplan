@@ -16,7 +16,7 @@ import { ProfileDataResolver } from "./route-guards/profile-resolve";
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
     { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent, canActivate: [RoleGuardService]},
+    { path: 'home', component: HomeComponent/*, canActivate: [RoleGuardService]*/},
     {path: 'profile', component: ProfileComponent, resolve: {
         profile : ProfileDataResolver
     }},

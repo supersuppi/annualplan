@@ -22,6 +22,7 @@ import { RoleGuardService } from './route-guards/auth-guard-roles';
 import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
 import { ProfileDataResolver } from './route-guards/profile-resolve';
+import { NouisliderModule } from 'ng2-nouislider';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ProfileDataResolver } from './route-guards/profile-resolve';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NouisliderModule
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.

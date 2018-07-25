@@ -1,7 +1,7 @@
 <div class="container">
   <div class="card">
     <div class="card-body">
-        <h5>My Dashboard</h5>
+      <h5>My Dashboard</h5>
       <!-- Image components -->
       <div class="row col-lg-12">
 
@@ -38,13 +38,34 @@
       <br>
       <!-- Inbox Component -->
       <h5> Inbox</h5>
-      <div class="row">
-        <table>
-
-        </table>
+      <div class="row col-lg-12">
+          <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Sender</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of rows; let i = index;">
+                    <td><input type="checkbox" id="i"></td>
+                    <td>{{row.sender}}</td>
+                    <td>{{row.statusMessage}}</td>
+                    <td>{{row.date}}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
       </div>
+      <!-- Slider component -->
+      <h5>Promotional Timeline</h5>
       <div class="row">
-        Place holder!!
+        <!-- <form [formGroup]="form1"> -->
+            <nouislider [config]="someKeyboardConfig" [(ngModel)]="sample" (ngModelChange)="onChange($event)"></nouislider>
+        <!-- </form> -->
       </div>
     </div>
   </div>
