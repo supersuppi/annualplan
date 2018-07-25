@@ -1,11 +1,15 @@
 package com.gxh.apserver.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,19 +17,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "promotion_level_ratecard")
-public class PromotionLevelRateCard {
-    @Id
+@Table(name = "promo_year")
+public class PromoYear {
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+	
+	@Temporal(TemporalType.DATE)
+	private Date year;
 
-    @Column(name = "ratecard_id")
-    private Long rateCard;
-
-    @Column(name = "dualmailer_id")
-    private Long dualMailer;
-
-    @Column(name = "tiles_selected",length=1)
-    private Integer value;
 }
