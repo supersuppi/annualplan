@@ -24,7 +24,7 @@
             </thead>
             
             <tbody>
-              <tr *ngFor="let row of rows">
+              <tr *ngFor="let row of rows;let rowid = index">
 
                 <td><p>{{row.pname}}</p></td>
                 <td><p>{{row.pcode}}</p></td>
@@ -32,7 +32,7 @@
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
                   <input *ngIf="!row.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="row.isEditable"/>
-                  <p *ngIf="row.isEditable" (dblclick)="editDM(i)">{{dm.value}}</p>
+                  <p *ngIf="row.isEditable" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
                 <td>
                   <button class="btn btn-primary btn-sm" (click)="row.isEditable=!row.isEditable" *ngIf="row.isEditable">Edit</button>
