@@ -1,0 +1,91 @@
+{
+	"promoyear":"2018",
+	"supplierid":102,
+	"products": [
+		{
+			"sku":"SKU1",
+			"name": "Sun cream"
+		}
+	],
+	"ratecards": [
+		{  
+		   "pname":"Premier Plus Package",
+		   "pcode":"DC1",
+		   "prate":500,
+		   "isEditable":true,
+		   "dualmailers":[  
+			  {  
+				 "id":"DC1DM1",
+				 "value":0,
+				 "promosku": [
+					{
+						"sku":"SKU1"
+					},
+					{
+						"sku":"SKU2"
+					}
+				 ],
+				 "promobrandsku": {
+					"name":"revolon",
+					"products": [
+						{
+							"sku":"SKU1"
+						}
+					]
+				 }
+			  },
+			  {  
+				 "id":"DC1DM2",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM3",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM4",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM5",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM6",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM7",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM8",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM9",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM10",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM11",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM12",
+				 "value":0
+			  },
+			  {  
+				 "id":"DC1DM13",
+				 "value":0
+			  }
+		   ]
+		}
+	]
+}
+
+
+
