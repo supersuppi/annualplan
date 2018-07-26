@@ -22,10 +22,10 @@ public class PromotionController extends BaseController {
     }
 
     @GetMapping("/supplier/{id}")
-     ResponseEntity<List<PromoDTO>> getSupplierPromo(@PathVariable("id") Long supplierID) {
-        List<PromoDTO> promoDTO = promotionService.getSupplierActivePromo(supplierID);
+     ResponseEntity<PromoDTO> getSupplierPromo(@PathVariable("id") Long supplierID) {
+        PromoDTO promoDTO = promotionService.getSupplierActivePromo(supplierID);
 
-        ResponseEntity<List<PromoDTO>> responseEntity = new ResponseEntity<List<PromoDTO>>(promoDTO,
+        ResponseEntity<PromoDTO> responseEntity = new ResponseEntity<PromoDTO>(promoDTO,
                 HttpStatus.OK);
 
         return responseEntity;

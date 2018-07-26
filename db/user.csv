@@ -1,0 +1,4 @@
+id,active,email,password,role_id
+2,1,admin@test.com,$2a$10$CtT8Q7hyLJlL5oCNfUbbzOa/uMSLx6ENv5GSoIKq9oe9LQJSuNoCq,1
+3,1,supplier@test.com,$10$CtT8Q7hyLJlL5oCNfUbbzOa/uMSLx6ENv5GSoIKq9oe9LQJSuNoCq,2
+4,1,cmanager@test.com,$10$CtT8Q7hyLJlL5oCNfUbbzOa/uMSLx6ENv5GSoIKq9oe9LQJSuNoCq,3

@@ -1,0 +1,14 @@
+id,code,max_tile_allocation,name,rc_dollar
+1,DC1,3,"Premier Plus Package",500
+2,DC2,3,"Premier Package",450
+3,DC3,4,"Supplier Stands",400
+4,DC4,3,"Unichem Only Eventing",350
+5,DC5,3,"Gondola Fins",300
+6,DC6,3,"Impulse Bins",250
+7,DC7,3,"Counter Units",200
+8,DC8,3,"Full Page",150
+9,DC9,3,"Half Page",100
+10,DC10,3,"Triple tile Range / GWP Offer",75
+11,DC11,3,"Double tile Range / GWP Offer",70
+12,DC12,3,"Standard Tile",60
+13,DC13,3,NASH,50

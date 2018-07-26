@@ -11,9 +11,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class PromoDTO {
-   private String pname;
-   private String pcode;
-   private Float prate;
-   private Boolean isEditable;
-   private List<DualMailerDTO> dualmailers;
+   private String promoyear;
+   private Long supplierID;
+   private List<RateCardDTO> ratecards;
+   private List<ProductDTO> products;
 }

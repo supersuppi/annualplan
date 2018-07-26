@@ -19,17 +19,20 @@
 				 "value":0,
 				 "promosku": [
 					{
-						"sku":"SKU1"
+						"sku":"SKU1",
+						"name": "Sun cream"
 					},
 					{
-						"sku":"SKU2"
+						"sku":"SKU2",
+						"name": "Sun cream"
 					}
 				 ],
 				 "promobrandsku": {
 					"name":"revolon",
 					"products": [
 						{
-							"sku":"SKU1"
+							"sku":"SKU1",
+							"name": "Sun cream"
 						}
 					]
 				 }

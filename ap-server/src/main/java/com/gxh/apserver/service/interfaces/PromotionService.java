@@ -5,5 +5,5 @@ import com.gxh.apserver.dto.PromoDTO;
 import java.util.List;
 
 public interface PromotionService {
-    List<PromoDTO> getSupplierActivePromo(Long supplierID);
+    PromoDTO getSupplierActivePromo(Long supplierID);
 }
