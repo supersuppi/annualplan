@@ -2,6 +2,8 @@ import { Component, OnInit} from '@angular/core';
 
 import {PromotionService} from '../services/index'
 import { Promotion } from "../models/index";
+import { ModalService } from '../shared/modal-services/ModalService';
+import { ProductSelectionModalComponent } from '../modal/product-selection-modal/product-selection-modal.component';
 
 @Component({
   selector: 'app-supplier',
@@ -13,10 +15,16 @@ export class SupplierComponent implements OnInit {
 
   rows:Array<Promotion>
 
-  constructor(private promotionService:PromotionService) {}
+  constructor(private promotionService:PromotionService, 
+    private modalService: ModalService) {}
 
   ngOnInit() {
       this.getSupplierPromotion(1);
+  }
+
+  clickMe() {
+    console.log("clicked here");
+    this.modalService.init(ProductSelectionModalComponent);
   }
 
   getSupplierPromotion(id:Number) {

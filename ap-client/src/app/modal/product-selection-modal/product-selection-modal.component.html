@@ -1,0 +1,24 @@
+<div class="col-lg-9">
+  <p>Select the products</p>
+  <br>
+
+    <div class="input-group mb-3">
+      <div class="input-group-text">
+        <input type="radio" aria-label="Checkbox for following text input" name="productSelect">
+        <label for="single">Single Product</label>
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <div class="input-group-text">
+        <input type="radio" aria-label="Radio button for following text input" name="productSelect">
+        <label for="single">Brand Product</label>
+      </div>
+    </div>
+
+  <br>
+  <div>
+    <button class="btn btn-primary" type="button" (click)="savePromotionProduct()">Save</button>
+    <button class="btn btn-danger" type="button" (click)="closeDialog()">Cancel</button>
+  </div>
+</div>

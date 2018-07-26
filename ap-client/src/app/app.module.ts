@@ -23,6 +23,7 @@ import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
 import { ProfileDataResolver } from './route-guards/profile-resolve';
 import { NouisliderModule } from 'ng2-nouislider';
+import { ProductSelectionModalComponent } from './modal/product-selection-modal/product-selection-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NouisliderModule } from 'ng2-nouislider';
     ProfileComponent,
     SupplierComponent,
     ManagerComponent,
-    HomeComponent
+    HomeComponent,
+    ProductSelectionModalComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,9 @@ import { NouisliderModule } from 'ng2-nouislider';
     AppRoutingModule,
     HttpClientModule,
     NouisliderModule
+  ],
+  entryComponents: [
+    ProductSelectionModalComponent
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.
