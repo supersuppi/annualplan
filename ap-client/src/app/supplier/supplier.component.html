@@ -1,7 +1,4 @@
 <div class="container">
-  <button class="btn btn-primary" (click)="clickMe()">
-    click here for modal..
-  </button>
     <div class="table-responsive">
         <table class="table table-sm">
             <thead>
@@ -34,12 +31,12 @@
                 <td><p>{{row.prate}}$</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!row.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="row.isEditable"/>
+                  <input *ngIf="!row.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="isEditable"/>
                   <p *ngIf="row.isEditable" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
                 <td>
-                  <button class="btn btn-primary btn-sm" (click)="row.isEditable=!row.isEditable" *ngIf="row.isEditable">Edit</button>
-                  <button class="btn btn-primary btn-sm" *ngIf="!row.isEditable" (click)="row.isEditable=!row.isEditable">Save</button>
+                  <button class="btn btn-primary btn-sm" (click)="isEditable=!isEditable" *ngIf="isEditable">Edit</button>
+                  <button class="btn btn-primary btn-sm" *ngIf="!isEditable" (click)="isEditable=!isEditable">Save</button>
                 </td>
               </tr>
             </tbody>
@@ -47,5 +44,7 @@
     </div>
 
     <button type="button" class="btn btn-success" (click)="saveTable($event)">Save</button>
-
+    <button class="btn btn-primary" (click)="clickMe()">
+      click here for modal..
+    </button>
  </div>

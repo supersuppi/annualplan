@@ -1,6 +1,8 @@
 {
 	"promoyear":"2018",
-	"supplierid":102,
+	"userid":102,
+	"isEditable":true,
+	"version":1,
 	"products": [
 		{
 			"sku":"SKU1",
@@ -12,7 +14,6 @@
 		   "pname":"Premier Plus Package",
 		   "pcode":"DC1",
 		   "prate":500,
-		   "isEditable":true,
 		   "dualmailers":[  
 			  {  
 				 "id":"DC1DM1",

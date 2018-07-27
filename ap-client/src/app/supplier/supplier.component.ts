@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 
 import {PromotionService} from '../services/index'
-import { Promotion } from "../models/index";
+import { Promotion, RateCard, Product } from "../models/index";
 import { ModalService } from '../shared/modal-services/ModalService';
 import { ProductSelectionModalComponent } from '../modal/product-selection-modal/product-selection-modal.component';
 
@@ -13,7 +13,10 @@ import { ProductSelectionModalComponent } from '../modal/product-selection-modal
 })
 export class SupplierComponent implements OnInit {
 
-  rows:Array<Promotion>
+  private isEditable:Boolean
+  private rows:Array<RateCard>
+  private products:Array<Product>
+  private promotion:Promotion;
 
   constructor(private promotionService:PromotionService, 
     private modalService: ModalService) {}
@@ -27,25 +30,23 @@ export class SupplierComponent implements OnInit {
     this.modalService.init(ProductSelectionModalComponent);
   }
 
-  getSupplierPromotion(id:Number) {
-    this.promotionService.getSupplierPromotions(id).subscribe((sPromotion:Promotion[]) => {
+  private getSupplierPromotion(id:Number) {
+    this.promotionService.getSupplierPromotions(id).subscribe((sPromotion:Promotion) => {
         console.debug("Get SupplierPromotion Call Success");
-        this.rows = sPromotion;
+        this.rows = sPromotion.ratecards;
+        this.products = sPromotion.products;
       },
       error => { 
           console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
       });
   }
 
-  editDM(rowid,id) {
+  private editDM(rowid,id) {
     console.log(rowid+"=="+id);
     console.log(this.rows[rowid].dualmailers[id]);
   }
 
-  saveTable() {
+  private saveTable() {
     console.log(this.rows);
   }
-
-
-
 }

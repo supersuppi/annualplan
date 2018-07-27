@@ -1,9 +1,10 @@
-import {DualMailer} from './index'
+import {DualMailer, Product, RateCard} from './index'
 
 export class Promotion {
-    public pname: string;
-    public pcode: string;
-    public prate: Number;
+    public promoyear: string;
+    public userid: Number;
     public isEditable: boolean;
-    public dualmailers: Array<DualMailer>;
+    public version: Number;
+    public products: Array<Product>;
+    public ratecards: Array<RateCard>;   
 }
