@@ -13,10 +13,7 @@ import { ProductSelectionModalComponent } from '../modal/product-selection-modal
 })
 export class SupplierComponent implements OnInit {
 
-  private isEditable:Boolean
-  private rows:Array<RateCard>
-  private products:Array<Product>
-  private promotion:Promotion;
+   promotion:Promotion;
 
   constructor(private promotionService:PromotionService, 
     private modalService: ModalService) {}
@@ -30,23 +27,32 @@ export class SupplierComponent implements OnInit {
     this.modalService.init(ProductSelectionModalComponent);
   }
 
-  private getSupplierPromotion(id:Number) {
+   getSupplierPromotion(id:Number) {
     this.promotionService.getSupplierPromotions(id).subscribe((sPromotion:Promotion) => {
         console.debug("Get SupplierPromotion Call Success");
-        this.rows = sPromotion.ratecards;
-        this.products = sPromotion.products;
+        this.promotion = sPromotion;
       },
       error => { 
           console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
       });
   }
 
-  private editDM(rowid,id) {
-    console.log(rowid+"=="+id);
-    console.log(this.rows[rowid].dualmailers[id]);
+  saveSupplierPromotion() {
+    this.promotionService.saveSupplierPromotions(this.promotion).subscribe((response:String) => {
+      console.debug("POST saveSupplierPromotion Call Success");
+      console.log(response);
+    },
+    error => { 
+        console.error("ERROR! saveSupplierPromotion:getSupplierPromotion = "+error);
+    });
   }
 
-  private saveTable() {
-    console.log(this.rows);
+   editDM(rowid,id) {
+    console.log(rowid+"=="+id);
+    console.log(this.promotion.ratecards[rowid].dualmailers[id]);
+  }
+
+   saveTable() {
+    console.log(this.promotion);
   }
 }

@@ -1,17 +1,11 @@
 package com.gxh.apserver.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,11 +20,11 @@ public class Promotion {
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     private Supplier supplier;
-	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "promo_level_one_id", referencedColumnName = "id")
-    private PromotionLevelRateCard promoLevelOne;
-	
-	@Column(name = "status",length=1)
+
+    @Column(name = "year")
+    @Temporal(TemporalType.DATE)
+    private Date year;
+
+	@Column(name = "status",length=10)
     private String status;
 }

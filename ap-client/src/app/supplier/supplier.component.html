@@ -1,4 +1,18 @@
 <div class="container">
+    
+  <div class="d-flex flex-row-reverse">
+        <div class="p-2">
+          <button class="btn btn-primary" (click)="promotion.isEditable=!promotion.isEditable" *ngIf="promotion.isEditable">Edit</button>
+          <button class="btn btn-primary" *ngIf="!promotion.isEditable" (click)="promotion.isEditable=!promotion.isEditable">Save</button>
+        </div>
+        <div class="p-2">
+          <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()">Save</button>
+        </div>
+        <div class="p-2">
+          <button class="btn btn-primary" (click)="clickMe()"> Modal Test</button>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-sm">
             <thead>
@@ -19,32 +33,23 @@
                 <th scope="col">DM11</th>
                 <th scope="col">DM12</th>
                 <th scope="col">DM13</th>
-                <th scope="col">Action</th>
               </tr>
             </thead>
             
             <tbody>
-              <tr *ngFor="let row of rows;let rowid = index">
+              <tr *ngFor="let row of promotion.ratecards;let rowid = index">
 
                 <td><p>{{row.pname}}</p></td>
                 <td><p>{{row.pcode}}</p></td>
                 <td><p>{{row.prate}}$</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!row.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="isEditable"/>
-                  <p *ngIf="row.isEditable" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
-                </td>
-                <td>
-                  <button class="btn btn-primary btn-sm" (click)="isEditable=!isEditable" *ngIf="isEditable">Edit</button>
-                  <button class="btn btn-primary btn-sm" *ngIf="!isEditable" (click)="isEditable=!isEditable">Save</button>
+                  <input *ngIf="!promotion.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable"/>
+                  <p *ngIf="promotion.isEditable" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
               </tr>
             </tbody>
          </table>
     </div>
 
-    <button type="button" class="btn btn-success" (click)="saveTable($event)">Save</button>
-    <button class="btn btn-primary" (click)="clickMe()">
-      click here for modal..
-    </button>
  </div>
