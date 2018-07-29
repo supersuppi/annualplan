@@ -1,11 +1,15 @@
 package com.gxh.apserver.helper;
 
+import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.*;
 import com.gxh.apserver.entity.*;
+import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.repository.interfaces.DualMailerRepository;
 import com.gxh.apserver.repository.interfaces.ProductRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +17,7 @@ import java.util.*;
 
 @Component
 public class PromotionDTOHelper {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private RateCardRepository rateCardRepository;
@@ -27,15 +32,36 @@ public class PromotionDTOHelper {
     private ProductRepository productRepository;
 
 
-    public PromoDTO buildExistingPromoDTO(Supplier supplier, Promotion promo) {
+    public PromoDTO buildExistingPromoDTO(Supplier supplier, Promotion promo) throws InvalidStatusException {
         System.out.println("build from saved promo");
         PromoDTO promoDTO = new PromoDTO();
         //Details about this promotion
-        promoDTO.setIsEditable(true);
-        promoDTO.setPromoyear("2018");
+        promoDTO.setPromoyear(promo.getYear().toString());
         promoDTO.setVersion(1);
         promoDTO.setUserid(supplier.getId());
 
+        switch (promo.getStatus()) {
+            case ACTIVE:
+                promoDTO.setStatus(PromotionStatus.ACTIVE);
+                promoDTO.setIsEditable(true);
+                return this.createDTO(promoDTO,supplier,promo);
+
+            case SUBMITED:
+                promoDTO.setStatus(PromotionStatus.SUBMITED);
+                promoDTO.setIsEditable(false);
+                return this.createDTO(promoDTO,supplier,promo);
+
+            case REJECTED:
+                promoDTO.setStatus(PromotionStatus.REJECTED);
+                promoDTO.setIsEditable(true);
+                return this.createDTO(promoDTO,supplier,promo);
+
+            default:
+                throw new InvalidStatusException("Invalid Status of the user");
+        }
+    }
+
+    private PromoDTO createDTO(PromoDTO promoDTO,Supplier supplier,Promotion promo) {
         List<RateCard> rateCards = rateCardRepository.findAll();
         List<DualMailer> dms = dualMailerRepository.findAll();
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
@@ -97,6 +123,7 @@ public class PromotionDTOHelper {
         promoDTO.setPromoyear("2018");
         promoDTO.setVersion(1);
         promoDTO.setUserid(supplier.getId());
+        promoDTO.setStatus(PromotionStatus.ACTIVE);
 
         List<RateCard> rateCards = rateCardRepository.findAll();
         List<DualMailer> dms = dualMailerRepository.findAll();

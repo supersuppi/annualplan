@@ -2,6 +2,7 @@ package com.gxh.apserver.entity;
 
 import javax.persistence.*;
 
+import com.gxh.apserver.constants.PromotionStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ public class Promotion {
     @Temporal(TemporalType.DATE)
     private Date year;
 
+    @Enumerated(EnumType.STRING)
 	@Column(name = "status",length=10)
-    private String status;
+    private PromotionStatus status;
 }

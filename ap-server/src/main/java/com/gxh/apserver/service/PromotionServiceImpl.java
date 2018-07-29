@@ -7,9 +7,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.entity.*;
+import com.gxh.apserver.exceptions.InvalidStatusException;
+import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.helper.PromotionDTOHelper;
 import com.gxh.apserver.repository.interfaces.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +29,7 @@ import javax.xml.crypto.Data;
 
 @Service(value = "promotionService")
 public class PromotionServiceImpl implements PromotionService {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private RateCardRepository rateCardRepository;
@@ -47,25 +53,24 @@ public class PromotionServiceImpl implements PromotionService {
     private PromotionDTOHelper promotionDTOHelper;
 
     @Override
-    public PromoDTO getSupplierActivePromo(Long supplierID) {
+    public PromoDTO getSupplierPromo(Long supplierID,Date promoYear) throws ResourceNotFoundException,InvalidStatusException {
 
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByStatus(supplier.get(),"ACTIVE");
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoYear);
 
             if(promo.isPresent()) {
-                System.out.println("Promo is present");
+                logger.info("Promo is present");
                 return promotionDTOHelper.buildExistingPromoDTO(supplier.get(),promo.get());
 
             } else {
-                System.out.println("Promo is not present");
+                logger.info("Promo is not present");
                 return promotionDTOHelper.buildNewPromoDTO(supplier.get());
             }
         } else {
-            System.out.println("supplier is null");
+            throw new ResourceNotFoundException("Supplier not found with ID:"+supplierID);
         }
-        return null;
     }
 
     @Override
@@ -75,7 +80,7 @@ public class PromotionServiceImpl implements PromotionService {
 
         //Create promo
         Promotion promo = new Promotion();
-        promo.setStatus("ACTIVE");
+        promo.setStatus(PromotionStatus.ACTIVE);
         promo.setSupplier(supplier.get());
 
         String pattern = "yyyy";
@@ -104,7 +109,6 @@ public class PromotionServiceImpl implements PromotionService {
                 prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
 
                 promotionLevelRateCardRepository.save(prc);
-
 
             }
         }
