@@ -9,6 +9,9 @@
           <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()">Save</button>
         </div>
         <div class="p-2">
+          <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()">Submit</button>
+        </div>
+        <div class="p-2">
           <button class="btn btn-primary" (click)="clickMe()"> Modal Test</button>
         </div>
     </div>
@@ -44,7 +47,7 @@
                 <td><p>{{row.prate}}$</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!promotion.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable"/>
+                  <input *ngIf="!promotion.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1"/>
                   <p *ngIf="promotion.isEditable" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
               </tr>

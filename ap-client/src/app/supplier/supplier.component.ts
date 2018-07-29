@@ -19,7 +19,7 @@ export class SupplierComponent implements OnInit {
     private modalService: ModalService) {}
 
   ngOnInit() {
-      this.getSupplierPromotion(1);
+      this.getSupplierPromotion(1,'2018-02-02');
   }
 
   clickMe() {
@@ -27,8 +27,8 @@ export class SupplierComponent implements OnInit {
     this.modalService.init(ProductSelectionModalComponent);
   }
 
-   getSupplierPromotion(id:Number) {
-    this.promotionService.getSupplierPromotions(id).subscribe((sPromotion:Promotion) => {
+   getSupplierPromotion(id:Number,promoyear:String) {
+    this.promotionService.getSupplierPromotions(id,promoyear).subscribe((sPromotion:Promotion) => {
         console.debug("Get SupplierPromotion Call Success");
         this.promotion = sPromotion;
       },

@@ -12,8 +12,8 @@ export class PromotionService{
 
     constructor(private httpClient: HttpClient) {}
 
-    getSupplierPromotions(supplierID:Number): Observable<Promotion>{
-        return this.httpClient.get<Promotion>(this.promotionSupplierGetUrl+supplierID, {
+    getSupplierPromotions(supplierID:Number,promoYear:String): Observable<Promotion>{
+        return this.httpClient.get<Promotion>(this.promotionSupplierGetUrl+supplierID+"/"+promoYear, {
             responseType: 'json'
         });
     }

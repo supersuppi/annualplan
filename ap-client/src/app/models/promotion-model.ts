@@ -5,6 +5,7 @@ export class Promotion {
     public userid: Number;
     public isEditable: boolean;
     public version: Number;
+    public status:String;
     public products: Array<Product>;
     public ratecards: Array<RateCard>;   
 }
