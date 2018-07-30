@@ -1,24 +1,45 @@
-<div class="col-lg-9">
-  <p>Select the products</p>
-  <br>
+<app-modal>
 
-    <div class="input-group mb-3">
-      <div class="input-group-text">
-        <input type="radio" aria-label="Checkbox for following text input" name="productSelect">
-        <label for="single">Single Product</label>
+    <div modalHeader>
+      <div class="row">
+        <h5>Select the products</h5>
+        <button type="button" class="close" (click)="closeDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     </div>
-    
-    <div class="input-group">
-      <div class="input-group-text">
-        <input type="radio" aria-label="Radio button for following text input" name="productSelect">
-        <label for="single">Brand Product</label>
+      
+    <div modalBody>
+      <div class="input-group mb-3">
+        <label for="single">
+          <input type="radio" aria-label="Checkbox for following text input" 
+            [value]="single" name="productSelect" [(ngModel)]="radioSelection">Single Product
+        </label>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="form-check-inline col-lg-3" *ngFor='let product of promotionalProduct'>
+          <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" value="product.sku"> {{product.name}}
+          </label>
+        </div>
+      </div>
+
+
+        
+      <div class="input-group">
+        <label for="single">
+          <input type="radio" aria-label="Checkbox for following text input" 
+            [value]="brand" [(ngModel)]="radioSelection"
+            name="productSelect">Brand Product
+        </label>
       </div>
     </div>
+      
+    <div modalFooter>
+      <button type="button" class="btn btn-primary" (click)="savePromotionProduct()">Save Promotion</button>
+      <button type="button" class="btn btn-danger " (click)="closeDialog()">Cancel</button>
+    </div>
 
-  <br>
-  <div>
-    <button class="btn btn-primary" type="button" (click)="savePromotionProduct()">Save</button>
-    <button class="btn btn-danger" type="button" (click)="closeDialog()">Cancel</button>
-  </div>
-</div>
+</app-modal>
+
