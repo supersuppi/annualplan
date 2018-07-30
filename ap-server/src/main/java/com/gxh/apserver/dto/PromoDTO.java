@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PromoDTO {
+public class PromoDTO extends BaseDTO {
    private String promoyear;
    private Long userid;
    private Boolean isEditable;

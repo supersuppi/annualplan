@@ -20,4 +20,8 @@ public interface PromotionRepository extends JpaRepository<Promotion,Long> {
 
     @Query("select p from Promotion p where p.supplier = ?1 and p.year = ?2")
     Optional<Promotion> findSupplierPromotionByYear(Supplier supplier,Date date);
+
+    @Query("select p from Promotion p where p.supplier = ?1 and p.year = ?2")
+    Optional<Promotion> findSupplierPromotionForManagerByYear(Supplier supplier,Date date);
+
 }

@@ -53,5 +53,26 @@ public class PromotionController extends BaseController {
 
         return responseEntity;
     }
+    @GetMapping("/manager/{id}/{year}")
+    ResponseEntity<PromoDTO> getSupplierPromoForManager(@PathVariable("id") Long supplierID,
+                                              @PathVariable("year") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) Date promoYear) {
+        PromoDTO promoDTO;
+
+        try {
+            promoDTO = promotionService. getSupplierPromoForManager(supplierID,promoYear);
+        } catch (ResourceNotFoundException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (InvalidStatusException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        ResponseEntity<PromoDTO> responseEntity = new ResponseEntity<PromoDTO>(promoDTO,
+                HttpStatus.OK);
+
+        return responseEntity;
+    }
+
 
 }

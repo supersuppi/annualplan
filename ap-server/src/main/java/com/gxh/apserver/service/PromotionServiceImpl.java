@@ -115,4 +115,28 @@ public class PromotionServiceImpl implements PromotionService {
 
         return new Boolean(true);
     }
+
+    @Override
+    public PromoDTO getSupplierPromoForManager(Long supplierID, Date promoYear) throws ResourceNotFoundException, InvalidStatusException {
+
+        Optional<Supplier> supplier = supplierRepository.findById(supplierID);
+
+        if(supplier.isPresent()) {
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionForManagerByYear(supplier.get(),promoYear);
+
+            if(promo.isPresent()) {
+                logger.info("Promo is present");
+                return promotionDTOHelper.buildExistingPromoDTO(supplier.get(),promo.get());
+
+            } else {
+                logger.info("Promo is not present");
+                PromoDTO promoDTO = new PromoDTO();
+                promoDTO.setHasError(true);
+                promoDTO.setErrorMessage("Suppiler Doenot have any active promo");
+                return promoDTO;
+            }
+        } else {
+            throw new ResourceNotFoundException("Supplier not found with ID:"+supplierID);
+        }
+    }
 }
