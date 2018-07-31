@@ -2,30 +2,33 @@ package com.gxh.apserver.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.exceptions.InvalidStatusException;
-import com.gxh.apserver.exceptions.ResourceNotFoundException;
-import com.gxh.apserver.helper.PromotionDTOHelper;
-import com.gxh.apserver.repository.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gxh.apserver.dto.BrandProductDTO;
-import com.gxh.apserver.dto.DualMailerDTO;
-import com.gxh.apserver.dto.ProductDTO;
+import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.PromoDTO;
-import com.gxh.apserver.dto.RateCardDTO;
+import com.gxh.apserver.dto.StatusChangeDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.PromotionLevelRateCard;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.exceptions.InvalidStatusException;
+import com.gxh.apserver.exceptions.ResourceNotFoundException;
+import com.gxh.apserver.helper.PromotionDTOHelper;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.ProductRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
-
-import javax.xml.crypto.Data;
 
 @Service(value = "promotionService")
 public class PromotionServiceImpl implements PromotionService {
@@ -122,7 +125,7 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionForManagerByYear(supplier.get(),promoYear);
+            Optional<Promotion> promo = promotionRepository.findSupplierActivePromotionForManagerByYear(supplier.get(),promoYear,PromotionStatus.SUBMITED);
 
             if(promo.isPresent()) {
                 logger.info("Promo is present");
@@ -139,4 +142,25 @@ public class PromotionServiceImpl implements PromotionService {
             throw new ResourceNotFoundException("Supplier not found with ID:"+supplierID);
         }
     }
+
+	@Override
+	public Boolean changePromotionStatus(StatusChangeDTO statusDTO) {
+		Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
+		
+		if(supplier.isPresent()) {
+			Optional<Promotion> promo = promotionRepository.findSupplierActivePromotionForManagerByYear(supplier.get(),statusDTO.getPromoYear(),PromotionStatus.ACTIVE);
+			
+			Promotion currentPromo = promo.get();
+
+			 if(currentPromo.getStatus().equals(PromotionStatus.SUBMITED)) {
+				 currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
+				 promotionRepository.save(currentPromo);
+				 return true;
+			 } else {
+				 return false;
+			 }
+		} else {
+			return false;	
+		}
+	}
 }
