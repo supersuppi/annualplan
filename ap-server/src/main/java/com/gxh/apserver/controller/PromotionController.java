@@ -39,7 +39,7 @@ public class PromotionController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
-    @PostMapping(value = "/manager/status/update")
+    @PostMapping(value = "/manager/submit/update")
     public ResponseEntity<StatusChangeDTO> changePromotionStatus(@RequestBody StatusChangeDTO promotionStatus) {
     	boolean success =  promotionService.changePromotionStatus(promotionStatus);
     	
@@ -47,6 +47,16 @@ public class PromotionController extends BaseController {
     	responseDTO.setStatusChangeSuccess(success);
 
     	return new ResponseEntity<StatusChangeDTO>(responseDTO,HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/supplier/submit")
+    public ResponseEntity<StatusChangeDTO> submitPromotion(@RequestBody StatusChangeDTO promotionStatus) {
+        boolean success =  promotionService.submitPromotion(promotionStatus);
+
+        StatusChangeDTO responseDTO = new StatusChangeDTO();
+        responseDTO.setStatusChangeSuccess(success);
+
+        return new ResponseEntity<StatusChangeDTO>(responseDTO,HttpStatus.OK);
     }
 
     @GetMapping("/supplier/{id}/{year}")

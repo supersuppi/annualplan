@@ -22,6 +22,9 @@ public interface PromotionRepository extends JpaRepository<Promotion,Long> {
     Optional<Promotion> findSupplierPromotionByYear(Supplier supplier,Date date);
 
     @Query("select p from Promotion p where p.supplier = ?1 and p.year = ?2 and p.status = ?3")
-    Optional<Promotion> findSupplierActivePromotionForManagerByYear(Supplier supplier,Date date,PromotionStatus status);
+    Optional<Promotion> findSupplierPromotionByYearAndStatus(Supplier supplier,Date date,PromotionStatus status);
+
+    @Query("update Promotion p set p.status = ?3 where p.supplier = ?1 and p.year = ?2")
+    Promotion updatePromotionStatus(Supplier supplier,Date date,PromotionStatus status);
 
 }
