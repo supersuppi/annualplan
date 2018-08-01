@@ -39,24 +39,32 @@ public class PromotionController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
-    @PostMapping(value = "/manager/submit/update")
+    @PostMapping(value = "/manager/status/update")
     public ResponseEntity<StatusChangeDTO> changePromotionStatus(@RequestBody StatusChangeDTO promotionStatus) {
-    	boolean success =  promotionService.changePromotionStatus(promotionStatus);
-    	
-    	StatusChangeDTO responseDTO = new StatusChangeDTO();
-    	responseDTO.setStatusChangeSuccess(success);
+        try {
+            boolean success =  promotionService.changePromotionStatus(promotionStatus);
+            StatusChangeDTO responseDTO = new StatusChangeDTO();
+            responseDTO.setStatusChangeSuccess(success);
 
-    	return new ResponseEntity<StatusChangeDTO>(responseDTO,HttpStatus.OK);
+            return new ResponseEntity<StatusChangeDTO>(responseDTO,HttpStatus.OK);
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping(value = "/supplier/submit")
     public ResponseEntity<StatusChangeDTO> submitPromotion(@RequestBody StatusChangeDTO promotionStatus) {
-        boolean success =  promotionService.submitPromotion(promotionStatus);
+        try {
+            boolean success =  promotionService.submitPromotion(promotionStatus);
+            StatusChangeDTO responseDTO = new StatusChangeDTO();
+            responseDTO.setStatusChangeSuccess(success);
 
-        StatusChangeDTO responseDTO = new StatusChangeDTO();
-        responseDTO.setStatusChangeSuccess(success);
-
-        return new ResponseEntity<StatusChangeDTO>(responseDTO,HttpStatus.OK);
+            return new ResponseEntity<StatusChangeDTO>(responseDTO,HttpStatus.OK);
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/supplier/{id}/{year}")
@@ -65,12 +73,12 @@ public class PromotionController extends BaseController {
         PromoDTO promoDTO;
 
         try {
-            promoDTO = promotionService. getSupplierPromo(supplierID,promoYear);
+            promoDTO = promotionService.getSupplierPromo(supplierID,promoYear);
         } catch (ResourceNotFoundException e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } catch (InvalidStatusException e) {
-            logger.error(e.getMessage());
+        } catch (InvalidStatusException ex) {
+            logger.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

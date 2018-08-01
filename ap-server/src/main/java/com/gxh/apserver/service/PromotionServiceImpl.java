@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.gxh.apserver.util.DateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,17 +179,17 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
 	@Override
-	public Boolean changePromotionStatus(StatusChangeDTO statusDTO) {
+	public Boolean changePromotionStatus(StatusChangeDTO statusDTO) throws ParseException {
 		Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
 		
 		if(supplier.isPresent()) {
-			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),new Date(statusDTO.getPromoYear()),PromotionStatus.SUBMITTED);
+            Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
+			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.SUBMITTED);
 			
 			Promotion currentPromo = promo.get();
-
             currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
-            promotionRepository.save(currentPromo);
 
+            promotionRepository.save(currentPromo);
             return true;
 		} else {
 			return false;	
@@ -196,30 +197,18 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
     @Override
-    public Boolean submitPromotion(StatusChangeDTO statusDTO) {
+    public Boolean submitPromotion(StatusChangeDTO statusDTO) throws ParseException {
         Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
 
-        System.out.println(statusDTO);
-
         if(supplier.isPresent()) {
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date promoDate = null;
-            try {
-                promoDate = sdf.parse(statusDTO.getPromoYear());
-            } catch (ParseException e) {
-                logger.error("error while parsing date");
-            }
-
+            Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
             Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.ACTIVE);
 
             Promotion currentPromo = promo.get();
-
             currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
+
             promotionRepository.save(currentPromo);
-
             return true;
-
         } else {
             return false;
         }

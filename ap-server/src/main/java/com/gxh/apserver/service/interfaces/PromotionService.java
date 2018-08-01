@@ -12,8 +12,8 @@ public interface PromotionService {
     PromoDTO getSupplierPromo(Long supplierID,Date promoYear) throws ResourceNotFoundException,
             InvalidStatusException;
     Boolean saveSupplierPromo(PromoDTO promoDTO) throws ParseException;
-    Boolean changePromotionStatus(StatusChangeDTO promoDTO);
+    Boolean changePromotionStatus(StatusChangeDTO promoDTO) throws ParseException;
     PromoDTO getSupplierPromoForManager(Long supplierID,Date promoYear) throws ResourceNotFoundException,
             InvalidStatusException;
-    Boolean submitPromotion(StatusChangeDTO statusDTO);
+    Boolean submitPromotion(StatusChangeDTO statusDTO) throws ParseException;
 }
