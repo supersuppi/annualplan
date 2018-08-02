@@ -25,6 +25,8 @@ import { ProfileDataResolver } from './route-guards/profile-resolve';
 import { NouisliderModule } from 'ng2-nouislider';
 import { ProductSelectionModalComponent } from './modal/product-selection-modal/product-selection-modal.component';
 import { ModalDialogModule } from 'ngx-modal-dialog';
+import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/promotion-reject-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { ModalDialogModule } from 'ngx-modal-dialog';
     SupplierComponent,
     ManagerComponent,
     HomeComponent,
-    ProductSelectionModalComponent
+    ProductSelectionModalComponent,
+    PromotionRejectModalComponent
   ],
   imports: [
     BrowserModule,
@@ -49,8 +52,10 @@ import { ModalDialogModule } from 'ngx-modal-dialog';
     NouisliderModule,
     ModalDialogModule.forRoot()
   ],
+  //For Modal
   entryComponents: [
-    ProductSelectionModalComponent
+    ProductSelectionModalComponent,
+    PromotionRejectModalComponent
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.

@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 
 import { Promotion,PromoStatus } from "../models/index";
 import {PromotionService} from '../services/index'
+
+import { ModalDialogService } from 'ngx-modal-dialog';
+
+import { PromotionRejectModalComponent } from '../modal/promotion-reject-modal/promotion-reject-modal.component';
+
 
 @Component({
   selector: 'app-manager',
@@ -14,10 +19,11 @@ export class ManagerComponent implements OnInit {
   private promotion:Promotion;
   private promoStatus:PromoStatus
 
-  constructor(private promotionService:PromotionService) { }
+  constructor(private promotionService:PromotionService,private modalDialogService: ModalDialogService,
+    private viewContainer: ViewContainerRef) { }
 
   ngOnInit() {
-    this.getSupplierPromotion(1,'2018-02-02');
+    this.getSupplierPromotion(1,'2018-01-01');
    }
 
    getSupplierPromotion(id:Number,promoyear:String) {
@@ -32,7 +38,7 @@ export class ManagerComponent implements OnInit {
 
     acceptPromotion() {
       console.debug("acceptPromotion");
-      this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"ACCEPTED")
+      this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"ACCEPTED",this.promotion.promoyear)
       this.promotionService.changePromotionStatus(this.promoStatus).subscribe((response:PromoStatus) => {
         console.debug("Get acceptPromotion Call Success");
         console.log(response.statusChangeSuccess);
@@ -44,13 +50,24 @@ export class ManagerComponent implements OnInit {
 
     rejectPromotion() {
       console.debug("rejectPromotion");
-      this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"REJECTED")
-      this.promotionService.changePromotionStatus(this.promoStatus).subscribe((response:PromoStatus) => {
-        console.debug("Get rejectPromotion Call Success");
-        console.log(response.statusChangeSuccess);
-      },
-      error => { 
-          console.error("ERROR! ManagerComponent:rejectPromotion = "+error);
+      this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"REJECTED",this.promotion.promoyear)
+      // this.promotionService.changePromotionStatus(this.promoStatus).subscribe((response:PromoStatus) => {
+      //   console.debug("Get rejectPromotion Call Success");
+      //   console.log(response.statusChangeSuccess);
+      // },
+      // error => { 
+      //     console.error("ERROR! ManagerComponent:rejectPromotion = "+error);
+      // });
+
+      this.modalDialogService.openDialog(this.viewContainer ,{
+        title: 'Why Reject ?',
+        childComponent: PromotionRejectModalComponent,
+        settings: {
+          closeButtonClass: 'close theme-icon-close'
+        },
+        data: {
+         // promotion : promotion1
+        }
       });
     }
 
