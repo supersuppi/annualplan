@@ -24,7 +24,7 @@ import { JwtHelper } from './helper/JWTHelper';
 import { ProfileDataResolver } from './route-guards/profile-resolve';
 import { NouisliderModule } from 'ng2-nouislider';
 import { ProductSelectionModalComponent } from './modal/product-selection-modal/product-selection-modal.component';
-import { ModalComponent } from './modal/modal.component';
+import { ModalDialogModule } from 'ngx-modal-dialog';
 
 @NgModule({
   declarations: [
@@ -38,8 +38,7 @@ import { ModalComponent } from './modal/modal.component';
     SupplierComponent,
     ManagerComponent,
     HomeComponent,
-    ProductSelectionModalComponent,
-    ModalComponent
+    ProductSelectionModalComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +46,8 @@ import { ModalComponent } from './modal/modal.component';
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-    NouisliderModule
+    NouisliderModule,
+    ModalDialogModule.forRoot()
   ],
   entryComponents: [
     ProductSelectionModalComponent

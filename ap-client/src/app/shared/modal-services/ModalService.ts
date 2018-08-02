@@ -12,13 +12,13 @@ export class ModalService {
     constructor(private domService : DomService) {}
 
 
-    init (component:any) {
+    init (component:any, inputs: object, outputs: object) {
         let componentConfig = {
-            inputs: {},
-            outputs: {}
+            inputs:inputs,
+            outputs:outputs
         }; 
         
-        this.domService.appendToParent(this.modalContainerId, component);
+        this.domService.appendToParent(this.modalContainerId, component, componentConfig);
         document.getElementById(this.modalContainerId).className = 'show';
         document.getElementById(this.overlayId).className = 'show';
     }

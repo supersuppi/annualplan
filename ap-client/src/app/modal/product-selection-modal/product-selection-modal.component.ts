@@ -1,34 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ComponentRef } from '@angular/core';
 import { ModalService } from '../../shared/modal-services/ModalService';
 import { Product } from '../../models';
+import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 
 @Component({
   selector: 'app-product-selection-modal',
   templateUrl: './product-selection-modal.component.html',
   styleUrls: ['./product-selection-modal.component.scss']
 })
-export class ProductSelectionModalComponent implements OnInit {
-  radioSelection: any;
-  promotionalProduct : any;
-  constructor(private modalService: ModalService) { }
+export class ProductSelectionModalComponent implements OnInit, IModalDialog {
+
+  private internalActionButtons = [];
+  private model = { productSelect : 'single'};
+  private promotionalProduct : any;
+
+  constructor(private modalService: ModalService) { 
+  }
 
   ngOnInit() {
-    this.radioSelection = 'single';
-
-    this.promotionalProduct = [
-      {sku: 'SKU-10', name: 'Test1'},
-      {sku: 'SKU-11', name: 'Test2'}
-    ];
-    console.log(this.radioSelection);
   }
 
-  closeDialog() {
-    console.log("Modal cancel is clicked");
-    this.modalService.destroy();
+  dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
+    options.actionButtons = this.internalActionButtons;
+    this.promotionalProduct = options.data['promotion'];
+
+    this.internalActionButtons.push({
+      text: 'Save Promotion',
+      buttonClass: 'btn btn-primary',
+      onAction: () => this.savePromotion()
+    });
+
+    this.internalActionButtons.push({
+      text: 'Cancel',
+      buttonClass: 'btn btn-danger',
+      onAction: () => true
+    });
   }
 
-  onSelectionChange(event) {
-    console.log(event);
+  savePromotion() {
+    console.log("Save promotion is clicked");
   }
 
 }

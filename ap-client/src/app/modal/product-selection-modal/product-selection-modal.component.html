@@ -1,45 +1,24 @@
-<app-modal>
+<div class="modal-body">
+  <div class="input-group mb-3">
+    <label for="single">
+      <input type="radio" aria-label="Checkbox for following text input" 
+        value="single" name="productSelect"  [(ngModel)]="model.productSelect" >Single Product
+    </label>
+  </div>
 
-    <div modalHeader>
-      <div class="row">
-        <h5>Select the products</h5>
-        <button type="button" class="close" (click)="closeDialog()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+  <div class="input-group mb-3" *ngIf = "model.productSelect === 'single'">
+    <div class="form-check-inline col-lg-3" *ngFor='let product of promotionalProduct'>
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value="product.sku"> {{product.name}}
+      </label>
     </div>
-      
-    <div modalBody>
-      <div class="input-group mb-3">
-        <label for="single">
-          <input type="radio" aria-label="Checkbox for following text input" 
-            [value]="single" name="productSelect" [(ngModel)]="radioSelection">Single Product
-        </label>
-      </div>
+  </div>
 
-      <div class="input-group mb-3">
-        <div class="form-check-inline col-lg-3" *ngFor='let product of promotionalProduct'>
-          <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" value="product.sku"> {{product.name}}
-          </label>
-        </div>
-      </div>
-
-
-        
-      <div class="input-group">
-        <label for="single">
-          <input type="radio" aria-label="Checkbox for following text input" 
-            [value]="brand" [(ngModel)]="radioSelection"
-            name="productSelect">Brand Product
-        </label>
-      </div>
-    </div>
-      
-    <div modalFooter>
-      <button type="button" class="btn btn-primary" (click)="savePromotionProduct()">Save Promotion</button>
-      <button type="button" class="btn btn-danger " (click)="closeDialog()">Cancel</button>
-    </div>
-
-</app-modal>
-
+  <div class="input-group">
+    <label for="single">
+      <input type="radio" aria-label="Checkbox for following text input" 
+        value="brand" [(ngModel)]="model.productSelect" 
+        name="productSelect">Brand Product
+    </label>
+  </div>
+</div>
