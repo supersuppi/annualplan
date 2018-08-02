@@ -184,8 +184,8 @@ public class PromotionServiceImpl implements PromotionService {
 		
 		if(supplier.isPresent()) {
             Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
-			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.SUBMITTED);
-			
+			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
+
 			Promotion currentPromo = promo.get();
             currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
 
@@ -202,7 +202,7 @@ public class PromotionServiceImpl implements PromotionService {
 
         if(supplier.isPresent()) {
             Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.ACTIVE);
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
 
             Promotion currentPromo = promo.get();
             currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));

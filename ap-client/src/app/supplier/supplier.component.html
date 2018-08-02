@@ -6,7 +6,7 @@
           <button class="btn btn-primary" *ngIf="!promotion.isEditable" (click)="promotion.isEditable=!promotion.isEditable">Save</button>
         </div>
         <div class="p-2">
-          <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()" *ngIf="promotion.isEditable">Save</button>
+          <button type="button" class="btn btn-warning" (click)="saveSupplierPromotion()" *ngIf="promotion.isEditable">Save</button>
         </div>
         <div class="p-2">
           <button type="button" class="btn btn-success" (click)="submitSupplierPromotion()" *ngIf="promotion.isEditable">Submit</button>
