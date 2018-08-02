@@ -46,8 +46,8 @@ public class PromotionDTOHelper {
                 promoDTO.setIsEditable(true);
                 return this.createDTO(promoDTO,supplier,promo);
 
-            case SUBMITED:
-                promoDTO.setStatus(PromotionStatus.SUBMITED);
+            case SUBMITTED:
+                promoDTO.setStatus(PromotionStatus.SUBMITTED);
                 promoDTO.setIsEditable(false);
                 return this.createDTO(promoDTO,supplier,promo);
 

@@ -1,18 +1,15 @@
 <div class="container">
     
-  <div class="d-flex flex-row-reverse">
+  <div class="d-flex flex-row-reverse" *ngIf="promotion.status === 'ACTIVE' || promotion.status === 'REJECTED'">
         <div class="p-2">
           <button class="btn btn-primary" (click)="promotion.isEditable=!promotion.isEditable" *ngIf="promotion.isEditable">Edit</button>
           <button class="btn btn-primary" *ngIf="!promotion.isEditable" (click)="promotion.isEditable=!promotion.isEditable">Save</button>
         </div>
         <div class="p-2">
-          <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()">Save</button>
+          <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()" *ngIf="promotion.isEditable">Save</button>
         </div>
         <div class="p-2">
-          <button type="button" class="btn btn-success" (click)="saveSupplierPromotion()">Submit</button>
-        </div>
-        <div class="p-2">
-          <button class="btn btn-primary" (click)="clickMe()"> Modal Test</button>
+          <button type="button" class="btn btn-success" (click)="submitSupplierPromotion()" *ngIf="promotion.isEditable">Submit</button>
         </div>
     </div>
 
@@ -47,11 +44,13 @@
                 <td><p>{{row.prate}}$</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!promotion.isEditable" type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1"/>
-                  <p *ngIf="promotion.isEditable" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <input *ngIf="!promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1"/>
+                  <p *ngIf="promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <p *ngIf="!promotion.isEditable && promotion.status === 'SUBMITTED'">{{dm.value}}</p>
                 </td>
               </tr>
             </tbody>
+            
          </table>
     </div>
 

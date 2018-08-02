@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef} from '@angular/core';
 
 import {PromotionService} from '../services/index'
-import { Promotion, RateCard, Product } from "../models/index";
+import { Promotion, PromoStatus } from "../models/index";
 import { ModalService } from '../shared/modal-services/ModalService';
 import { ProductSelectionModalComponent } from '../modal/product-selection-modal/product-selection-modal.component';
 import {} from '';
@@ -16,13 +16,14 @@ import { ModalDialogService } from 'ngx-modal-dialog';
 export class SupplierComponent implements OnInit {
 
    promotion:Promotion;
+   private promoStatus:PromoStatus
 
   constructor(private promotionService:PromotionService, 
     private modalService: ModalService, 
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
-      this.getSupplierPromotion(1,'2018-02-02');
+      this.getSupplierPromotion(1,'2018-01-01');
   }
 
   clickMe() {
@@ -62,6 +63,18 @@ export class SupplierComponent implements OnInit {
     },
     error => { 
         console.error("ERROR! saveSupplierPromotion:getSupplierPromotion = "+error);
+    });
+  }
+
+  submitSupplierPromotion() {
+    console.debug("promo year"+this.promotion.promoyear);
+    this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"SUBMITTED",this.promotion.promoyear)
+    this.promotionService.submitSupplierPromotion(this.promoStatus).subscribe((response:PromoStatus) => {
+      console.debug("POST submitSupplierPromotion Call Success");
+      console.log(response);
+    },
+    error => { 
+        console.error("ERROR! submitSupplierPromotion = "+error);
     });
   }
 

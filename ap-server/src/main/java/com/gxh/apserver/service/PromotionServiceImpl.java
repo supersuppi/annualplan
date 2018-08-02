@@ -2,30 +2,32 @@ package com.gxh.apserver.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.exceptions.InvalidStatusException;
-import com.gxh.apserver.exceptions.ResourceNotFoundException;
-import com.gxh.apserver.helper.PromotionDTOHelper;
-import com.gxh.apserver.repository.interfaces.*;
+import com.gxh.apserver.util.DateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gxh.apserver.dto.BrandProductDTO;
-import com.gxh.apserver.dto.DualMailerDTO;
-import com.gxh.apserver.dto.ProductDTO;
+import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.PromoDTO;
-import com.gxh.apserver.dto.RateCardDTO;
+import com.gxh.apserver.dto.StatusChangeDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.PromotionLevelRateCard;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.exceptions.InvalidStatusException;
+import com.gxh.apserver.exceptions.ResourceNotFoundException;
+import com.gxh.apserver.helper.PromotionDTOHelper;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.ProductRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
-
-import javax.xml.crypto.Data;
 
 @Service(value = "promotionService")
 public class PromotionServiceImpl implements PromotionService {
@@ -77,39 +79,75 @@ public class PromotionServiceImpl implements PromotionService {
     public Boolean saveSupplierPromo(final PromoDTO promoDTO) throws ParseException {
 
         Optional<Supplier> supplier = supplierRepository.findById(promoDTO.getUserid());
+        Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByID(supplier.get());
 
-        //Create promo
-        Promotion promo = new Promotion();
-        promo.setStatus(PromotionStatus.ACTIVE);
-        promo.setSupplier(supplier.get());
+        if(currentPromotion.isPresent()) {
+            logger.info("Promo is present..updating");
+            Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
 
-        String pattern = "yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        Date date = simpleDateFormat.parse(promoDTO.getPromoyear());
+            //Get rate card for dual mailers
+            List<RateCard> rateCards = rateCardRepository.findAll();
+            List<DualMailer> dms = dualMailerRepository.findAll();
+            Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();
 
-        promo.setYear((date));
+            for (PromotionLevelRateCard rcdm : ratecardDms.get()) {
+                //(K,V) = (rateCardID+DuailmailerID, PromotionLevelRateCard object)
+                rcdmMap.put(rcdm.getRateCard().toString()+rcdm.getDualMailer().toString(),rcdm);
+            }
 
-        Promotion savedPromo =  promotionRepository.saveAndFlush(promo);
+            //loop DC:Rate card
+            for(int i=0;i<rateCards.size();i++) {
+                RateCard rateCard = rateCards.get(i);
+                for(int j=0;j<rateCards.size();j++) {
+                    DualMailer dm = dms.get(j);
 
-        //Save rate card for dual mailers
-        List<RateCard> rateCards = rateCardRepository.findAll();
-        List<DualMailer> dms = dualMailerRepository.findAll();
-        //loop DC:Rate card
-        for(int i=0;i<rateCards.size();i++) {
-            RateCard rateCard = rateCards.get(i);
-            for(int j=0;j<rateCards.size();j++) {
-                DualMailer dm = dms.get(j);
+                    PromotionLevelRateCard prc = null;
+                    prc = rcdmMap.get(rateCard.getId().toString()+dm.getId().toString());
 
-                PromotionLevelRateCard prc = null;
-                prc = new PromotionLevelRateCard();
+                    prc.setPromo(currentPromotion.get().getId());
+                    prc.setRateCard(rateCard.getId());
+                    prc.setDualMailer(dm.getId());
+                    prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
 
-                prc.setPromo(savedPromo.getId());
-                prc.setRateCard(rateCard.getId());
-                prc.setDualMailer(dm.getId());
-                prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
+                    promotionLevelRateCardRepository.save(prc);
 
-                promotionLevelRateCardRepository.save(prc);
+                }
+            }
+        } else {
+            logger.info("Promo is not present.Saving");
+            //Create promo
+            Promotion promo = new Promotion();
+            promo.setStatus(PromotionStatus.ACTIVE);
+            promo.setSupplier(supplier.get());
 
+            String pattern = "yyyy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            Date date = simpleDateFormat.parse(promoDTO.getPromoyear());
+
+            promo.setYear((date));
+
+            Promotion savedPromo =  promotionRepository.saveAndFlush(promo);
+
+            //Save rate card for dual mailers
+            List<RateCard> rateCards = rateCardRepository.findAll();
+            List<DualMailer> dms = dualMailerRepository.findAll();
+            //loop DC:Rate card
+            for(int i=0;i<rateCards.size();i++) {
+                RateCard rateCard = rateCards.get(i);
+                for(int j=0;j<rateCards.size();j++) {
+                    DualMailer dm = dms.get(j);
+
+                    PromotionLevelRateCard prc = null;
+                    prc = new PromotionLevelRateCard();
+
+                    prc.setPromo(savedPromo.getId());
+                    prc.setRateCard(rateCard.getId());
+                    prc.setDualMailer(dm.getId());
+                    prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
+
+                    promotionLevelRateCardRepository.save(prc);
+
+                }
             }
         }
 
@@ -122,7 +160,7 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionForManagerByYear(supplier.get(),promoYear);
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoYear,PromotionStatus.SUBMITTED);
 
             if(promo.isPresent()) {
                 logger.info("Promo is present");
@@ -137,6 +175,42 @@ public class PromotionServiceImpl implements PromotionService {
             }
         } else {
             throw new ResourceNotFoundException("Supplier not found with ID:"+supplierID);
+        }
+    }
+
+	@Override
+	public Boolean changePromotionStatus(StatusChangeDTO statusDTO) throws ParseException {
+		Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
+		
+		if(supplier.isPresent()) {
+            Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
+			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.SUBMITTED);
+			
+			Promotion currentPromo = promo.get();
+            currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
+
+            promotionRepository.save(currentPromo);
+            return true;
+		} else {
+			return false;	
+		}
+	}
+
+    @Override
+    public Boolean submitPromotion(StatusChangeDTO statusDTO) throws ParseException {
+        Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
+
+        if(supplier.isPresent()) {
+            Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.ACTIVE);
+
+            Promotion currentPromo = promo.get();
+            currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
+
+            promotionRepository.save(currentPromo);
+            return true;
+        } else {
+            return false;
         }
     }
 }
