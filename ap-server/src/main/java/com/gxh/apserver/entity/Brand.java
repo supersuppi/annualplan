@@ -19,7 +19,7 @@ public class Brand {
     @Column(name = "name",length=100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "brand_group_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "brand_group_id", referencedColumnName = "id")
     private BrandGroup brandGroup;
 }

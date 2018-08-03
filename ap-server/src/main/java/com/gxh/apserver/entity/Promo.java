@@ -84,7 +84,7 @@ public class Promo {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "promomechic_id", referencedColumnName = "id")
-    private PromoMechic promoMechic;
+    private PromoMechanic promoMechic;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "offercallout_id", referencedColumnName = "id")

@@ -1,0 +1,14 @@
+id,code,name,rc_dollar,promo_mechanic_id,promotion_id
+1,DC1,"Premier Plus Package",500,1,1
+2,DC2,"Premier Package",450,1,1
+3,DC3,"Supplier Stands",400,2,1
+4,DC4,"Unichem Only Eventing",350,1,1
+5,DC5,"Gondola Fins",300,2,1
+6,DC6,"Impulse Bins",250,5,1
+7,DC7,"Counter Units",200,5,1
+8,DC8,"Full Page",150,3,1
+9,DC9,"Half Page",100,4,1
+10,DC10,"Triple tile Range / GWP Offer",75,1,1
+11,DC11,"Double tile Range / GWP Offer",70,5,1
+12,DC12,"Standard Tile",60,1,1
+13,DC13,NASH,50,7,1
