@@ -3,6 +3,7 @@ package com.gxh.apserver.controller;
 import java.text.ParseException;
 import java.util.Date;
 
+import com.gxh.apserver.dto.PromoCommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class PromotionController extends BaseController {
     @PostMapping(value = "/supplier/submit")
     public ResponseEntity<StatusChangeDTO> submitPromotion(@RequestBody StatusChangeDTO promotionStatus) {
         try {
-            boolean success =  promotionService.submitPromotion(promotionStatus);
+            boolean success =  promotionService.changePromotionStatus(promotionStatus);
             StatusChangeDTO responseDTO = new StatusChangeDTO();
             responseDTO.setStatusChangeSuccess(success);
 
@@ -107,6 +108,18 @@ public class PromotionController extends BaseController {
                 HttpStatus.OK);
 
         return responseEntity;
+    }
+
+    @PostMapping(value = "/manager/comment/save")
+    public ResponseEntity<String> saveManagerComment(@RequestBody PromoCommentDTO promoCommentDTO) {
+
+        try {
+            promotionService.saveManagerComment(promoCommentDTO);
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
