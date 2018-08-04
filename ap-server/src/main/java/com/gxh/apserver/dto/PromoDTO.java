@@ -1,6 +1,7 @@
 package com.gxh.apserver.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import com.gxh.apserver.constants.PromotionStatus;
 import lombok.Getter;
@@ -17,5 +18,6 @@ public class PromoDTO extends BaseDTO {
    private Integer version;
    private PromotionStatus status;
    private List<RateCardDTO> ratecards;
-   private List<ProductDTO> products;
+//   private List<ProductDTO> products;
+   private Map<String, List<ProductDTO>> mapOfProducts;
 }

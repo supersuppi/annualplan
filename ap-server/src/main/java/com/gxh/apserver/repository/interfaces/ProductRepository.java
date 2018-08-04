@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
-    @Query("select p from Product p where p.vendorAXCode = ?1")
+    @Query("select p from Product p where p.vendorAXCode = ?1 order by p.brand")
     Optional<List<Product>> findproductsBySupplierAXCode(Long vendorAXCode);
 }

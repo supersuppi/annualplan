@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Component
 public class PromotionDTOHelper {
@@ -68,16 +69,22 @@ public class PromotionDTOHelper {
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(promo.getId());
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
-        List<ProductDTO> skus = new ArrayList<ProductDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
+        Map<String, List<ProductDTO>> mapProduct = new HashMap<>(); 
 
         for (PromotionLevelRateCard rcdm : ratecardDms.get()) {
             //(K,V) = (rateCardID+DuailmailerID, value)
             rcdmMap.put(rcdm.getRateCard().toString()+rcdm.getDualMailer().toString(),rcdm.getValue());
         }
 
+        // Returns a map of Brand and list of skus within that brand.
         for (Product product : products.get()) {
-            skus.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName()));
+        	List<ProductDTO> tempList = mapProduct.get(product.getBrand().getName());
+        	if(!mapProduct.containsKey(product.getBrand().getName())) {
+        		tempList = new ArrayList<>();
+        		mapProduct.put(product.getBrand().getName(), tempList);
+        	}
+        	tempList.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName()));
         }
 
         for (RateCard rateCard : rateCards) {
@@ -108,7 +115,7 @@ public class PromotionDTOHelper {
             rows.add(row);
         }
         //Set products
-        promoDTO.setProducts(skus);
+        promoDTO.setMapOfProducts(mapProduct);
         //Set rate cards
         promoDTO.setRatecards(rows);
 
@@ -130,10 +137,16 @@ public class PromotionDTOHelper {
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
-        List<ProductDTO> skus = new ArrayList<ProductDTO>();
-
+        Map<String, List<ProductDTO>> mapProduct = new HashMap<>(); 
+        
+        // Returns a map of Brand and list of skus within that brand.
         for (Product product : products.get()) {
-            skus.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName()));
+        	List<ProductDTO> tempList = mapProduct.get(product.getBrand().getName());
+        	if(!mapProduct.containsKey(product.getBrand().getName())) {
+        		tempList = new ArrayList<>();
+        		mapProduct.put(product.getBrand().getName(), tempList);
+        	}
+        	tempList.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName()));
         }
 
         for (RateCard rateCard : rateCards) {
@@ -164,7 +177,7 @@ public class PromotionDTOHelper {
             rows.add(row);
         }
         //Set products
-        promoDTO.setProducts(skus);
+        promoDTO.setMapOfProducts(mapProduct);
         //Set rate cards
         promoDTO.setRatecards(rows);
 
