@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.gxh.apserver.dto.PromoCommentDTO;
+import com.gxh.apserver.entity.*;
+import com.gxh.apserver.repository.interfaces.*;
 import com.gxh.apserver.util.DateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,20 +16,9 @@ import org.springframework.stereotype.Service;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
-import com.gxh.apserver.entity.DualMailer;
-import com.gxh.apserver.entity.Promotion;
-import com.gxh.apserver.entity.PromotionLevelRateCard;
-import com.gxh.apserver.entity.RateCard;
-import com.gxh.apserver.entity.Supplier;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.helper.PromotionDTOHelper;
-import com.gxh.apserver.repository.interfaces.DualMailerRepository;
-import com.gxh.apserver.repository.interfaces.ProductRepository;
-import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
-import com.gxh.apserver.repository.interfaces.PromotionRepository;
-import com.gxh.apserver.repository.interfaces.RateCardRepository;
-import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
 
 @Service(value = "promotionService")
@@ -35,28 +27,24 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Autowired
     private RateCardRepository rateCardRepository;
-
     @Autowired
     private SupplierRepository supplierRepository;
-
     @Autowired
     private DualMailerRepository dualMailerRepository;
-
     @Autowired
     private PromotionRepository promotionRepository;
-
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private PromotionLevelRateCardRepository promotionLevelRateCardRepository;
-
     @Autowired
     private PromotionDTOHelper promotionDTOHelper;
+    @Autowired
+    private PromoCommentRepository promoCommentRepository;
 
     @Override
     public PromoDTO getSupplierPromo(Long supplierID,Date promoYear) throws ResourceNotFoundException,InvalidStatusException {
-
+        logger.info(">>> getSupplierPromo");
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
@@ -76,8 +64,8 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public Boolean saveSupplierPromo(final PromoDTO promoDTO) throws ParseException {
-
+    public boolean saveSupplierPromo(final PromoDTO promoDTO) throws ParseException {
+        logger.info(">>> saveSupplierPromo");
         Optional<Supplier> supplier = supplierRepository.findById(promoDTO.getUserid());
         Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByID(supplier.get());
 
@@ -155,8 +143,31 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public PromoDTO getSupplierPromoForManager(Long supplierID, Date promoYear) throws ResourceNotFoundException, InvalidStatusException {
+    public boolean saveManagerComment(PromoCommentDTO promoCommentDTO) throws ParseException {
+        logger.info(">>> saveManagerComment");
+        Optional<Supplier> supplier = supplierRepository.findById(promoCommentDTO.getSupplierid());
 
+        Date promoDate = DateConverter.convertFromStringTODate(promoCommentDTO.getPromoYear());
+        Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoDate);
+
+        //save comment
+        PromoComments newComment = new PromoComments();
+        newComment.setPromotion(currentPromotion.get());
+        newComment.setComment(promoCommentDTO.getComment());
+
+        promoCommentRepository.save(newComment);
+
+        Promotion promo = currentPromotion.get();
+        promo.setStatus(PromotionStatus.REJECTED);
+
+        promotionRepository.save(promo);
+
+        return true;
+    }
+
+    @Override
+    public PromoDTO getSupplierPromoForManager(Long supplierID, Date promoYear) throws ResourceNotFoundException, InvalidStatusException {
+        logger.info(">>> getSupplierPromoForManager");
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
@@ -179,7 +190,8 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
 	@Override
-	public Boolean changePromotionStatus(StatusChangeDTO statusDTO) throws ParseException {
+	public boolean changePromotionStatus(StatusChangeDTO statusDTO) throws ParseException {
+        logger.info(">>> changePromotionStatus");
 		Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
 		
 		if(supplier.isPresent()) {
@@ -195,22 +207,4 @@ public class PromotionServiceImpl implements PromotionService {
 			return false;	
 		}
 	}
-
-    @Override
-    public Boolean submitPromotion(StatusChangeDTO statusDTO) throws ParseException {
-        Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
-
-        if(supplier.isPresent()) {
-            Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
-
-            Promotion currentPromo = promo.get();
-            currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
-
-            promotionRepository.save(currentPromo);
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

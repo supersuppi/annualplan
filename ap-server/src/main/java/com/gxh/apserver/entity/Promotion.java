@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.gxh.apserver.constants.PromotionStatus;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
@@ -14,8 +15,8 @@ import java.util.Date;
 @Table(name = "promotion")
 public class Promotion {
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -29,4 +30,9 @@ public class Promotion {
     @Enumerated(EnumType.STRING)
 	@Column(name = "status",length=10)
     private PromotionStatus status;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    private Date createdAt;
 }
