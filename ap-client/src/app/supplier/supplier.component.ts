@@ -29,8 +29,9 @@ export class SupplierComponent implements OnInit {
   clickMe() {
 
     let promotion1 = [
-      {sku : 'SKU-10', name: 'Test 1'},
-      {sku : 'SKU-10', name: 'Test 1'}
+      {sku : 'SKU-1', name: 'Sun cream'},
+      {sku : 'SKU-2', name: 'Sun Screen'},
+      {sku : 'SKU-3', name: 'Lotion'}
     ];
 
     this.modalDialogService.openDialog(this.viewContainer ,{

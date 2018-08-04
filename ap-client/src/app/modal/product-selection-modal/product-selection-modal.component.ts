@@ -12,7 +12,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   private internalActionButtons = [];
   private model = { productSelect : 'single'};
-  private promotionalProduct : any;
+  private promotionalProducts : any;
 
   constructor(private modalService: ModalService) { 
   }
@@ -22,7 +22,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
-    this.promotionalProduct = options.data['promotion'];
+    this.promotionalProducts = options.data['promotion'];
 
     this.internalActionButtons.push({
       text: 'Save Promotion',
@@ -39,6 +39,10 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   savePromotion() {
     console.log("Save promotion is clicked");
+  }
+
+  test(event) {
+    console.log(event);
   }
 
 }
