@@ -60,7 +60,7 @@ export class ManagerComponent implements OnInit {
       // });
 
       this.modalDialogService.openDialog(this.viewContainer ,{
-        title: 'Why Reject ?',
+        title: 'Promotion Rejection Message',
         childComponent: PromotionRejectModalComponent,
         settings: {
           closeButtonClass: 'close theme-icon-close'

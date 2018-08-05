@@ -6,6 +6,6 @@ export class Promotion {
     public isEditable: boolean;
     public version: Number;
     public status:String;
-    public products: Array<Product>;
+    public mapOfProducts: Map<string, Array<Product>>;
     public ratecards: Array<RateCard>;   
 }

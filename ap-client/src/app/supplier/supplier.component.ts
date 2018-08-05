@@ -16,7 +16,7 @@ import { ModalDialogService } from 'ngx-modal-dialog';
 export class SupplierComponent implements OnInit {
 
    promotion:Promotion;
-   private promoStatus:PromoStatus
+   private promoStatus:PromoStatus;
 
   constructor(private promotionService:PromotionService, 
     private modalService: ModalService, 
@@ -28,20 +28,14 @@ export class SupplierComponent implements OnInit {
 
   clickMe() {
 
-    let promotion1 = [
-      {sku : 'SKU-1', name: 'Sun cream'},
-      {sku : 'SKU-2', name: 'Sun Screen'},
-      {sku : 'SKU-3', name: 'Lotion'}
-    ];
-
     this.modalDialogService.openDialog(this.viewContainer ,{
       title: 'Choose Promotion Type',
       childComponent: ProductSelectionModalComponent,
       settings: {
-        closeButtonClass: 'close theme-icon-close'
+        closeButtonClass: 'close theme-icon-close',
       },
       data: {
-        promotion : promotion1
+        brandAndProducts : this.promotion.mapOfProducts
       }
     });
 
