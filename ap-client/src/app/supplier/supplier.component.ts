@@ -2,9 +2,7 @@ import { Component, OnInit, ViewContainerRef} from '@angular/core';
 
 import {PromotionService} from '../services/index'
 import { Promotion, PromoStatus } from "../models/index";
-import { ModalService } from '../shared/modal-services/ModalService';
 import { ProductSelectionModalComponent } from '../modal/product-selection-modal/product-selection-modal.component';
-import {} from '';
 import { ModalDialogService } from 'ngx-modal-dialog';
 
 @Component({
@@ -19,29 +17,13 @@ export class SupplierComponent implements OnInit {
    private promoStatus:PromoStatus;
 
   constructor(private promotionService:PromotionService, 
-    private modalService: ModalService, 
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
       this.getSupplierPromotion(1,'2018-01-01');
   }
 
-  clickMe() {
-
-    this.modalDialogService.openDialog(this.viewContainer ,{
-      title: 'Choose Promotion Type',
-      childComponent: ProductSelectionModalComponent,
-      settings: {
-        closeButtonClass: 'close theme-icon-close',
-      },
-      data: {
-        brandAndProducts : this.promotion.mapOfProducts
-      }
-    });
-
-  }
-
-   getSupplierPromotion(id:Number,promoyear:String) {
+  getSupplierPromotion(id:Number,promoyear:String) {
     this.promotionService.getSupplierPromotions(id,promoyear).subscribe((sPromotion:Promotion) => {
         console.debug("Get SupplierPromotion Call Success");
         this.promotion = sPromotion;
@@ -76,9 +58,17 @@ export class SupplierComponent implements OnInit {
    editDM(rowid,id) {
     console.log(rowid+"=="+id);
     console.log(this.promotion.ratecards[rowid].dualmailers[id]);
+    //Display modal
+    this.modalDialogService.openDialog(this.viewContainer ,{
+      title: 'Choose Promotion Type',
+      childComponent: ProductSelectionModalComponent,
+      settings: {
+        closeButtonClass: 'close theme-icon-close',
+      },
+      data: {
+        brandAndProducts : this.promotion.mapOfProducts
+      }
+    });
   }
 
-   saveTable() {
-    console.log(this.promotion);
-  }
 }
