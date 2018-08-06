@@ -8,6 +8,7 @@ import com.gxh.apserver.repository.interfaces.DualMailerRepository;
 import com.gxh.apserver.repository.interfaces.ProductRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +128,7 @@ public class PromotionDTOHelper {
         PromoDTO promoDTO = new PromoDTO();
         //Details about this promotion
         promoDTO.setIsEditable(true);
-        promoDTO.setPromoyear("2018");
+        promoDTO.setPromoyear(DateUtil.getNowDateInString());
         promoDTO.setVersion(1);
         promoDTO.setUserid(supplier.getId());
         promoDTO.setStatus(PromotionStatus.ACTIVE);

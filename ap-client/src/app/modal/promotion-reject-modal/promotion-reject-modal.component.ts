@@ -1,22 +1,28 @@
 import { Component, OnInit, ComponentRef } from '@angular/core';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 
+import { PromoComment } from "../../models/index";
+import {PromotionService} from '../../services/index'
+
 @Component({
   selector: 'app-promotion-reject-modal',
   templateUrl: './promotion-reject-modal.component.html',
-  styleUrls: ['./promotion-reject-modal.component.scss']
+  styleUrls: ['./promotion-reject-modal.component.scss'],
+  providers: [PromotionService]
 })
 export class PromotionRejectModalComponent implements OnInit {
 
   private internalActionButtons = [];
-
-  constructor() { }
+  private promoComment : PromoComment;
+   
+  constructor(private promotionService:PromotionService) { }
 
   ngOnInit() {
   }
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
+    this.promoComment = options.data['promoCommentModel'];
 
     this.internalActionButtons.push({
       text: 'Send',
@@ -32,7 +38,16 @@ export class PromotionRejectModalComponent implements OnInit {
   }
 
   sendMessage():boolean {
-    console.log("Message Sent");
+    console.log("Message Sent");this.promoComment
+    
+    this.promotionService.savePromotionRejectComment(this.promoComment).subscribe((response:any) => {
+      console.debug("save PromotionRejectComment Call Success");
+      console.log(response);
+    },
+    error => { 
+        console.error("ERROR! PromotionRejectModalComponent:sendMessage = "+error);
+    });
+
     return true;
   }
 }

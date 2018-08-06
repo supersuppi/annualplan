@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient,HttpHeaders } from "@angular/common/http";
 
-import { Promotion, PromoStatus } from "../models/index";
+import { Promotion, PromoStatus, PromoComment } from "../models/index";
 
 @Injectable()
 export class PromotionService{
@@ -12,6 +12,7 @@ export class PromotionService{
     private promotionSupplierSaveURL = "http://localhost:8008/apserver/promotion/save/";
     private promotionSupplierForManagerURL = "http://localhost:8008/apserver/promotion/manager/";
     private promotionManagerStatusUpdateURL = "http://localhost:8008/apserver/promotion/manager/status/update";
+    private promotionManagerPromoRejectURL = "http://localhost:8008/apserver/promotion//manager/comment/save";
 
     constructor(private httpClient: HttpClient) {}
 
@@ -36,6 +37,12 @@ export class PromotionService{
 
     changePromotionStatus(data:PromoStatus): Observable<PromoStatus>{
         return this.httpClient.post<PromoStatus>(this.promotionManagerStatusUpdateURL,data, {
+            headers: new HttpHeaders().set('Content-Type', 'application/json')
+        });
+    }
+
+    savePromotionRejectComment(data:PromoComment): Observable<any>{
+        return this.httpClient.post<PromoComment>(this.promotionManagerPromoRejectURL,data, {
             headers: new HttpHeaders().set('Content-Type', 'application/json')
         });
     }

@@ -29,7 +29,7 @@ public class PromoComments {
     private Promotion promotion;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     @CreatedDate
     private Date createdAt = new Date();
 

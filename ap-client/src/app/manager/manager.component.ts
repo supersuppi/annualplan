@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 
-import { Promotion,PromoStatus } from "../models/index";
+import { Promotion,PromoStatus,PromoComment } from "../models/index";
 import {PromotionService} from '../services/index'
 
 import { ModalDialogService } from 'ngx-modal-dialog';
@@ -17,7 +17,8 @@ import { PromotionRejectModalComponent } from '../modal/promotion-reject-modal/p
 export class ManagerComponent implements OnInit {
 
   private promotion:Promotion;
-  private promoStatus:PromoStatus
+  private promoStatus:PromoStatus;
+  private promoComment : PromoComment;
 
   constructor(private promotionService:PromotionService,private modalDialogService: ModalDialogService,
     private viewContainer: ViewContainerRef) { }
@@ -50,23 +51,18 @@ export class ManagerComponent implements OnInit {
 
     rejectPromotion() {
       console.debug("rejectPromotion");
-      this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"REJECTED",this.promotion.promoyear)
-      // this.promotionService.changePromotionStatus(this.promoStatus).subscribe((response:PromoStatus) => {
-      //   console.debug("Get rejectPromotion Call Success");
-      //   console.log(response.statusChangeSuccess);
-      // },
-      // error => { 
-      //     console.error("ERROR! ManagerComponent:rejectPromotion = "+error);
-      // });
+
+      this.promoComment = new PromoComment(this.promotion.promoyear,1)
 
       this.modalDialogService.openDialog(this.viewContainer ,{
         title: 'Promotion Rejection Message',
+
         childComponent: PromotionRejectModalComponent,
         settings: {
           closeButtonClass: 'close theme-icon-close'
         },
         data: {
-         // promotion : promotion1
+          promoCommentModel : this.promoComment
         }
       });
     }
