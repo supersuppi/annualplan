@@ -7,7 +7,7 @@
 	"products": [
 		{
 			"brand_name":"revolon_brand",
-			"products": [
+			"product_skus": [
 				{
 					"id":1,
 					"sku":"SKU1",
@@ -22,7 +22,7 @@
 		 },
 		 {
 			"brand_name":"jhonson_brand",
-			"products": [
+			"product_skus": [
 				{
 					"id":11,
 					"sku":"SKU11",

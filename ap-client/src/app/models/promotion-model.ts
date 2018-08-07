@@ -1,4 +1,4 @@
-import {DualMailer, Product, RateCard} from './index'
+import {Product, RateCard} from './index'
 
 export class Promotion {
     public promoyear: String;
@@ -6,6 +6,6 @@ export class Promotion {
     public isEditable: boolean;
     public version: Number;
     public status:String;
-    public mapOfProducts: Map<string, Array<Product>>;
+    public products: Array<Product>;
     public ratecards: Array<RateCard>;   
 }
