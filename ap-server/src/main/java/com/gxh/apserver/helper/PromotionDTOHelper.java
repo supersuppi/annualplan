@@ -1,20 +1,33 @@
 package com.gxh.apserver.helper;
 
-import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.dto.*;
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.exceptions.InvalidStatusException;
-import com.gxh.apserver.repository.interfaces.DualMailerRepository;
-import com.gxh.apserver.repository.interfaces.ProductRepository;
-import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
-import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Stream;
+import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.BrandProductDTO;
+import com.gxh.apserver.dto.DualMailerDTO;
+import com.gxh.apserver.dto.ProductDTO;
+import com.gxh.apserver.dto.PromoDTO;
+import com.gxh.apserver.dto.RateCardDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Product;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.PromotionLevelRateCard;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.exceptions.InvalidStatusException;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.ProductRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
 
 @Component
 public class PromotionDTOHelper {
@@ -84,7 +97,7 @@ public class PromotionDTOHelper {
         		tempList = new ArrayList<>();
         		mapProduct.put(product.getBrand().getName(), tempList);
         	}
-        	tempList.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName()));
+        	tempList.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName(), product.getId()));
         }
 
         for (RateCard rateCard : rateCards) {
@@ -146,7 +159,7 @@ public class PromotionDTOHelper {
         		tempList = new ArrayList<>();
         		mapProduct.put(product.getBrand().getName(), tempList);
         	}
-        	tempList.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName()));
+        	tempList.add(new ProductDTO(product.getGXHID(),product.getMarketingShortName(), product.getId()));
         }
 
         for (RateCard rateCard : rateCards) {

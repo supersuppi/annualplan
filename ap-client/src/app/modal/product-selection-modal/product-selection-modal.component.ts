@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angular/core';
-import { ModalService } from '../../shared/modal-services/ModalService';
 import { Product } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 
@@ -15,8 +14,9 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   private brandAndProducts : Map<string, Array<Product>>;
   private productArray : Array<Product>;
   private brandKeys : Array<string>;
+  private selectedProducts : Array<Product> = [];
 
-  constructor(private modalService: ModalService) { 
+  constructor() { 
   }
 
   ngOnInit() {
@@ -28,7 +28,6 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
-
     this.brandAndProducts = new Map<string, Array<Product>>();
     // Products come as a list of objects with key value pair,
     // to map the data to a Map using this method.
@@ -48,10 +47,12 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
       buttonClass: 'btn btn-danger',
       onAction: () => true
     });
+
   }
 
   savePromotion() {
     console.log("Save promotion is clicked");
+    return true;
   }
 
   // Adding the object key and values to a map.
@@ -64,4 +65,15 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     this.productArray = this.brandAndProducts.get(event.target.value);
     console.log(this.productArray);
   }
+
+  // Creates an array of selected products 
+  onProductSelection(event, productSelection) {
+    if( event.target.checked ) {
+      this.selectedProducts.push(productSelection);
+    } else{
+      let index = this.selectedProducts.indexOf(productSelection);
+      this.selectedProducts.splice(index, 1);
+    }
+  }
+
 }

@@ -26,6 +26,7 @@ import { NouisliderModule } from 'ng2-nouislider';
 import { ProductSelectionModalComponent } from './modal/product-selection-modal/product-selection-modal.component';
 import { ModalDialogModule } from 'ngx-modal-dialog';
 import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/promotion-reject-modal.component';
+import { AddPromotionComponent } from './modal/add-promotion/add-promotion.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/pr
     ManagerComponent,
     HomeComponent,
     ProductSelectionModalComponent,
-    PromotionRejectModalComponent
+    PromotionRejectModalComponent,
+    AddPromotionComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +57,8 @@ import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/pr
   //For Modal
   entryComponents: [
     ProductSelectionModalComponent,
-    PromotionRejectModalComponent
+    PromotionRejectModalComponent,
+    AddPromotionComponent
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.

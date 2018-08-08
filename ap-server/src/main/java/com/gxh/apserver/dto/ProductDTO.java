@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ProductDTO {
     private Long sku;
     private String name;
+    private Long productId;
 }

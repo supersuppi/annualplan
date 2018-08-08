@@ -18,6 +18,5 @@ public class PromoDTO extends BaseDTO {
    private Integer version;
    private PromotionStatus status;
    private List<RateCardDTO> ratecards;
-//   private List<ProductDTO> products;
    private Map<String, List<ProductDTO>> mapOfProducts;
 }
