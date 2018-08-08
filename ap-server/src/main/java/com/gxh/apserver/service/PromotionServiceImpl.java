@@ -49,6 +49,8 @@ public class PromotionServiceImpl implements PromotionService {
     private PromoCommentRepository promoCommentRepository;
     @Autowired
     private PromotionLevelSKURepository promotionLevelSKURepository;
+    @Autowired
+    private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
 
     @Override
     public PromoDTO getSupplierPromo(Long supplierID,Date promoYear) throws ResourceNotFoundException,InvalidStatusException {
@@ -88,9 +90,10 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.get().getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
         Optional<List<PromotionLevelSKU>> promoskus = promotionLevelSKURepository.findAllByPromoID(currentPromotion.get().getId());
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
 
+        int totalBudget = 0;
         Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();
-
         if(ratecardDms.isPresent()) {
             logger.info("Updating Promo");
             for (PromotionLevelRateCard rcdm : ratecardDms.get()) {
@@ -101,7 +104,7 @@ public class PromotionServiceImpl implements PromotionService {
             //loop DC:Rate card
             for(int i=0;i<rateCards.get().size();i++) {
                 RateCard rateCard = rateCards.get().get(i);
-                for(int j=0;j<rateCards.get().size();j++) {
+                 for(int j=0;j<rateCards.get().size();j++) {
                     DualMailer dm = dms.get(j);
 
                     PromotionLevelRateCard prc = null;
@@ -111,10 +114,19 @@ public class PromotionServiceImpl implements PromotionService {
                     prc.setRateCard(rateCard.getId());
                     prc.setDualMailer(dm.getId());
                     prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
+                     //Calculate budget ( Rateplan cost x number of tiles
+                    totalBudget += rateCard.getRateCardDollar() * promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue();
 
                     promotionLevelRateCardRepository.save(prc);
                 }
             }
+            logger.info("total_budget:"+totalBudget);
+
+            //Update Budget
+            SupplierPromotionBudget CurrentPromoBudget = promoBudget.get();
+            CurrentPromoBudget.setTotalBudget(Long.valueOf(totalBudget));
+            supplierPromotionBudgetRepository.save(CurrentPromoBudget);
+
         } else {
             logger.info("Saving new Promo");
             //loop DC:Rate card
@@ -130,11 +142,16 @@ public class PromotionServiceImpl implements PromotionService {
                     prc.setRateCard(rateCard.getId());
                     prc.setDualMailer(dm.getId());
                     prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
+                    //Calculate budget ( Rateplan cost x number of tiles
+                    totalBudget += rateCard.getRateCardDollar() * promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue();
 
                     promotionLevelRateCardRepository.save(prc);
-
                 }
             }
+            //Update Budget
+            SupplierPromotionBudget CurrentPromoBudget = promoBudget.get();
+            CurrentPromoBudget.setTotalBudget(Long.valueOf(totalBudget));
+            supplierPromotionBudgetRepository.save(CurrentPromoBudget);
         }
 
         return new Boolean(true);

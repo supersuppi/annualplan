@@ -12,20 +12,23 @@ import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.comp
 })
 export class SupplierComponent implements OnInit {
 
-   promotion:Promotion;
+   private promotion:Promotion;
    private promoStatus:PromoStatus;
+   private pageLoaded:Boolean; //to avoid promotion undefined error
 
-  constructor(private promotionService:PromotionService, 
+  constructor(private promotionService:PromotionService,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
-      this.getSupplierPromotion(1,'2018-01-01');
+    this.pageLoaded =false;
+    this.getSupplierPromotion(1,'2018-01-01');
   }
 
   getSupplierPromotion(id:Number,promoyear:String) {
     this.promotionService.getSupplierPromotions(id,promoyear).subscribe((sPromotion:Promotion) => {
       console.debug("Get SupplierPromotion Call Success");
       this.promotion = sPromotion;
+      this.pageLoaded =true;
     },
     error => { 
         console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
@@ -36,6 +39,7 @@ export class SupplierComponent implements OnInit {
     this.promotionService.saveSupplierPromotions(this.promotion).subscribe((response:String) => {
       console.debug("POST saveSupplierPromotion Call Success");
       console.log(response);
+      this.refreshData();
     },
     error => { 
         console.error("ERROR! saveSupplierPromotion:getSupplierPromotion = "+error);
@@ -48,6 +52,7 @@ export class SupplierComponent implements OnInit {
     this.promotionService.submitSupplierPromotion(this.promoStatus).subscribe((response:PromoStatus) => {
       console.debug("POST submitSupplierPromotion Call Success");
       console.log(response);
+      this.refreshData();
     },
     error => { 
         console.error("ERROR! submitSupplierPromotion = "+error);
@@ -71,11 +76,11 @@ export class SupplierComponent implements OnInit {
         parentRef : this.viewContainer
       }
     });
-
   }
 
-  saveTable() {
-  console.log(this.promotion);
+  
+  refreshData() {
+    this.getSupplierPromotion(1,'2018-01-01');
   }
 
 }
