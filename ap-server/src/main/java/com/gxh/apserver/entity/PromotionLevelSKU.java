@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "promotion_level_sku")
 public class PromotionLevelSKU {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -25,6 +24,6 @@ public class PromotionLevelSKU {
     @Column(name = "dualmailer_id")
     private Long dualMailer;
 
-    @Column(name = "tiles_selected",length=1)
-    private Integer value;
+    @Column(name = "product_id")
+    private Long product;
 }

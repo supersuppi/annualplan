@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewContainerRef} from '@angular/core';
 import {PromotionService} from '../services/index'
 import { Promotion, PromoStatus } from "../models/index";
-import { ModalService } from '../shared/modal-services/ModalService';
 import { ModalDialogService } from 'ngx-modal-dialog';
 import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.component';
 
@@ -68,7 +67,7 @@ export class SupplierComponent implements OnInit {
       },
       data: {
         values : this.promotion.ratecards[rowid].dualmailers[id].value,
-        brandAndProducts : this.promotion.mapOfProducts,
+        brandAndProducts : this.promotion.products,
         parentRef : this.viewContainer
       }
     });

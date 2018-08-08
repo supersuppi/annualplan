@@ -14,9 +14,10 @@ import lombok.Setter;
 public class PromoDTO extends BaseDTO {
    private String promoyear;
    private Long userid;
+   private Long promo_id;
    private Boolean isEditable;
    private Integer version;
    private PromotionStatus status;
    private List<RateCardDTO> ratecards;
-   private Map<String, List<ProductDTO>> mapOfProducts;
+   private List<BrandProductDTO> products;
 }

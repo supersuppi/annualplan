@@ -35,10 +35,4 @@ public class RateCard {
     @JoinColumn(name = "promoMechanic_id", referencedColumnName = "id")
     private PromoMechanic promoMechanic;
 
-
-
-
-
-
-
 }

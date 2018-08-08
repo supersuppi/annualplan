@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PromotionLevelRateCardRepository extends JpaRepository<PromotionLevelRateCard,Long> {
-
     @Query("select prt from PromotionLevelRateCard prt where prt.promo = ?1")
     Optional<List<PromotionLevelRateCard>> findAllByPromoID(Long promoID);
 }

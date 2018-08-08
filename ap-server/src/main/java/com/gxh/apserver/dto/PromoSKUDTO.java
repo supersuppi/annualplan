@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BrandProductDTO {
-    private String name;
-    private List<ProductDTO> product_skus;
+public class PromoSKUDTO {
+    private Integer promo_count;
+    private List<ProductDTO> products_selected;
 }

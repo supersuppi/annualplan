@@ -47,6 +47,7 @@
 		   "pcode":"DC1",
 		   "prate":500,
 		   "max_tile":3,
+		   "min_tile":3,
 		   "max_product":3,
 		   "nash_rc":0,
 		   "dualmailers":[  

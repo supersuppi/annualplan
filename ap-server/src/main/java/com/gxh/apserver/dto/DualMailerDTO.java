@@ -13,7 +13,5 @@ import java.util.List;
 public class DualMailerDTO {
     private String id;
     private Integer value;
-    private List<ProductDTO> promosku;
-    private BrandProductDTO promoBrandSku;
-
+    private List<PromoSKUDTO> promosku;
 }

@@ -2,6 +2,7 @@ package com.gxh.apserver.controller;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import com.gxh.apserver.dto.PromoCommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,26 @@ public class PromotionController extends BaseController {
         }
 
         ResponseEntity<PromoDTO> responseEntity = new ResponseEntity<PromoDTO>(promoDTO,
+                HttpStatus.OK);
+
+        return responseEntity;
+    }
+
+    @GetMapping("/supplier/{id}")
+    ResponseEntity<List<PromoDTO>> getAllSupplierPromo(@PathVariable("id") Long supplierID) {
+        List<PromoDTO> promoDTO;
+
+        try {
+            promoDTO = promotionService.getAllSupplierPromo(supplierID);
+        } catch (ResourceNotFoundException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (InvalidStatusException ex) {
+            logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        ResponseEntity<List<PromoDTO>> responseEntity = new ResponseEntity<List<PromoDTO>>(promoDTO,
                 HttpStatus.OK);
 
         return responseEntity;
