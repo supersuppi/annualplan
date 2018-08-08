@@ -1,4 +1,12 @@
-<div class="container">
+<div class="container" *ngIf ="pageLoaded">
+
+  <div class="d-flex flex-row">
+      <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear}}</span></div>
+      <div class="p-2"><span class="alert alert-info"><strong>Status: </strong> {{promotion.status}}</span></div>
+      <div class="p-2"><span class="alert alert-info"><strong>Total Budget: </strong>{{promotion.budget.allocated}}</span></div>
+      <div class="p-2"><span class="alert alert-info"><strong>Used Budget: </strong>{{promotion.budget.used}}</span></div>
+      <div class="p-2"><span class="alert alert-info"><strong>Budget Available: </strong>{{promotion.budget.diff}}</span></div>
+  </div>
   
   <div class="d-flex flex-row-reverse" *ngIf="promotion.status === 'ACTIVE' || promotion.status === 'REJECTED'">
         <div class="p-2">
@@ -11,7 +19,7 @@
         <div class="p-2">
           <button type="button" class="btn btn-success" (click)="submitSupplierPromotion()" *ngIf="promotion.isEditable">Submit</button>
         </div>
-    </div>
+  </div>
 
     <div class="table-responsive">
         <table class="table table-sm">

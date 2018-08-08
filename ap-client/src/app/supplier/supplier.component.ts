@@ -12,13 +12,15 @@ import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.comp
 })
 export class SupplierComponent implements OnInit {
 
-   promotion:Promotion;
+   private promotion:Promotion;
    private promoStatus:PromoStatus;
+   private pageLoaded:Boolean; //to avoid promotion undefined error
 
-  constructor(private promotionService:PromotionService, 
+  constructor(private promotionService:PromotionService,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
+    this.pageLoaded =false;
       this.getSupplierPromotion(1,'2018-01-01');
   }
 
@@ -26,6 +28,7 @@ export class SupplierComponent implements OnInit {
     this.promotionService.getSupplierPromotions(id,promoyear).subscribe((sPromotion:Promotion) => {
       console.debug("Get SupplierPromotion Call Success");
       this.promotion = sPromotion;
+      this.pageLoaded =true;
     },
     error => { 
         console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
@@ -72,10 +75,6 @@ export class SupplierComponent implements OnInit {
       }
     });
 
-  }
-
-  saveTable() {
-  console.log(this.promotion);
   }
 
 }
