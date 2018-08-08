@@ -4,6 +4,11 @@
 	"userid":102,
 	"isEditable":true,
 	"version":1,
+	"budget": {
+		"allocated":10000,
+		"used":500,
+		"diff":9500
+	},
 	"products": [
 		{
 			"brand_name":"revolon_brand",

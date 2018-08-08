@@ -8,8 +8,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "supplier_budget")
-public class SupplierBudget {
+@Table(name = "supplier_promotion_budget")
+public class SupplierPromotionBudget {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,8 +17,8 @@ public class SupplierBudget {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
-    private Supplier supplier;
+    @JoinColumn(name = "promotion_id", referencedColumnName = "id")
+    private Promotion promotion;
 
     @Column(name = "promotion_budget_allocated")
     private Long budgetAllocated;

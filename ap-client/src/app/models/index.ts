@@ -6,3 +6,4 @@ export * from './brandproduct-model';
 export * from './promo-status-model';
 export * from './manager-comment-model';
 export * from './product-sku-model';
+export * from './promo-budget-model';

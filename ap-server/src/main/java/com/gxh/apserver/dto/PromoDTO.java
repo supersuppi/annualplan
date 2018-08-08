@@ -18,6 +18,7 @@ public class PromoDTO extends BaseDTO {
    private Boolean isEditable;
    private Integer version;
    private PromotionStatus status;
+   private BudgetDTO budget;
    private List<RateCardDTO> ratecards;
    private List<BrandProductDTO> products;
 }

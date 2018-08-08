@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import com.gxh.apserver.dto.*;
 import com.gxh.apserver.entity.*;
+import com.gxh.apserver.util.BudgetCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class PromotionDTOHelper {
     private PromotionRepository promotionRepository;
     @Autowired
     private PromotionLevelSKURepository promotionLevelSKURepository;
+    @Autowired
+    private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
 
     public PromoDTO getPromoDTO(Supplier supplier, Promotion promo) throws InvalidStatusException {
         logger.info(">>> buildPromoDTO");
@@ -73,6 +76,7 @@ public class PromotionDTOHelper {
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(promo.getId());
         Optional<List<PromotionLevelSKU>> promoskus = promotionLevelSKURepository.findAllByPromoID(promo.getId());
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
@@ -110,7 +114,6 @@ public class PromotionDTOHelper {
             row.setNash_rc(rateCard.getPromoMechanic().getTimesOfNash());
 
             List<DualMailerDTO> dmList = new ArrayList<>();
-
             for (DualMailer dm : dms) {
                 DualMailerDTO dto = null;
 
@@ -134,7 +137,8 @@ public class PromotionDTOHelper {
         }
         //Set rate cards
         promoDTO.setRatecards(rows);
-
+        //Set Budget
+        promoDTO.setBudget(BudgetCalculator.getBudget(promoBudget.get()));
         return promoDTO;
     }
 
