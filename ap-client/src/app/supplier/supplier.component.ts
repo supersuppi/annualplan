@@ -78,9 +78,12 @@ export class SupplierComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
   
   refreshData() {
     this.getSupplierPromotion(1,'2018-01-01');
   }
 
+=======
+>>>>>>> be44ca1e720c8803f6530ea832339498e4f9cbc1
 }
