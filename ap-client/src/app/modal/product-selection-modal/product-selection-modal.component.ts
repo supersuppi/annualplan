@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angular/core';
 import { Product } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
+import { ProductSKU } from '../../models/product-sku-model';
 
 @Component({
   selector: 'app-product-selection-modal',
@@ -11,30 +12,22 @@ import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   private internalActionButtons = [];
-  private brandAndProducts : Map<string, Array<Product>>;
+  private product_skus : Array<ProductSKU>;
   private productArray : Array<Product>;
-  private brandKeys : Array<string>;
   private selectedProducts : Array<Product> = [];
 
   constructor() { 
   }
 
   ngOnInit() {
-    // Get all the keys from map
-    this.brandKeys = Array.from(this.brandAndProducts.keys());
     // Initial value of products to be displayed in modal
-    this.productArray = this.brandAndProducts.get(this.brandKeys[0]);
+    this.product_skus = this.productArray[0].product_skus;
   }
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
-    this.brandAndProducts = new Map<string, Array<Product>>();
-    // Products come as a list of objects with key value pair,
-    // to map the data to a Map using this method.
-    Object.keys(options.data['brandAndProducts']).forEach(key => {
-      this.addParametersToMap(key, options.data['brandAndProducts'][key]);
-    });
-
+    this.productArray = options.data['brandAndProducts'];
+    this.selectedProducts = options.data['selectedProducts'];
     // Action buttons for modal
     this.internalActionButtons.push({
       text: 'Save Promotion',
@@ -55,15 +48,14 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     return true;
   }
 
-  // Adding the object key and values to a map.
-  addParametersToMap (key : string, values : Array<Product>) {
-    this.brandAndProducts.set(key, values);
-  }
-
   //dropdown value event change
   onValueChange(event) {
-    this.productArray = this.brandAndProducts.get(event.target.value);
-    console.log(this.productArray);
+    this.productArray.forEach(product => {
+      if (product.name === event.target.value) {
+        this.product_skus = product.product_skus;
+      }
+    });
+    console.log(this.product_skus);
   }
 
   // Creates an array of selected products 

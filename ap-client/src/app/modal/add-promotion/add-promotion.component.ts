@@ -1,13 +1,15 @@
-import { Component, OnInit, ComponentRef } from '@angular/core';
+import { Component, OnInit, ComponentRef, ViewEncapsulation } from '@angular/core';
 import { IModalDialog, IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
 import { Subject, Observable } from 'rxjs';
 import { ModalService } from '../../shared/modal-services/ModalService';
 import { ProductSelectionModalComponent } from '../product-selection-modal/product-selection-modal.component';
+import { ProductSKU } from '../../models/product-sku-model';
 
 @Component({
   selector: 'app-add-promotion',
   templateUrl: './add-promotion.component.html',
-  styleUrls: ['./add-promotion.component.scss']
+  styleUrls: ['./add-promotion.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AddPromotionComponent implements OnInit, IModalDialog {
 
@@ -16,6 +18,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   private internalActionButtons = [];
   private promotionProducts: any;
   private parentRef : any;
+  private selectedProducts : Array<ProductSKU>;
   
   constructor(private modalService: ModalService, 
     private modalDialogService: ModalDialogService) { }
@@ -28,6 +31,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
     options.actionButtons = this.internalActionButtons;
     this.numberOfTiles = options.data['values'];
     this.promotionProducts = options.data['brandAndProducts'];
+    this.selectedProducts = options.data['selectedProducts'];
     // Modal needs a target on which it needs to be displayed,
     // since dialogInit will first close the existing modal and open a new one;
     // the target is lost so get a refernce of parent where it needs to be displayed
@@ -45,13 +49,15 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
      //Showing modal on cell click
     this.modalDialogService.openDialog(this.parentRef ,{
       title: 'Choose Promotion Type',
+      placeOnTop: true,
       childComponent: ProductSelectionModalComponent,
       settings: {
         closeButtonClass: 'close theme-icon-close',
       },
       data: {
         brandAndProducts : this.promotionProducts,
-        promotionNumber : event.target.id  
+        promotionNumber : event.target.id,
+        selectedProducts : this.selectedProducts  
       }
     });
   }

@@ -1,4 +1,4 @@
-import {ProductSKU} from './index'
+import { ProductSKU } from './product-sku-model';
 
 export class PromotionSKU {
     public promo_count:Number;
