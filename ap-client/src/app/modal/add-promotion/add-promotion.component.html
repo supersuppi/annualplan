@@ -1,6 +1,6 @@
 <div class="modal-body">
 
-  <div class="row">
+  <div class="row" *ngIf="numberOfTiles > 0;else addTiles">
     <div class="col-lg-12">
       <div class="col-lg-4" *ngFor="let tile of tilesArray">
           <button class="btn btn-success" id="{{tile}}" (click)="addPromotion($event)">
@@ -14,6 +14,7 @@
   <ng-template #addTiles>
     <div class="row">
       <div>Number of tiles selected : {{numberOfTiles}}</div>
+      <br/>
       <div>Provide the tiles to continue further.</div>
     </div>
   </ng-template>
