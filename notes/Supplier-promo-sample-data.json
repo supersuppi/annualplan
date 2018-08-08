@@ -1,42 +1,86 @@
 {
 	"promoyear":"2018",
+	"promo_id":1,
 	"userid":102,
 	"isEditable":true,
 	"version":1,
 	"products": [
 		{
-			"sku":"SKU1",
-			"name": "Sun cream"
-		}
+			"brand_name":"revolon_brand",
+			"product_skus": [
+				{
+					"id":1,
+					"sku":"SKU1",
+					"name": "Sun cream"
+				},
+				{
+					"id":2,
+					"sku":"SKU2",
+					"name": "cold cream"
+				}
+			]
+		 },
+		 {
+			"brand_name":"jhonson_brand",
+			"product_skus": [
+				{
+					"id":11,
+					"sku":"SKU11",
+					"name": "Baby cream"
+				},
+				{
+					"id":12,
+					"sku":"SKU12",
+					"name": "Baby oil"
+				},
+				{
+					"id":13,
+					"sku":"SKU13",
+					"name": "Baby powder"
+				}
+			]
+		 }
 	],
 	"ratecards": [
 		{  
 		   "pname":"Premier Plus Package",
 		   "pcode":"DC1",
 		   "prate":500,
+		   "max_tile":3,
+		   "max_product":3,
+		   "nash_rc":0,
 		   "dualmailers":[  
 			  {  
 				 "id":"DC1DM1",
-				 "value":0,
-				 "promosku": [
-					{
-						"sku":"SKU1",
-						"name": "Sun cream"
-					},
-					{
-						"sku":"SKU2",
-						"name": "Sun cream"
-					}
-				 ],
-				 "promobrandsku": {
-					"name":"revolon",
-					"products": [
+				 "value":2,
+				 "promosku": [ 
+				 {
+					"promo_count":1,
+					"products_selected":[
 						{
+							"id":1,
 							"sku":"SKU1",
 							"name": "Sun cream"
 						}
 					]
+				 },
+				 {
+					"promo_count":2,
+					"products_selected":[
+						{
+							"id":2,
+							"sku":"SKU2",
+							"name": "cold cream"
+						},
+						{
+							"id":13,
+							"sku":"SKU13",
+							"name": "Baby powder"
+						},
+					]
 				 }
+					
+				 ]
 			  },
 			  {  
 				 "id":"DC1DM2",

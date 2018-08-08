@@ -12,12 +12,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.gxh.apserver.security.JWTTokenFilterConfigurer;
 import com.gxh.apserver.security.JWTTokenProvider;
+
+import java.util.Arrays;
 
 /**
  * 
@@ -60,6 +65,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	public void configure(HttpSecurity http) throws Exception{
 		http.csrf()
 			.disable().cors().and()
+
 			// Creation of tokens is 'stateless' 
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().authorizeRequests()
@@ -91,5 +97,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
     public AuthenticationManager customAuthenticationManager() throws Exception {
         return authenticationManager();
     }
-	
+
+	/**
+	 *  Add this to remove cross origin error at client and The request was
+	 *  rejected because the URL was not normalized at server, when making post
+	 *  call from modal service(ngx-modal)
+	 *
+	 */
+	@Bean
+	public HttpFirewall defaultHttpFirewall() {
+		return new DefaultHttpFirewall();
+	}
 }

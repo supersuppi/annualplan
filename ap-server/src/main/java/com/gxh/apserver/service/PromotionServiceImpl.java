@@ -34,7 +34,7 @@ import com.gxh.apserver.repository.interfaces.PromotionRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
 import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
-import com.gxh.apserver.util.DateConverter;
+import com.gxh.apserver.util.DateUtil;
 
 @Service(value = "promotionService")
 public class PromotionServiceImpl implements PromotionService {
@@ -162,7 +162,7 @@ public class PromotionServiceImpl implements PromotionService {
         logger.info(">>> saveManagerComment");
         Optional<Supplier> supplier = supplierRepository.findById(promoCommentDTO.getSupplierid());
 
-        Date promoDate = DateConverter.convertFromStringTODate(promoCommentDTO.getPromoYear());
+        Date promoDate = DateUtil.convertFromStringTODate(promoCommentDTO.getPromoYear());
         Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoDate);
 
         //save comment
@@ -210,7 +210,7 @@ public class PromotionServiceImpl implements PromotionService {
 		Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
 		
 		if(supplier.isPresent()) {
-            Date promoDate = DateConverter.convertFromStringTODate(statusDTO.getPromoYear());
+            Date promoDate = DateUtil.convertFromStringTODate(statusDTO.getPromoYear());
 			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
 
 			Promotion currentPromo = promo.get();

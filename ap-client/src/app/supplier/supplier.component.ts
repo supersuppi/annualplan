@@ -17,7 +17,6 @@ export class SupplierComponent implements OnInit {
    private promoStatus:PromoStatus;
 
   constructor(private promotionService:PromotionService, 
-    private modalService: ModalService, 
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
