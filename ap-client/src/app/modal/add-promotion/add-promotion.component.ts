@@ -56,7 +56,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
       },
       data: {
         brandAndProducts : this.promotionProducts,
-        promotionNumber : event.target.id,
+        promo_count : event.target.id,
         selectedProducts : this.selectedProducts  
       }
     });

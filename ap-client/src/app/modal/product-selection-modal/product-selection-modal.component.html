@@ -21,7 +21,8 @@
         <div class="form-check-inline col-lg-5" *ngFor='let product of product_skus'>
           <label class="form-check-label">
             <input type="checkbox" class="form-check-input" name="promotionalProducts" id="product.id"
-              value="product.sku" (change)="onProductSelection($event, product)"> {{ product.name }}
+              value="product.sku" (change)="onProductSelection($event, product)"
+              [checked]="isSelected(product)"> {{ product.name }}
           </label>
         </div>
       </div>

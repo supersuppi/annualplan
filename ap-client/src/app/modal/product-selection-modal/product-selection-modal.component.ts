@@ -14,7 +14,8 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   private internalActionButtons = [];
   private product_skus : Array<ProductSKU>;
   private productArray : Array<Product>;
-  private selectedProducts : Array<Product> = [];
+  private selectedProducts : Array<ProductSKU>;
+  private promo_count : Number;
 
   constructor() { 
   }
@@ -28,6 +29,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     options.actionButtons = this.internalActionButtons;
     this.productArray = options.data['brandAndProducts'];
     this.selectedProducts = options.data['selectedProducts'];
+    this.promo_count = options.data['promo_count'];
     // Action buttons for modal
     this.internalActionButtons.push({
       text: 'Save Promotion',
@@ -52,7 +54,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   onValueChange(event) {
     this.productArray.forEach(product => {
       if (product.name === event.target.value) {
-        this.product_skus = product.product_skus;
+        return this.product_skus = product.product_skus;
       }
     });
     console.log(this.product_skus);
@@ -62,10 +64,21 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   onProductSelection(event, productSelection) {
     if( event.target.checked ) {
       this.selectedProducts.push(productSelection);
-    } else{
+    } else {
       let index = this.selectedProducts.indexOf(productSelection);
       this.selectedProducts.splice(index, 1);
     }
+  }
+
+  // Checkbox is "checked" if the product is already selected. 
+  isSelected(product) {
+    let isProductSelected : boolean = false;
+    this.selectedProducts.forEach(prod => {
+      if ( prod["sku"] === product["sku"] ) {
+        isProductSelected = true;
+      }
+    });
+    return isProductSelected;
   }
 
 }
