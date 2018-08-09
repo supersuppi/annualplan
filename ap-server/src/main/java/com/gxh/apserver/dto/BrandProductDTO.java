@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BrandProductDTO {
-    private String name;
+    private String brand_name;
     private List<ProductDTO> product_skus;
 }

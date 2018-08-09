@@ -28,7 +28,8 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
     this.productArray = options.data['brandAndProducts'];
-    this.selectedProducts = options.data['selectedProducts'];
+    this.selectedProducts = 
+      typeof options.data['selectedProducts'] === "undefined" ? [] : options.data['selectedProducts'];
     this.promo_count = options.data['promo_count'];
     // Action buttons for modal
     this.internalActionButtons.push({
@@ -52,8 +53,9 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   //dropdown value event change
   onValueChange(event) {
+    console.log(this.productArray);
     this.productArray.forEach(product => {
-      if (product.name === event.target.value) {
+      if (product.brand_name === event.target.value) {
         return this.product_skus = product.product_skus;
       }
     });

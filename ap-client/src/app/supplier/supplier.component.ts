@@ -74,7 +74,7 @@ export class SupplierComponent implements OnInit {
         values : this.promotion.ratecards[rowid].dualmailers[id].value,
         brandAndProducts : this.promotion.products,
         parentRef : this.viewContainer,
-        selectedProducts : this.promotion.ratecards[rowid].dualmailers[id]["promosku"]
+        dualMailer : this.promotion.ratecards[rowid].dualmailers[id]
       }
     });
   }
