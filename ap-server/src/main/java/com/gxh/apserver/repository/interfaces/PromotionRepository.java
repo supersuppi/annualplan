@@ -1,6 +1,7 @@
 package com.gxh.apserver.repository.interfaces;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,7 @@ public interface PromotionRepository extends JpaRepository<Promotion,Long> {
     Optional<Promotion> findSupplierPromotionByStatus(Supplier supplier,PromotionStatus status);
 
     @Query("select p from Promotion p where p.supplier = ?1")
-    Optional<Promotion> findSupplierPromotionByID(Supplier supplier);
+    Optional<List<Promotion>> findAllPromotionBySupplierID(Supplier supplier);
 
     @Query("select p from Promotion p where p.supplier = ?1 and p.year = ?2")
     Optional<Promotion> findSupplierPromotionByYear(Supplier supplier,Date date);
