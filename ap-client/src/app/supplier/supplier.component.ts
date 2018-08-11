@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewContainerRef} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {PromotionService} from '../services/index'
 import { Promotion, PromoStatus } from "../models/index";
 import { ModalDialogService } from 'ngx-modal-dialog';
@@ -15,23 +16,28 @@ export class SupplierComponent implements OnInit {
    private promotion:Promotion;
    private promoStatus:PromoStatus;
    private pageLoaded:Boolean; //to avoid promotion undefined error
+   private hasError:Boolean;
+   private activePromoYear:String;
 
-  constructor(private promotionService:PromotionService,
+  constructor(private promotionService:PromotionService,private _Activatedroute:ActivatedRoute,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
     this.pageLoaded =false;
-    this.getSupplierPromotion(1,'2018-01-01');
+    this.hasError =false;
+    this.activePromoYear = this._Activatedroute.snapshot.params['pyear'];
+    this.getSupplierPromotion(localStorage.getItem('supplierID'),this.activePromoYear);
   }
 
-  getSupplierPromotion(id:Number,promoyear:String) {
+  getSupplierPromotion(id:String,promoyear:String) {
     this.promotionService.getSupplierPromotions(id,promoyear).subscribe((sPromotion:Promotion) => {
       console.debug("Get SupplierPromotion Call Success");
       this.promotion = sPromotion;
       this.pageLoaded =true;
     },
     error => { 
-        console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
+      this.hasError = true;
+      console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
     });
   }
 
@@ -42,7 +48,8 @@ export class SupplierComponent implements OnInit {
       this.refreshData();
     },
     error => { 
-        console.error("ERROR! saveSupplierPromotion:getSupplierPromotion = "+error);
+      this.hasError = true;
+      console.error("ERROR! saveSupplierPromotion:getSupplierPromotion = "+error);
     });
   }
 
@@ -55,6 +62,7 @@ export class SupplierComponent implements OnInit {
       this.refreshData();
     },
     error => { 
+      this.hasError = true;
         console.error("ERROR! submitSupplierPromotion = "+error);
     });
   }
@@ -80,6 +88,6 @@ export class SupplierComponent implements OnInit {
   }
 
   refreshData() {
-    this.getSupplierPromotion(1,'2018-01-01');
+    this.getSupplierPromotion(localStorage.getItem('supplierID'),this.activePromoYear);
   }
 }

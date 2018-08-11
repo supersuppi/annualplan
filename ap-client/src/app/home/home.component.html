@@ -1,4 +1,9 @@
-<div class="container">
+<div class="container" *ngIf ="pageLoaded">
+  
+  <div class="d-flex flex-row" id="banner">
+    <div class="p-2"><h2>Vendor : {{homeContent.supplierName}}</h2></div>
+  </div>
+  
   <div class="card">
     <div class="card-body">
       <h5>My Dashboard</h5>
@@ -7,7 +12,7 @@
 
         <span class="column col-lg-3">
           <img src="../../assets/images/pieChart.png" alt="pie-chart">
-          <figcaption class="imgCaption"><a  [routerLink]="['/supplier']">Active Promotion</a></figcaption>
+          <figcaption class="imgCaption"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Active Promotion</a></figcaption>
         </span>
         <span  class="column col-lg-3">
           <img src="../../assets/images/barChart.png" alt="bar-chart">
@@ -64,9 +69,17 @@
       <h5>Promotional Timeline</h5>
       <div class="row">
         <!-- <form [formGroup]="form1"> -->
-            <nouislider [config]="someKeyboardConfig" [(ngModel)]="sample" (ngModelChange)="onChange($event)"></nouislider>
+            <nouislider [config]="someKeyboardConfig" [(ngModel)]="sample" (ngModelChange)="onSliderChange($event)"></nouislider>
         <!-- </form> -->
       </div>
     </div>
+
+    <div class="d-flex flex-row-reverse">
+      <button type="button" class="btn btn-success" (click)="displaySupplierPromotion()" >See Promotion</button>
+    </div>
+
+
   </div>
+
+
 </div>
