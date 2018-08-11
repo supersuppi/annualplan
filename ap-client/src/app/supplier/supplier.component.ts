@@ -8,8 +8,7 @@ import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.comp
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
-  styleUrls: ['./supplier.component.scss'],
-  providers: [PromotionService]
+  styleUrls: ['./supplier.component.scss']
 })
 export class SupplierComponent implements OnInit {
 
@@ -82,7 +81,7 @@ export class SupplierComponent implements OnInit {
         values : this.promotion.ratecards[rowid].dualmailers[id].value,
         brandAndProducts : this.promotion.products,
         parentRef : this.viewContainer,
-        selectedProducts : this.promotion.ratecards[rowid].dualmailers[id]["promosku"]
+        dualMailer : this.promotion.ratecards[rowid].dualmailers[id]
       }
     });
   }

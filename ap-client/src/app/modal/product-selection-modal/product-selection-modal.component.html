@@ -8,7 +8,7 @@
       </label>
       <span>
         <select name="brandDropdown" (change)="onValueChange($event)">
-          <option *ngFor="let brand of productArray" [ngValue]="brand.name" >{{brand.name}}</option>
+          <option *ngFor="let brand of productArray" [ngValue]="brand.brand_name" >{{brand.brand_name}}</option>
         </select>
       </span>
     </div>

@@ -2,6 +2,8 @@ import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angu
 import { Product } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 import { ProductSKU } from '../../models/product-sku-model';
+import { Subscription } from 'rxjs';
+import { PromotionService } from '../../services';
 
 @Component({
   selector: 'app-product-selection-modal',
@@ -17,7 +19,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   private selectedProducts : Array<ProductSKU>;
   private promo_count : Number;
 
-  constructor() { 
+  constructor(private promotionService : PromotionService) { 
   }
 
   ngOnInit() {
@@ -28,7 +30,8 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
     this.productArray = options.data['brandAndProducts'];
-    this.selectedProducts = options.data['selectedProducts'];
+    this.selectedProducts = 
+      typeof options.data['selectedProducts'] === "undefined" ? [] : options.data['selectedProducts'];
     this.promo_count = options.data['promo_count'];
     // Action buttons for modal
     this.internalActionButtons.push({
@@ -45,15 +48,19 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   }
 
+  // Save the products which are selected by supplier.
   savePromotion() {
-    console.log("Save promotion is clicked");
+    this.promotionService.saveSelectedProducts(
+      this.promo_count, this.selectedProducts
+    );
     return true;
   }
 
   //dropdown value event change
   onValueChange(event) {
+    console.log(this.productArray);
     this.productArray.forEach(product => {
-      if (product.name === event.target.value) {
+      if (product.brand_name === event.target.value) {
         return this.product_skus = product.product_skus;
       }
     });

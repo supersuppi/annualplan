@@ -1,4 +1,4 @@
-import { Product, BrandProduct,PromotionSKU } from "./index";
+import { PromotionSKU } from "./promo-sku-model";
 
 export class DualMailer {
     public id:String;
