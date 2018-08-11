@@ -36,6 +36,15 @@ export class AddPromotionComponent implements OnInit, IModalDialog, OnDestroy, A
     // this 'Subject' will add the selected product to dualMailer array.
     this.subs = this.promotionService.promoSubject.subscribe((data)=> {
       console.log(data);
+
+      for (let i = 0; i < this.dualMailer.promosku.length; i++) {
+        // Remove the promotion sku before adding a new one.
+        if ( this.dualMailer.promosku[i].promo_count == data["promo_count"] ) {
+          this.dualMailer.promosku.splice(i,1);
+          break;
+        }
+      }
+
       this.dualMailer.promosku.push(data);
     });
   }
