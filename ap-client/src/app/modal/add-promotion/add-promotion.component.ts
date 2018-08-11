@@ -1,10 +1,11 @@
-import { Component, OnInit, ComponentRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ComponentRef, ViewEncapsulation, OnDestroy, AfterViewInit } from '@angular/core';
 import { IModalDialog, IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 import { ModalService } from '../../shared/modal-services/ModalService';
 import { ProductSelectionModalComponent } from '../product-selection-modal/product-selection-modal.component';
 import { ProductSKU } from '../../models/product-sku-model';
 import { DualMailer } from '../../models';
+import { PromotionService } from '../../services';
 
 @Component({
   selector: 'app-add-promotion',
@@ -12,7 +13,7 @@ import { DualMailer } from '../../models';
   styleUrls: ['./add-promotion.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AddPromotionComponent implements OnInit, IModalDialog {
+export class AddPromotionComponent implements OnInit, IModalDialog, OnDestroy, AfterViewInit {
 
   private numberOfTiles : Number;
   private tilesArray : Array<Number> = [];
@@ -20,12 +21,23 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   private promotionProducts: any;
   private parentRef : any;
   private dualMailer : DualMailer;
+  private subs : Subscription;
   
   constructor(private modalService: ModalService, 
-    private modalDialogService: ModalDialogService) { }
+    private modalDialogService: ModalDialogService,
+    private promotionService :PromotionService) { }
 
   ngOnInit() {
     this.createTilesArray();
+  }
+
+  // This method is executed when the child view is displayed completely.
+  ngAfterViewInit () {
+    // this 'Subject' will add the selected product to dualMailer array.
+    this.subs = this.promotionService.promoSubject.subscribe((data)=> {
+      console.log(data);
+      this.dualMailer.promosku.push(data);
+    });
   }
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
@@ -78,6 +90,10 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
     for(let i =0;i < this.numberOfTiles; i++) {
       this.tilesArray.push(i+1);
     }
+  }
+
+  ngOnDestroy () {
+    this.subs.unsubscribe();
   }
 
 }

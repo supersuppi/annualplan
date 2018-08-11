@@ -2,6 +2,8 @@ import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angu
 import { Product } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 import { ProductSKU } from '../../models/product-sku-model';
+import { Subscription } from 'rxjs';
+import { PromotionService } from '../../services';
 
 @Component({
   selector: 'app-product-selection-modal',
@@ -17,7 +19,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   private selectedProducts : Array<ProductSKU>;
   private promo_count : Number;
 
-  constructor() { 
+  constructor(private promotionService : PromotionService) { 
   }
 
   ngOnInit() {
@@ -46,8 +48,11 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   }
 
+  // Save the products which are selected by supplier.
   savePromotion() {
-    console.log("Save promotion is clicked");
+    this.promotionService.saveSelectedProducts(
+      this.promo_count, this.selectedProducts
+    );
     return true;
   }
 
