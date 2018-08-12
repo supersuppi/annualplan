@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,10 +24,9 @@ public class Supplier {
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "supplier_captain_id", referencedColumnName = "id")
-    private User supplierCaptain;
-
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier_user_id", referencedColumnName = "id")
-    private User supplier;
+    private User supplierAppUser;
+
+    @ManyToMany(fetch=FetchType.LAZY, mappedBy = "suppliers")
+    private Set<Manager> managers = new HashSet<Manager>();
 }
