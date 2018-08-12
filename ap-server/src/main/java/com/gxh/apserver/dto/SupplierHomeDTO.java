@@ -1,6 +1,7 @@
 package com.gxh.apserver.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gxh.apserver.entity.Manager;
 import lombok.Data;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public class SupplierHomeDTO extends HomeDTO {
     private String supplierName;
     private Long supplierCode;
     private Long supplierID;
+    private List<ManagerDTO> managers;
 }
