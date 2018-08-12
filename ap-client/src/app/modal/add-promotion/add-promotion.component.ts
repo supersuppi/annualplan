@@ -88,7 +88,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog, OnDestroy, A
   getSelectedProdBasedOnPromoCount (num : Number) : Array<ProductSKU>{
 
     for(let i=0; i < this.dualMailer["promosku"].length; i++) {
-      if( this.dualMailer.promosku[i].promo_count === num ) {
+      if( this.dualMailer.promosku[i].promo_count == num ) {
         return this.dualMailer.promosku[i].products_selected;
       }
     }

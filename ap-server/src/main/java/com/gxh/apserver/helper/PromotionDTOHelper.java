@@ -86,7 +86,7 @@ public class PromotionDTOHelper {
             ratecardDms.get().forEach(promotionLevelRateCard ->
                     rcdmMap.put(promotionLevelRateCard.getRateCard().toString()+promotionLevelRateCard.getDualMailer().toString(),promotionLevelRateCard.getValue()));
         }
-
+        
         Map<String, List<ProductDTO>> mapProduct = new HashMap<>();
         List<BrandProductDTO> brandProductDTOS = new ArrayList<>();
 
@@ -125,7 +125,46 @@ public class PromotionDTOHelper {
                     dto.setValue(0);
                 }
                 if(promoskus.isPresent()) {
-                   //TODO:Loop and set values
+                	List<PromotionLevelSKU> promotionSKUList = promoskus.get();
+                	List<ProductDTO> productDTOList = new ArrayList<>();
+                	Map<Integer, List<ProductDTO>> map = new HashMap<>();
+                	List<PromoSKUDTO> promoSKUList = new ArrayList<>();
+                	
+                	for (int i = 0; i < promotionSKUList.size(); i++) {
+                		if ( (promotionSKUList.get(i).getDualMailer() == dm.getId()) 
+                				&& (promotionSKUList.get(i).getRateCard() == rateCard.getId())) {
+                			
+                			for ( int j = 0; j < products.get().size(); j++ ) {
+                				ProductDTO productDTO = new ProductDTO();
+                				if ( promotionSKUList.get(i).getProduct() == products.get().get(j).getId() ) {
+                					productDTO.setId(products.get().get(j).getId());
+                					productDTO.setName(products.get().get(j).getMarketingShortName());
+                					productDTO.setSku(products.get().get(j).getGXHID());
+                					
+                					// Add the promo count and products selected to a map. 
+                					if (map.containsKey(promotionSKUList.get(i).getPromoCount())) {
+                						productDTOList = map.get(promotionSKUList.get(i).getPromoCount());
+                						productDTOList.add(productDTO);
+                					} else {
+                						productDTOList.clear();
+                						productDTOList.add(productDTO);
+                					}
+                					map.put(promotionSKUList.get(i).getPromoCount(), productDTOList);
+                					break;
+                				}
+                			}
+                		}
+                	}
+                	
+                	for (Integer key : map.keySet()) {
+                		PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
+                		promoSKUDTO.setPromo_count(key);
+                		promoSKUDTO.setProducts_selected(map.get(key));
+                		promoSKUList.add(promoSKUDTO);
+                	}
+                	
+                	dto.setPromosku(promoSKUList);
+                	
                 } else {
                     dto.setPromosku(new ArrayList<PromoSKUDTO>());
                 }
