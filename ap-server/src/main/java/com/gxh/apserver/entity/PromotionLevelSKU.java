@@ -26,4 +26,7 @@ public class PromotionLevelSKU {
 
     @Column(name = "product_id")
     private Long product;
+    
+    @Column(name = "promo_count")
+    private int promoCount;
 }

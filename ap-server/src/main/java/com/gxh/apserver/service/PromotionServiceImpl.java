@@ -1,31 +1,48 @@
 package com.gxh.apserver.service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.repository.interfaces.*;
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
+import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Product;
+import com.gxh.apserver.entity.PromoComments;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.PromotionLevelRateCard;
+import com.gxh.apserver.entity.PromotionLevelSKU;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.helper.PromotionDTOHelper;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.ProductRepository;
+import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
+import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
 import com.gxh.apserver.util.DateUtil;
-
-import javax.transaction.Transactional;
 
 @Service(value = "promotionService")
 public class PromotionServiceImpl implements PromotionService {
@@ -116,7 +133,9 @@ public class PromotionServiceImpl implements PromotionService {
                     prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
                      //Calculate budget ( Rateplan cost x number of tiles
                     totalBudget += rateCard.getRateCardDollar() * promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue();
-
+                    
+                    promoDTO.getRatecards().get(i).getDualmailers().get(j).getPromosku();
+                    
                     promotionLevelRateCardRepository.save(prc);
                 }
             }
@@ -146,6 +165,10 @@ public class PromotionServiceImpl implements PromotionService {
                     totalBudget += rateCard.getRateCardDollar() * promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue();
 
                     promotionLevelRateCardRepository.save(prc);
+                    
+                    // Save the selected products.
+                    savePromotionSku(dm.getId(), currentPromotion.get().getId(), rateCard.getId(),
+                    		promoDTO.getRatecards().get(i).getDualmailers().get(j).getPromosku());
                 }
             }
             //Update Budget
@@ -155,6 +178,28 @@ public class PromotionServiceImpl implements PromotionService {
         }
 
         return new Boolean(true);
+    }
+    
+    // Save the products selected by the supplier.
+	private void savePromotionSku(Long dmId, Long promoId, Long rcId,
+			List<PromoSKUDTO> promoSkuList) {
+		
+		PromotionLevelSKU levelSKU;
+		
+		for (int i = 0; i < promoSkuList.size(); i++) {
+			List<ProductDTO> selectedProductsList = promoSkuList.get(i).getProducts_selected();
+			for ( int j = 0; j < selectedProductsList.size(); j++) {
+				levelSKU = new PromotionLevelSKU(); 
+				
+				levelSKU.setDualMailer(dmId);
+				levelSKU.setProduct(selectedProductsList.get(j).getId());
+				levelSKU.setPromo(promoId);
+				levelSKU.setRateCard(rcId);
+				levelSKU.setPromoCount(promoSkuList.get(i).getPromo_count());
+				
+				promotionLevelSKURepository.save(levelSKU);
+			}
+		}
     }
 
     @Override
