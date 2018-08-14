@@ -27,8 +27,7 @@ import { ProductSelectionModalComponent } from './modal/product-selection-modal/
 import { ModalDialogModule } from 'ngx-modal-dialog';
 import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/promotion-reject-modal.component';
 import { AddPromotionComponent } from './modal/add-promotion/add-promotion.component';
-import { PromotionService } from './services';
-
+import { SupplierPromotionService } from './services/supplier.promotion.service';
 
 @NgModule({
   declarations: [
@@ -68,7 +67,7 @@ import { PromotionService } from './services';
       useClass: HttpRequestInterceptor,
       multi: true
     }, RoleDropdownResolver, RoleGuardService, AuthService, JwtHelper, ProfileDataResolver,
-    PromotionService
+    SupplierPromotionService
   ],
   bootstrap: [AppComponent]
 })
