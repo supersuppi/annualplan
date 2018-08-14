@@ -23,14 +23,27 @@ public class PromoComments {
     @Column(name = "comment")
     private String comment;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at")
+    @CreatedDate
+    private Date createdAt = new Date();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
+    private Supplier supplier;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private Manager manager;
+
+    @Column(name = "sender_id")
+    private Long sender;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "promotion_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Promotion promotion;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    @CreatedDate
-    private Date createdAt = new Date();
+
 
 }

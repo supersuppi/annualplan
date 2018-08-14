@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('validUser', 'true');
     localStorage.setItem('token', response.headers.get('Authorization'));
     localStorage.setItem('username', this.tokenHelper.decodeToken(localStorage.getItem('token')).sub);
+    localStorage.setItem('role', this.tokenHelper.decodeToken(localStorage.getItem('token')).auth[0].authority);
   }
 
 }

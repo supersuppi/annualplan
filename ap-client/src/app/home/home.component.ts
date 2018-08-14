@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@an
 import {FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import {HomeService} from '../services/index'
-import { UserHomeData } from '../models/index';
+import { UserHomeData, SupplierHomeData, ManagerHomeData, HomeComment } from '../models/index';
 
 @Component({
   selector: 'app-home',
@@ -13,9 +13,10 @@ import { UserHomeData } from '../models/index';
 })
 export class HomeComponent implements OnInit {
   private homeContent:UserHomeData;
+  private comments:Array<HomeComment>;
+
   private pageLoaded:Boolean; //to avoid promotion undefined error
   sample: number;
-  rows : any[];
   selectedYear:Number;
 
   someKeyboardConfig: any = {
@@ -38,12 +39,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.sample = this.someKeyboardConfig.start;
-    this.rows = [
-      {sender: "Sam", statusMessage: "Plan is accepted", date: new Date()},
-      {sender: "Mark", statusMessage: "Plan is Ok", date: new Date()},
-      {sender: "Ram", statusMessage: "Plan is accepted", date: new Date()},
-    ];
-
     this.pageLoaded =false;
     this.getHomePageData(localStorage.getItem('username'));
   }
@@ -51,17 +46,32 @@ export class HomeComponent implements OnInit {
   
   getHomePageData(email:String) {
     console.debug("getHomePageData");
-    this.homeService.getUserHomePageData(email).subscribe((homeData:UserHomeData) => {
-      console.debug("Get getHomePageData Call Success");
-      console.debug(homeData);
-      this.homeContent = homeData;
-      // share data
-      localStorage.setItem('supplierID',this.homeContent.supplierID.toString());
-      this.pageLoaded =true;
-    },
-    error => { 
-        console.error("ERROR! HomeComponent:getHomePageData = "+error);
-    });
+ 
+    if(localStorage.getItem('role') === 'ROLE_VENDOR') {
+      this.homeService.getUserHomePageData(email).subscribe((homeData:SupplierHomeData) => {
+        console.debug("Get getHomePageData for supplier Call Success");
+        console.debug(homeData);
+        this.homeContent = homeData;
+        this.comments = (homeData.comments == null ? new Array() : homeData.comments);
+        localStorage.setItem('supplierID', homeData.supplierID.toString());
+        this.pageLoaded =true;
+      },
+      error => { 
+          console.error("ERROR! HomeComponent:getHomePageData for supplier = "+error);
+      });
+    } else {
+      this.homeService.getUserHomePageData(email).subscribe((homeData:ManagerHomeData) => {
+        console.debug("Get getHomePageData for Manager Call Success");
+        console.debug(homeData);
+        this.homeContent = homeData;
+        localStorage.setItem('managerID', homeData.managerID.toString());
+        this.pageLoaded =true;
+      },
+      error => { 
+          console.error("ERROR! HomeComponent:getHomePageData for Manager = "+error);
+      });
+    }
+
   }
 
   onSliderChange(event : any) {

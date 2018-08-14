@@ -6,4 +6,5 @@ import lombok.Data;
 public class HomeDTO {
     private Long userID;
     private String userName;
+    private String role;
 }

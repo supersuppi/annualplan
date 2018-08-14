@@ -25,10 +25,11 @@ export class SupplierComponent implements OnInit {
     this.pageLoaded =false;
     this.hasError =false;
     this.activePromoYear = this._Activatedroute.snapshot.params['pyear'];
-    this.getSupplierPromotion(localStorage.getItem('supplierID'),this.activePromoYear);
+    let sid:Number = Number(localStorage.getItem('supplierID'))
+    this.getSupplierPromotion(sid,this.activePromoYear);
   }
 
-  getSupplierPromotion(id:String,promoyear:String) {
+  getSupplierPromotion(id:Number,promoyear:String) {
     this.promotionService.getSupplierPromotions(id,promoyear).subscribe((sPromotion:Promotion) => {
       console.debug("Get SupplierPromotion Call Success");
       this.promotion = sPromotion;
@@ -87,6 +88,6 @@ export class SupplierComponent implements OnInit {
   }
 
   refreshData() {
-    this.getSupplierPromotion(localStorage.getItem('supplierID'),this.activePromoYear);
+    this.getSupplierPromotion(Number(localStorage.getItem('supplierID')),this.activePromoYear);
   }
 }
