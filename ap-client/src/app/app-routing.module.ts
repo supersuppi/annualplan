@@ -16,13 +16,15 @@ import { ProfileDataResolver } from "./route-guards/profile-resolve";
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
     { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent/*, canActivate: [RoleGuardService]*/},
+    { path: 'home', component: HomeComponent, canActivate: [RoleGuardService]},
+   // { path: 'home', component: HomeComponent},
     {path: 'profile', component: ProfileComponent, resolve: {
         profile : ProfileDataResolver
     }},
-    { path: 'supplier', component: SupplierComponent },
-    { path: 'manager', component: ManagerComponent },
-    { path: 'admin', component: AdmindashboardComponent, canActivate: [RoleGuardService],
+    { path: 'supplier', component: SupplierComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_VENDOR'}},
+    { path: 'supplier/:pyear', component: SupplierComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_VENDOR'}},
+    { path: 'manager', component: ManagerComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_CM'}},
+    { path: 'admin', component: AdmindashboardComponent,
         children: [
             {path: 'register', component: RegisterdashboardComponent, resolve:{
                 roles : RoleDropdownResolver

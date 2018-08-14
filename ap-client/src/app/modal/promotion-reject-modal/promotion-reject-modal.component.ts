@@ -38,7 +38,7 @@ export class PromotionRejectModalComponent implements OnInit {
   }
 
   sendMessage():boolean {
-    console.log("Message Sent");this.promoComment
+    console.log("Message Sent");
     
     this.promotionService.savePromotionRejectComment(this.promoComment).subscribe((response:any) => {
       console.debug("save PromotionRejectComment Call Success");

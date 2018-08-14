@@ -11,3 +11,7 @@ export * from './promo-sku-model';
 export * from './assigned-user-model';
 export * from './user-home-model';
 export * from './promoyear-details-model';
+export * from './supplier-home-model';
+export * from './manager-home-model'
+export * from './manager-model';
+export * from './home-comment-model';

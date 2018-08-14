@@ -3,6 +3,16 @@
   <div class="d-flex flex-row" id="banner">
     <div class="p-2"><h2>Vendor : {{homeContent.supplierName}}</h2></div>
   </div>
+
+  <div *ngIf="homeContent.role === 'CM'">
+    <label>Vendors: </label>
+    <select (change)="filterForeCasts($event.target.value)">
+        <option value="0">--All--</option>
+        <option *ngFor="let vendor of summaries" value={{summary}}>
+            {{summary}}
+        </option>
+    </select>
+  </div>
   
   <div class="card">
     <div class="card-body">
@@ -10,15 +20,21 @@
       <!-- Image components -->
       <div class="row col-lg-12">
 
-        <span class="column col-lg-3">
+        <span class="column col-lg-3" *ngIf='homeContent.activePromoYear != null'>
           <img src="../../assets/images/pieChart.png" alt="pie-chart">
-          <figcaption class="imgCaption"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Active Promotion</a></figcaption>
+          <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Active Promotion</a></figcaption>
         </span>
+
+        <span class="column col-lg-3" *ngIf='homeContent.activePromoYear == null'>
+          <img src="../../assets/images/pieChart.png" alt="pie-chart">
+          <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">No Active Promotion</a></figcaption>
+        </span>
+
         <span  class="column col-lg-3">
           <img src="../../assets/images/barChart.png" alt="bar-chart">
           <figcaption class="imgCaption">Budget vs Actual</figcaption>
         </span>
-        <span  class="column col-lg-3">
+        <span  class="column col-lg-3" *ngIf="homeContent.role === 'CM'">
           <img src="../../assets/images/calendar.png" alt="calendar" class="imgWithDropdown">
           <figcaption class="dropdownCaption">
               <select name="" id="">
@@ -28,7 +44,7 @@
               </select>
           </figcaption>
         </span>
-        <span  class="column col-lg-3">
+        <span  class="column col-lg-3" *ngIf="homeContent.role === 'CM'">
           <img src="../../assets/images/tags.png" alt="tags" class="imgWithDropdown">
           <figcaption class="dropdownCaption">
               <select name="" id="">
@@ -43,27 +59,28 @@
       <br>
       <!-- Inbox Component -->
       <h5> Inbox</h5>
-      <div class="row col-lg-12">
-          <div class="table-responsive">
+      <div class="row col-lg-12" *ngIf="comments.length != 0">
+          <div class="table-responsive" >
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th>Select</th>
                     <th>Sender</th>
                     <th>Message</th>
                     <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let row of rows; let i = index;">
-                    <td><input type="checkbox" id="i"></td>
-                    <td>{{row.sender}}</td>
-                    <td>{{row.statusMessage}}</td>
-                    <td>{{row.date}}</td>
+                  <tr *ngFor="let row of comments; let i = index;">
+                    <td>{{row.senderName}}</td>
+                    <td>{{row.comment}}</td>
+                    <td>{{row.sentOn}}</td>
                   </tr>
                 </tbody>
               </table>
           </div>
+      </div>
+      <div class="row col-lg-12" *ngIf="comments.length === 0">
+        <p>No Messages!</p>
       </div>
       <!-- Slider component -->
       <h5>Promotional Timeline</h5>
