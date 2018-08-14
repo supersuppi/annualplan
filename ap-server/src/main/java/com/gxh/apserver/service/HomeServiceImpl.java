@@ -32,6 +32,8 @@ public class HomeServiceImpl implements HomeService {
     private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private PromoCommentRepository promoCommentRepository;
 
     @Override
     public HomeDTO getUserHomeContent(String emailAddress) throws ResourceNotFoundException {
@@ -41,11 +43,15 @@ public class HomeServiceImpl implements HomeService {
             SupplierHomeDTO supHomeDTO = new SupplierHomeDTO();
             supHomeDTO.setUserID(user.getId());
             supHomeDTO.setUserName(user.getEmail());
+            supHomeDTO.setRole(user.getRole().getName());
+
             return getDetailsForSupplier(user,supHomeDTO);
         } else if(user.getRole().getName().equalsIgnoreCase("CM")) {
             ManagerHomeDTO managerHomeDTO = new ManagerHomeDTO();
             managerHomeDTO.setUserID(user.getId());
             managerHomeDTO.setUserName(user.getEmail());
+            managerHomeDTO.setRole(user.getRole().getName());
+
             return getDetailsForManager(user,managerHomeDTO);
         } else {
             throw new ResourceNotFoundException("No user details found");
@@ -80,6 +86,7 @@ public class HomeServiceImpl implements HomeService {
 
     protected SupplierHomeDTO getSupplierDetails(Supplier supplier,SupplierHomeDTO supHomeDTO){
         Optional<List<Promotion>> promotions = promotionRepository.findAllPromotionBySupplierID(supplier);
+        Optional<List<PromoComments>> comments = promoCommentRepository.findAllCommentsBySupplierID(supplier);
 
         supHomeDTO.setSupplierID(supplier.getId());
         supHomeDTO.setSupplierName(supplier.getName());
@@ -97,6 +104,14 @@ public class HomeServiceImpl implements HomeService {
             promoYears.add(new PromoYearDetailDTO(promo.getYear().toString(), BudgetCalculator.getBudget(promoBudget.get())));
         });
         supHomeDTO.setPromoYearDetails(promoYears);
+        // Set Comments
+        if(comments.isPresent()) {
+            List<SupManCommentDTO> commentsDTO = new ArrayList<>();
+
+            comments.get().forEach(comment ->
+                    commentsDTO.add(new SupManCommentDTO(comment.getManager().getName(),comment.getComment(),comment.getCreatedAt())));
+            supHomeDTO.setComments(commentsDTO);
+        }
         return supHomeDTO;
     }
 }

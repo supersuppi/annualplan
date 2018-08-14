@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.gxh.apserver.entity.*;
+import com.gxh.apserver.repository.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,27 +22,9 @@ import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
-import com.gxh.apserver.entity.DualMailer;
-import com.gxh.apserver.entity.Product;
-import com.gxh.apserver.entity.PromoComments;
-import com.gxh.apserver.entity.Promotion;
-import com.gxh.apserver.entity.PromotionLevelRateCard;
-import com.gxh.apserver.entity.PromotionLevelSKU;
-import com.gxh.apserver.entity.RateCard;
-import com.gxh.apserver.entity.Supplier;
-import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.helper.PromotionDTOHelper;
-import com.gxh.apserver.repository.interfaces.DualMailerRepository;
-import com.gxh.apserver.repository.interfaces.ProductRepository;
-import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
-import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
-import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
-import com.gxh.apserver.repository.interfaces.PromotionRepository;
-import com.gxh.apserver.repository.interfaces.RateCardRepository;
-import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
-import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
 import com.gxh.apserver.util.DateUtil;
 
@@ -52,6 +36,8 @@ public class PromotionServiceImpl implements PromotionService {
     private RateCardRepository rateCardRepository;
     @Autowired
     private SupplierRepository supplierRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
     @Autowired
     private DualMailerRepository dualMailerRepository;
     @Autowired
@@ -175,6 +161,7 @@ public class PromotionServiceImpl implements PromotionService {
             SupplierPromotionBudget CurrentPromoBudget = promoBudget.get();
             CurrentPromoBudget.setTotalBudget(Long.valueOf(totalBudget));
             supplierPromotionBudgetRepository.save(CurrentPromoBudget);
+
         }
 
         return new Boolean(true);
@@ -206,6 +193,7 @@ public class PromotionServiceImpl implements PromotionService {
     public boolean saveManagerComment(PromoCommentDTO promoCommentDTO) throws ParseException {
         logger.info(">>> saveManagerComment");
         Optional<Supplier> supplier = supplierRepository.findById(promoCommentDTO.getSupplierid());
+        Optional<Manager> manager = managerRepository.findById(promoCommentDTO.getManagerid());
 
         Date promoDate = DateUtil.convertFromStringTODate(promoCommentDTO.getPromoYear());
         Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoDate);
@@ -213,6 +201,8 @@ public class PromotionServiceImpl implements PromotionService {
         //save comment
         PromoComments newComment = new PromoComments();
         newComment.setPromotion(currentPromotion.get());
+        newComment.setSupplier(supplier.get());
+        newComment.setManager(manager.get());
         newComment.setComment(promoCommentDTO.getComment());
 
         promoCommentRepository.save(newComment);

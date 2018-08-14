@@ -14,4 +14,5 @@ public class SupplierHomeDTO extends HomeDTO {
     private Long supplierCode;
     private Long supplierID;
     private List<ManagerDTO> managers;
+    private List<SupManCommentDTO> comments;
 }

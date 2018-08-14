@@ -28,7 +28,7 @@ public class Promotion {
     private Date year;
 
     @Enumerated(EnumType.STRING)
-	@Column(name = "status",length=10)
+	@Column(name = "status",length=20)
     private PromotionStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
