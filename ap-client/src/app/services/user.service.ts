@@ -5,17 +5,32 @@ import { Observable, Subject } from "rxjs";
 import { UserContact } from "../models/user-contact-model";
 import { map } from "rxjs/operators";
 
+// interface to create an object of required attributes.
+interface UserInfoHeader {
+    loggedIn? : boolean;
+    firstName? : String;
+    lastName? : String;
+    phone? : Number;
+}
+
 @Injectable()
 export class UserService {
 
-    userLoggedIn = new Subject<boolean>();
+    userLoggedIn = new Subject<UserInfoHeader>();
+    showNameInHeader = new Subject<any>();
+    public userInfo : UserInfoHeader = {}; 
     userUrl = "http://localhost:8008/apserver/user";
 
     constructor(private httpClient : HttpClient) {}
 
     setLoggedInUser() {
-        localStorage.getItem('validUser') ? 
-            this.userLoggedIn.next(true) : this.userLoggedIn.next(false);
+        
+        if (localStorage.getItem('validUser')) {
+            this.userInfo.loggedIn=true;
+        } else {
+            this.userInfo.loggedIn=false;
+        }
+        this.userLoggedIn.next(this.userInfo);
     }
 
     registerUser(userRegisterFormValues : Object) : Observable<any>{
@@ -39,4 +54,9 @@ export class UserService {
     getUserProfile(emailAddress: string): Observable<UserContact> {
         return this.httpClient.get<UserContact>(this.userUrl+"/profile/"+emailAddress);
     }
+
+    getUser(emailAddress: string): Observable<UserContact> {
+        return this.httpClient.get<UserContact>(this.userUrl+"/"+emailAddress);
+    }
+
 }

@@ -2,8 +2,8 @@ import { User } from "./user-model";
 
 export class UserContact {
 
-    public firstName: String;
-    public lastName: String;
+    public firstName: string;
+    public lastName: string;
     public phone: Number;
 
 }

@@ -3,7 +3,7 @@
 
     <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex" *ngIf="loggedInUser">
         <li class="dropdown" appDropdown>
-            <a style="cursor: pointer;" class="dropdown-toggle textcolor" role="button">Hi, User<span class="caret"></span></a>
+            <a style="cursor: pointer;" class="dropdown-toggle textcolor" role="button">Hi {{displayName}}<span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a style="cursor: pointer;" (click)="onShowDashboard()">My Dashboard</a></li>
                 <li><a style="cursor: pointer;" (click)="onShowProfile()">Profile</a></li>

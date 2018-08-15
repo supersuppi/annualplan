@@ -71,9 +71,13 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value="/profile/{email}")
 	public ResponseEntity<UserDTO> userProfile(@PathVariable("email") String emailAddress ) {
-		
 		UserDTO userDTO = userService.getUserProfile(emailAddress);
-		
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/{email}")
+	public ResponseEntity<UserDTO> getUserInfo( @PathVariable("email") String emailAddress ) {
+		UserDTO userDTO = userService.getUserProfile(emailAddress);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 	

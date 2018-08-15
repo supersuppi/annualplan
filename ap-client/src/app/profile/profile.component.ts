@@ -5,7 +5,7 @@ import { contactValidator } from '../shared/validators/contact-validator';
 import { passwordMatchValidator } from '../shared/validators/passwordmatch-validator';
 import { UserService } from '../services/user.service';
 import { JwtHelper } from '../helper/JWTHelper';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProfilePasswordUpdatesValidator } from '../shared/validators/passwordsdependency-validator';
 
 @Component({
@@ -21,18 +21,13 @@ export class ProfileComponent implements OnInit {
   initialFormData : any;
 
   constructor(private userService : UserService, 
-      private route: ActivatedRoute, private tokenHelper : JwtHelper) { }
+    private route: ActivatedRoute, private tokenHelper : JwtHelper,
+    private router : Router) { }
 
   ngOnInit() {
-
     this.profileData = this.route.snapshot.data['profile'];
     this.createFormControls();
     this.presetFormValues();
-
-    // this.userProfileGroup.valueChanges.subscribe((data)=> {
-    //   console.log("New value changes are :"+data);
-    // });
-
   }
 
   onProfileSubmit() {
@@ -65,6 +60,7 @@ export class ProfileComponent implements OnInit {
 
   resetChanges() {
     console.log("reset is clicked");
+    this.router.navigate(['\home']);
     this.userProfileGroup.reset(this.initialFormData);
   }
 

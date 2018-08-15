@@ -6,6 +6,7 @@ import { UserService } from '../services/user.service';
 import { HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelper } from "../helper/JWTHelper";
+import { UserContact } from '../models/user-contact-model';
 
 @Component({
   selector: 'app-login',
@@ -29,11 +30,22 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
+    // Post call to authenticate the user.
     this.userService.loginUser(this.userLoginGroup.value).subscribe(
       (response: HttpResponse<any>) => {
-        this.storeUserInLocalStorage(response);
-        console.log("Login Success");
-        this.router.navigate(['/home']);
+
+        // Get call to get the user details to show in header of the application.
+        this.userService.getUser(this.userLoginGroup.value['email']).subscribe(
+          (data) => {
+            console.log(data);
+            this.storeUserInLocalStorage(response, data);
+            console.log("Login Success");
+            this.router.navigate(['/home']);
+        }, err => {
+          console.log("Something went wrong");
+          this.invalidCreds = true;
+        }); 
+
       }, error => {
         console.log("Login Failed");
         this.invalidCreds = true;
@@ -41,12 +53,13 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  storeUserInLocalStorage(response: any) {
+  storeUserInLocalStorage( response: HttpResponse<any>, data : UserContact ) {
     console.log("store User deatils In LocalStorage");
     localStorage.setItem('validUser', 'true');
     localStorage.setItem('token', response.headers.get('Authorization'));
     localStorage.setItem('username', this.tokenHelper.decodeToken(localStorage.getItem('token')).sub);
     localStorage.setItem('role', this.tokenHelper.decodeToken(localStorage.getItem('token')).auth[0].authority);
+    localStorage.setItem('name', data.lastName+","+data.firstName);
   }
 
 }

@@ -12,6 +12,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   subscription : Subscription;
   loggedInUser : boolean;
+  displayName : string;
 
   constructor(private router : Router, 
       private userService : UserService) { }
@@ -19,9 +20,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log("Header component is loaded");
     this.subscription = this.userService.userLoggedIn.subscribe(
-      (isUserValid) => {
-        console.log(isUserValid);
-        this.loggedInUser = isUserValid;
+      (data) => {
+        console.log(data.loggedIn);
+        this.loggedInUser = data.loggedIn;
+        this.displayName = localStorage.getItem('name');
       }
     );
   }
