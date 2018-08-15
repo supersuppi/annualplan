@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angular/core';
-import { Product } from '../../models';
+import { Product, AddOrRemoveProducts } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 import { ProductSKU } from '../../models/product-sku-model';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,12 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   private product_skus : Array<ProductSKU>;
   private productArray : Array<Product>;
   private selectedProducts : Array<ProductSKU>;
-  private promo_count : Number;
+  private deSelectedProducts : Array<ProductSKU> = [];
+  private newSelectedProducts : Array<ProductSKU> = [];
+  private promoCount : Number;
+  private rowId : Number;
+  private dmId : Number;
+  private promoId : Number;
 
   constructor(private promotionService : SupplierPromotionService) { 
   }
@@ -32,7 +37,10 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     this.productArray = options.data['brandAndProducts'];
     this.selectedProducts = 
       typeof options.data['selectedProducts'] === "undefined" ? [] : options.data['selectedProducts'];
-    this.promo_count = options.data['promo_count'];
+    this.promoCount = options.data['promo_count'];
+    this.rowId = options.data['rowId'];
+    this.dmId = options.data['dmId'];
+    this.promoId = options.data['promoId'];
     // Action buttons for modal
     this.internalActionButtons.push({
       text: 'Save Promotion',
@@ -50,10 +58,27 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
 
   // Save the products which are selected by supplier.
   savePromotion() {
-    this.promotionService.saveSelectedProducts(
-      this.promo_count, this.selectedProducts
-    );
-    return true;
+    this.promotionService.saveOrRemoveSelectedProducts(this.constructDataToUpdate()).subscribe(
+      () => {
+        console.log("Db updated");
+      }, err => {
+        console.log("Something went wrong");
+      });
+
+      return true;
+  }
+
+  constructDataToUpdate () {
+    let productsSaveOrRemove : AddOrRemoveProducts = new AddOrRemoveProducts(); 
+
+    productsSaveOrRemove.dmId = this.dmId;
+    productsSaveOrRemove.promoId = this.promoId;
+    productsSaveOrRemove.rcId = this.rowId;
+    productsSaveOrRemove.productsSelected = this.newSelectedProducts;
+    productsSaveOrRemove.productsDeselected = this.deSelectedProducts;
+    productsSaveOrRemove.promoCount = this.promoCount;
+
+    return productsSaveOrRemove;
   }
 
   //dropdown value event change
@@ -67,13 +92,25 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     console.log(this.product_skus);
   }
 
-  // Creates an array of selected products 
+  // Creates an array of selected and deselected products 
   onProductSelection(event, productSelection) {
     if( event.target.checked ) {
-      this.selectedProducts.push(productSelection);
+      this.newSelectedProducts.push(productSelection);
     } else {
+      // If the product is unchecked , we need to handle 2 cases.
+      // 1) If the product is already selected and saved in DB and the product is deselected ,
+      //  we are populating the deselected array.
+      // 2) If the product is selected without saving it to promotion then we just need to splice
+      // the array witout updating deselected array.
       let index = this.getIndex(this.selectedProducts, productSelection);
-      this.selectedProducts.splice(index, 1);
+      if ( index > -1) {
+        this.deSelectedProducts.push(
+          this.selectedProducts.splice(index, 1)[0]);
+      } else {
+        this.newSelectedProducts.splice(
+          this.newSelectedProducts.indexOf(productSelection,1)
+        );
+      }
     }
   }
 

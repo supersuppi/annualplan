@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +30,31 @@ public class PromotionController extends BaseController {
 
         try {
             promotionService.saveSupplierPromo(promotion);
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
+    @PostMapping(value = "/product/save")
+    public ResponseEntity<String> saveSelectedProducts(@RequestBody AddOrRemoveProductRequestDTO requestBody) {
+    	
+    	try {
+    		promotionService.saveOrRemoveSelectedProducts(requestBody);
+    	} catch (ParseException e) {
+    		logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    	}
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
+    @GetMapping(value = "/product")
+    public ResponseEntity<String> getSelectedProducts(@RequestBody PromoDTO requestBody) {
+
+        try {
+            promotionService.saveSupplierPromo(requestBody);
         } catch (ParseException e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

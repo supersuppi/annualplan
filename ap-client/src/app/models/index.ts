@@ -15,3 +15,4 @@ export * from './supplier-home-model';
 export * from './manager-home-model'
 export * from './manager-model';
 export * from './home-comment-model';
+export * from './add-or-remove-products-model';

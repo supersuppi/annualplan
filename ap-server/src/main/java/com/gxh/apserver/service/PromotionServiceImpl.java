@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
 import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
@@ -123,6 +124,7 @@ public class PromotionServiceImpl implements PromotionService {
                     promoDTO.getRatecards().get(i).getDualmailers().get(j).getPromosku();
                     
                     promotionLevelRateCardRepository.save(prc);
+                    
                 }
             }
             logger.info("total_budget:"+totalBudget);
@@ -151,10 +153,6 @@ public class PromotionServiceImpl implements PromotionService {
                     totalBudget += rateCard.getRateCardDollar() * promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue();
 
                     promotionLevelRateCardRepository.save(prc);
-                    
-                    // Save the selected products.
-                    savePromotionSku(dm.getId(), currentPromotion.get().getId(), rateCard.getId(),
-                    		promoDTO.getRatecards().get(i).getDualmailers().get(j).getPromosku());
                 }
             }
             //Update Budget
@@ -165,28 +163,6 @@ public class PromotionServiceImpl implements PromotionService {
         }
 
         return new Boolean(true);
-    }
-    
-    // Save the products selected by the supplier.
-	private void savePromotionSku(Long dmId, Long promoId, Long rcId,
-			List<PromoSKUDTO> promoSkuList) {
-		
-		PromotionLevelSKU levelSKU;
-		
-		for (int i = 0; i < promoSkuList.size(); i++) {
-			List<ProductDTO> selectedProductsList = promoSkuList.get(i).getProducts_selected();
-			for ( int j = 0; j < selectedProductsList.size(); j++) {
-				levelSKU = new PromotionLevelSKU(); 
-				
-				levelSKU.setDualMailer(dmId);
-				levelSKU.setProduct(selectedProductsList.get(j).getId());
-				levelSKU.setPromo(promoId);
-				levelSKU.setRateCard(rcId);
-				levelSKU.setPromoCount(promoSkuList.get(i).getPromo_count());
-				
-				promotionLevelSKURepository.save(levelSKU);
-			}
-		}
     }
 
     @Override
@@ -256,5 +232,35 @@ public class PromotionServiceImpl implements PromotionService {
 		} else {
 			return false;	
 		}
+	}
+
+	@Transactional
+	@Override
+	public void saveOrRemoveSelectedProducts(AddOrRemoveProductRequestDTO requestBody) throws ParseException {
+		
+		logger.info(" Inside saveOrRemoveSelectedProducts ");
+		
+		PromotionLevelSKU levelSKU;
+		
+		for ( int i = 0; i < requestBody.getProductsSelected().size(); i++ ) {
+			levelSKU = new PromotionLevelSKU();
+			
+			levelSKU.setDualMailer(requestBody.getDmId());
+			levelSKU.setProduct(requestBody.getProductsSelected().get(i).getId());
+			levelSKU.setPromo(requestBody.getPromoId());
+			levelSKU.setRateCard(requestBody.getRcId());
+			levelSKU.setPromoCount(requestBody.getPromoCount());
+			
+			promotionLevelSKURepository.save(levelSKU);
+		}
+		
+		for ( int i = 0; i < requestBody.getProductsDeselected().size(); i++ ) {
+
+			promotionLevelSKURepository.deleteByRowData(requestBody.getDmId(), requestBody.getRcId(),
+					requestBody.getPromoId(), requestBody.getProductsDeselected().get(i).getId(),
+					requestBody.getPromoCount());
+			
+		}
+		
 	}
 }
