@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gxh.apserver.dto.UserDTO;
 import com.gxh.apserver.entity.Role;
 import com.gxh.apserver.entity.UserContact;
 import com.gxh.apserver.exceptions.CustomException;
@@ -69,11 +70,11 @@ public class UserController extends BaseController {
 	}
 	
 	@GetMapping(value="/profile/{email}")
-	public ResponseEntity<UserContact> userProfile(@PathVariable("email") String emailAddress ) {
+	public ResponseEntity<UserDTO> userProfile(@PathVariable("email") String emailAddress ) {
 		
-		UserContact userContact = userService.getUserProfile(emailAddress);
+		UserDTO userDTO = userService.getUserProfile(emailAddress);
 		
-		return new ResponseEntity<UserContact>(userContact, HttpStatus.OK);
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gxh.apserver.dto.UserDTO;
 import com.gxh.apserver.entity.Role;
 import com.gxh.apserver.entity.User;
 import com.gxh.apserver.entity.UserContact;
@@ -106,12 +107,16 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserContact getUserProfile(String emailAddress) {
+	public UserDTO getUserProfile(String emailAddress) {
 		
-		User user = userRepository.findByEmail(emailAddress);
-		UserContact userContact = userContactsRepository.findByUser(user);
+		UserContact userContact = userContactsRepository.findByEmailAddress(emailAddress);
+		UserDTO userDTO = new UserDTO();
 		
-		return userContact;
+		userDTO.setFirstName(userContact.getFirstName());
+		userDTO.setLastName(userContact.getLastName());
+		userDTO.setPhone(userContact.getPhone());
+		
+		return userDTO;
 	}
 
 }

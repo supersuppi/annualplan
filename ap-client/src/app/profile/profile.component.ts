@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   initialFormData : any;
 
   constructor(private userService : UserService, 
-      private route: ActivatedRoute) { }
+      private route: ActivatedRoute, private tokenHelper : JwtHelper) { }
 
   ngOnInit() {
 
@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
 
   presetFormValues() {
 
-    this.userEmailAddress = this.profileData['user']['email'];
+    this.userEmailAddress = this.tokenHelper.decodeToken(localStorage.getItem('token')).sub;
     this.userProfileGroup.controls['firstName'].setValue(this.profileData['firstName']);
     this.userProfileGroup.controls['lastName'].setValue(this.profileData['lastName']);
     this.userProfileGroup.controls['contact'].setValue(this.profileData['phone']);

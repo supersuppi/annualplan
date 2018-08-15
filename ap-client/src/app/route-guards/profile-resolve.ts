@@ -18,7 +18,6 @@ export class ProfileDataResolver implements Resolve<UserContact> {
     ): Observable<any> | Promise<any>|any {
         // Fetch email address from token public claim.
         this.userEmailAddress = this.tokenHelper.decodeToken(localStorage.getItem('token')).sub;
-        this.userService.getUserProfile(this.userEmailAddress);
 
         return this.userService.getUserProfile(this.userEmailAddress);
     }

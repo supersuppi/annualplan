@@ -2,6 +2,7 @@ package com.gxh.apserver.service.interfaces;
 
 import java.util.Collection;
 
+import com.gxh.apserver.dto.UserDTO;
 import com.gxh.apserver.entity.Role;
 import com.gxh.apserver.entity.UserContact;
 import com.gxh.apserver.exceptions.CustomException;
@@ -21,6 +22,6 @@ public interface UserService {
 	
 	public String loginUser(String username, String password) throws CustomException, InvalidEmailPasswordException;
 
-	public UserContact getUserProfile(String emailAddress);
+	public UserDTO getUserProfile(String emailAddress);
 
 }

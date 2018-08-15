@@ -8,7 +8,7 @@ import com.gxh.apserver.entity.UserContact;
 
 public interface UserContactsRepository extends CrudRepository<UserContact, Long>{
 
-//	@Query("Select c from user_contact c, user u where c.user_id=u.id and u.email='email'")
-	public UserContact findByUser(User user);
+	@Query("Select c from UserContact c, User u where c.user=u.id and u.email=?1")
+	public UserContact findByEmailAddress(String emailAddress);
 
 }
