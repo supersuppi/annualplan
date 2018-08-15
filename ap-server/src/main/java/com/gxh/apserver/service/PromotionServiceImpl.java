@@ -1,6 +1,7 @@
 package com.gxh.apserver.service;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,6 @@ import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
 import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
-import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
@@ -91,9 +91,7 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoDTO.getPromoyear()));
         Optional<List<RateCard>> rateCards = rateCardRepository.findRateCardBYPromotionID(currentPromotion.get());
         List<DualMailer> dms = dualMailerRepository.findAll();
-        Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.get().getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
-        Optional<List<PromotionLevelSKU>> promoskus = promotionLevelSKURepository.findAllByPromoID(currentPromotion.get().getId());
         Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
 
         int totalBudget = 0;
@@ -261,6 +259,30 @@ public class PromotionServiceImpl implements PromotionService {
 					requestBody.getPromoCount());
 			
 		}
+		
+	}
+
+	@Override
+	public List<ProductDTO> getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
+			throws ParseException {
+		
+		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
+		Optional<List<Product>> prodOptionalList = productRepository.findAllSelectedProducts(promoId, dmId, rowId, promoCount);
+		
+		if( prodOptionalList.isPresent() ) {
+			prodOptionalList.get().forEach( product -> {
+				ProductDTO productDTO = new ProductDTO();
+				
+				productDTO.setId(product.getId());
+				productDTO.setName(product.getMarketingShortName());
+				productDTO.setSku(product.getGXHID());
+				
+				productDTOList.add(productDTO);
+			}); 
+			return productDTOList;
+		}
+			
+		return productDTOList;
 		
 	}
 }

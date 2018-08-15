@@ -37,7 +37,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     this.productArray = options.data['brandAndProducts'];
     this.selectedProducts = 
       typeof options.data['selectedProducts'] === "undefined" ? [] : options.data['selectedProducts'];
-    this.promoCount = options.data['promo_count'];
+    this.promoCount = options.data['promoCount'];
     this.rowId = options.data['rowId'];
     this.dmId = options.data['dmId'];
     this.promoId = options.data['promoId'];

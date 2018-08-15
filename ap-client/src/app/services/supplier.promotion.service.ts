@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
-import { HttpClient,HttpHeaders } from "@angular/common/http";
+import { HttpClient,HttpHeaders, HttpParams } from "@angular/common/http";
 
 import { Promotion, PromoStatus, PromoComment, PromotionSKU, ProductSKU, AddOrRemoveProducts } from "../models/index";
 
@@ -11,6 +11,7 @@ export class SupplierPromotionService{
     private promotionSupplierSubmitURL = "http://localhost:8008/apserver/promotion/supplier/submit";
     private promotionSupplierSaveURL = "http://localhost:8008/apserver/promotion/save/";
     private promotionSupplierSaveOrRemoveProductsURL = "http://localhost:8008/apserver/promotion/product/save/";
+    private getSelectedProductsURL = "http://localhost:8008/apserver/promotion/product/fetch/";
     
     private promoSku : PromotionSKU;
     public promoSubject = new Subject<PromotionSKU>();
@@ -33,6 +34,18 @@ export class SupplierPromotionService{
 
     saveOrRemoveSelectedProducts( data : AddOrRemoveProducts ): Observable<any> {
         return this.httpClient.post<AddOrRemoveProducts>( this.promotionSupplierSaveOrRemoveProductsURL, data );
+    }
+
+    getSelectedProducts( promoId : Number, dmId : any, rowId : any,
+         promoCount: any) : Observable<Array<ProductSKU>>{
+
+        return this.httpClient.get<Array<ProductSKU>>(this.getSelectedProductsURL+promoId, {
+            params: {
+                dmId : dmId+1,
+                rowId : rowId+1,
+                promoCount : promoCount
+            }
+        });
     }
 
 }

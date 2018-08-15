@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
+import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
@@ -28,4 +29,7 @@ public interface PromotionService {
             InvalidStatusException;
     
     public void saveOrRemoveSelectedProducts( AddOrRemoveProductRequestDTO requestBody ) throws ParseException;
+
+	public List<ProductDTO> getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
+		throws ParseException;
 }

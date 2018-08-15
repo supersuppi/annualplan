@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
+import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,17 +51,20 @@ public class PromotionController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
-    @GetMapping(value = "/product")
-    public ResponseEntity<String> getSelectedProducts(@RequestBody PromoDTO requestBody) {
+	@GetMapping(value = "/product/fetch/{promoId}")
+	public ResponseEntity<List<ProductDTO>> getSelectedProducts(@PathVariable("promoId") Long promoId,
+			@RequestParam Long dmId, @RequestParam Long rowId, @RequestParam int promoCount) {
 
-        try {
-            promotionService.saveSupplierPromo(requestBody);
-        } catch (ParseException e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+		List<ProductDTO> productDTOList;
+
+		try {
+			productDTOList = promotionService.getSavedProductsForPromoCount(promoId, dmId, rowId, promoCount);
+		} catch (ParseException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		return new ResponseEntity<List<ProductDTO>>(productDTOList, HttpStatus.OK);
+	}
     
     @PostMapping(value = "/manager/status/update")
     public ResponseEntity<StatusChangeDTO> changePromotionStatus(@RequestBody StatusChangeDTO promotionStatus) {

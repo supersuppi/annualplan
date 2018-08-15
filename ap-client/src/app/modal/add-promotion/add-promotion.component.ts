@@ -55,7 +55,20 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
 
   // Selecting the promotion.
   addPromotion(event) {
-    //Showing modal on cell click
+
+    this.promotionService.getSelectedProducts(
+      this.promoId, this.dmId, this.rowId, event.target.id
+    ).subscribe( (data) => {
+      this.showProductSelectionModal (event, data)
+    }, err => {
+      console.log("Something went wrong");
+    });
+
+  }
+
+  //Showing modal on cell click
+  showProductSelectionModal (event, selectedProducts : Array<ProductSKU>) {
+
     this.modalDialogService.openDialog(this.parentRef ,{
       title: 'Choose Promotion Type',
       placeOnTop: true,
@@ -65,21 +78,13 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
       },
       data: {
         brandAndProducts : this.promotionProducts,
-        promo_count : event.target.id,
-        selectedProducts : this.getSelectedProdBasedOnPromoCount(event.target.id),
+        promoCount : event.target.id,
+        selectedProducts : selectedProducts,
         rowId : (+this.rowId)+1,
         dmId : (+this.dmId)+1,
         promoId : this.promoId
       }
     });
-  }
-
-  getSelectedProdBasedOnPromoCount (num : Number) : Array<ProductSKU>{
-    for(let i=0; i < this.dualMailer["promosku"].length; i++) {
-      if( this.dualMailer.promosku[i].promo_count == num ) {
-        return this.dualMailer.promosku[i].products_selected;
-      }
-    }
   }
 
   createTilesArray () {
