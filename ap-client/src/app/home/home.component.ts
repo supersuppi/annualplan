@@ -14,6 +14,7 @@ import { UserHomeData, SupplierHomeData, ManagerHomeData, HomeComment } from '..
 export class HomeComponent implements OnInit {
   private homeContent:UserHomeData;
   private comments:Array<HomeComment>;
+  private supplierID:Number;
 
   private pageLoaded:Boolean; //to avoid promotion undefined error
   sample: number;
@@ -64,6 +65,8 @@ export class HomeComponent implements OnInit {
         console.debug("Get getHomePageData for Manager Call Success");
         console.debug(homeData);
         this.homeContent = homeData;
+        this.supplierID = homeData.suppliers[0].supplierID; //TODO:getting 1st sup for test
+        this.comments = (homeData.comments == null ? new Array() : homeData.comments);
         localStorage.setItem('managerID', homeData.managerID.toString());
         this.pageLoaded =true;
       },
@@ -80,7 +83,13 @@ export class HomeComponent implements OnInit {
   }
 
   displaySupplierPromotion(){
-    this.router.navigate(['/supplier/',this.selectedYear+'-01-01']);
+    if(localStorage.getItem('role') === 'ROLE_VENDOR') {
+      this.router.navigate(['/supplier/',this.selectedYear+'-01-01']);
+    } else {
+      
+      this.router.navigate(['/manager/'+this.supplierID+'/'+this.selectedYear+'-01-01']);
+    }
+    
   }
 
 }

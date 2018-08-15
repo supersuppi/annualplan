@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import { Promotion,PromoStatus,PromoComment } from "../models/index";
 import {PromotionService} from '../services/index'
 
@@ -19,18 +19,25 @@ export class ManagerComponent implements OnInit {
   private promotion:Promotion;
   private promoStatus:PromoStatus;
   private promoComment : PromoComment;
+  private activePromoYear:String;
+  private supplierID:Number;
+  private pageLoaded:Boolean;//to avoid promotion undefined error
 
   constructor(private promotionService:PromotionService,private modalDialogService: ModalDialogService,
-    private viewContainer: ViewContainerRef) { }
+    private viewContainer: ViewContainerRef,private _Activatedroute:ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.getSupplierPromotion(1,'2018-01-01');
+    this.pageLoaded =false;
+    this.activePromoYear = this._Activatedroute.snapshot.params['pyear'];
+    this.supplierID = this._Activatedroute.snapshot.params['sid'];
+    this.getSupplierPromotion(this.supplierID,this.activePromoYear);
    }
 
    getSupplierPromotion(id:Number,promoyear:String) {
     this.promotionService.getSupplierPromotionsForManager(id,promoyear).subscribe((sPromotion:Promotion) => {
         console.debug("Get SupplierPromotion Call Success");
         this.promotion = sPromotion;
+        this.pageLoaded =true;
       },
       error => { 
           console.error("ERROR! ManagerComponent:getSupplierPromotion = "+error);
@@ -52,7 +59,7 @@ export class ManagerComponent implements OnInit {
     rejectPromotion() {
       console.debug("rejectPromotion");
 
-      this.promoComment = new PromoComment(this.promotion.promoyear,1)
+      this.promoComment = new PromoComment(this.promotion.promoyear,this.supplierID,1)
 
       this.modalDialogService.openDialog(this.viewContainer ,{
         title: 'Promotion Rejection Message',
@@ -63,10 +70,39 @@ export class ManagerComponent implements OnInit {
         },
         data: {
           promoCommentModel : this.promoComment
-        }
+        },
+        actionButtons: [
+          {
+            text: 'Send',
+            buttonClass: 'btn btn-primary',
+            onAction: () => this.sendMessage()
+          },
+          {
+            text: 'Cancel',
+            buttonClass: 'btn btn-danger',
+            onAction: () => true
+          }
+        ]
       });
     }
 
-   
+    goBack() {
+      this.router.navigate(['/home']);
+    }
+
+    sendMessage():boolean {
+      console.log("Message Sent");
+      
+      this.promotionService.savePromotionRejectComment(this.promoComment).subscribe((response:any) => {
+        console.debug("save PromotionRejectComment Call Success");
+        console.log(response);
+        this.goBack();
+      },
+      error => { 
+          console.error("ERROR! PromotionRejectModalComponent:sendMessage = "+error);
+      });
+  
+      return true;
+    }  
 
 }

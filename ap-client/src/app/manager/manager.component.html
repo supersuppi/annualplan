@@ -1,4 +1,11 @@
 <div class="container">
+
+    <div class="d-flex flex-row">
+        <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear}}</span></div>
+        <div class="p-2"><span class="alert alert-info"><strong>Status: </strong> {{promotion.status}}</span></div>
+        <div class="p-2"><span class="alert alert-info"><strong>Total Budget: </strong>{{promotion.budget.allocated}}</span></div>
+        <div class="p-2"><span class="alert alert-info"><strong>Used Budget: </strong>{{promotion.budget.used}}</span></div>
+    </div>
     
     <div class="d-flex flex-row-reverse">
           <div class="p-2">
@@ -9,7 +16,7 @@
           </div>
     </div>
   
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf ="pageLoaded">
           <table class="table table-sm">
               <thead>
                 <tr>
