@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewContainerRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {PromotionService} from '../services/index'
 import { Promotion, PromoStatus } from "../models/index";
 import { ModalDialogService } from 'ngx-modal-dialog';
 import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.component';
+import { SupplierPromotionService } from '../services/index';
 
 @Component({
   selector: 'app-supplier',
@@ -18,7 +18,7 @@ export class SupplierComponent implements OnInit {
    private hasError:Boolean;
    private activePromoYear:String;
 
-  constructor(private promotionService:PromotionService,private _Activatedroute:ActivatedRoute,
+  constructor(private promotionService: SupplierPromotionService,private _Activatedroute:ActivatedRoute,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {

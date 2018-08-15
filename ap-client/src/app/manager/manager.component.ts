@@ -1,18 +1,16 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Promotion,PromoStatus,PromoComment } from "../models/index";
-import {PromotionService} from '../services/index'
-
 import { ModalDialogService } from 'ngx-modal-dialog';
-
 import { PromotionRejectModalComponent } from '../modal/promotion-reject-modal/promotion-reject-modal.component';
+import { ManagerPromotionService } from '../services/index';
 
 
 @Component({
   selector: 'app-manager',
   templateUrl: './manager.component.html',
   styleUrls: ['./manager.component.scss'],
-  providers: [PromotionService]
+  providers: [ManagerPromotionService]
 })
 export class ManagerComponent implements OnInit {
 
@@ -23,7 +21,7 @@ export class ManagerComponent implements OnInit {
   private supplierID:Number;
   private pageLoaded:Boolean;//to avoid promotion undefined error
 
-  constructor(private promotionService:PromotionService,private modalDialogService: ModalDialogService,
+  constructor(private promotionService:ManagerPromotionService,private modalDialogService: ModalDialogService,
     private viewContainer: ViewContainerRef,private _Activatedroute:ActivatedRoute, private router: Router) { }
 
   ngOnInit() {

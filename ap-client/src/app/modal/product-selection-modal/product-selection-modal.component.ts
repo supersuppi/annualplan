@@ -3,7 +3,7 @@ import { Product } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 import { ProductSKU } from '../../models/product-sku-model';
 import { Subscription } from 'rxjs';
-import { PromotionService } from '../../services';
+import { SupplierPromotionService } from '../../services/index';
 
 @Component({
   selector: 'app-product-selection-modal',
@@ -19,7 +19,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   private selectedProducts : Array<ProductSKU>;
   private promo_count : Number;
 
-  constructor(private promotionService : PromotionService) { 
+  constructor(private promotionService : SupplierPromotionService) { 
   }
 
   ngOnInit() {
@@ -72,9 +72,20 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
     if( event.target.checked ) {
       this.selectedProducts.push(productSelection);
     } else {
-      let index = this.selectedProducts.indexOf(productSelection);
+      let index = this.getIndex(this.selectedProducts, productSelection);
       this.selectedProducts.splice(index, 1);
     }
+  }
+
+  getIndex (selectedProductArray : Array<ProductSKU>, product : ProductSKU ) : number {
+    let index; 
+    for ( let i = 0; i < selectedProductArray.length; i++ ) {
+      if ( selectedProductArray[i].sku == product.sku ) {
+        index = i;
+        break;
+      }
+    }
+    return index;
   }
 
   // Checkbox is "checked" if the product is already selected. 

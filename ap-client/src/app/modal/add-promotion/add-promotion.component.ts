@@ -5,7 +5,7 @@ import { ModalService } from '../../shared/modal-services/ModalService';
 import { ProductSelectionModalComponent } from '../product-selection-modal/product-selection-modal.component';
 import { ProductSKU } from '../../models/product-sku-model';
 import { DualMailer } from '../../models';
-import { PromotionService } from '../../services';
+import { SupplierPromotionService } from '../../services/index';
 
 @Component({
   selector: 'app-add-promotion',
@@ -25,7 +25,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog, OnDestroy, A
   
   constructor(private modalService: ModalService, 
     private modalDialogService: ModalDialogService,
-    private promotionService :PromotionService) { }
+    private promotionService : SupplierPromotionService) { }
 
   ngOnInit() {
     this.createTilesArray();
@@ -68,6 +68,8 @@ export class AddPromotionComponent implements OnInit, IModalDialog, OnDestroy, A
 
   // Selecting the promotion.
   addPromotion(event) {
+
+    // this.promotionService.getSelectedProducts();
 
     //Showing modal on cell click
     this.modalDialogService.openDialog(this.parentRef ,{
