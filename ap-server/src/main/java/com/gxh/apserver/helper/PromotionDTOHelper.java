@@ -75,7 +75,6 @@ public class PromotionDTOHelper {
         List<DualMailer> dms = dualMailerRepository.findAll();
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(promo.getId());
-        Optional<List<PromotionLevelSKU>> promoskus = promotionLevelSKURepository.findAllByPromoID(promo.getId());
         Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
@@ -123,50 +122,6 @@ public class PromotionDTOHelper {
                     dto.setValue(rcdmMap.get(rateCard.getId().toString() + dm.getId().toString()));
                 } else {
                     dto.setValue(0);
-                }
-                if(promoskus.isPresent()) {
-                	List<PromotionLevelSKU> promotionSKUList = promoskus.get();
-                	List<ProductDTO> productDTOList = new ArrayList<>();
-                	Map<Integer, List<ProductDTO>> map = new HashMap<>();
-                	List<PromoSKUDTO> promoSKUList = new ArrayList<>();
-                	
-                	for (int i = 0; i < promotionSKUList.size(); i++) {
-                		if ( (promotionSKUList.get(i).getDualMailer() == dm.getId()) 
-                				&& (promotionSKUList.get(i).getRateCard() == rateCard.getId())) {
-                			
-                			for ( int j = 0; j < products.get().size(); j++ ) {
-                				ProductDTO productDTO = new ProductDTO();
-                				if ( promotionSKUList.get(i).getProduct() == products.get().get(j).getId() ) {
-                					productDTO.setId(products.get().get(j).getId());
-                					productDTO.setName(products.get().get(j).getMarketingShortName());
-                					productDTO.setSku(products.get().get(j).getGXHID());
-                					
-                					// Add the promo count and products selected to a map. 
-                					if (map.containsKey(promotionSKUList.get(i).getPromoCount())) {
-                						productDTOList = map.get(promotionSKUList.get(i).getPromoCount());
-                						productDTOList.add(productDTO);
-                					} else {
-                						productDTOList.clear();
-                						productDTOList.add(productDTO);
-                					}
-                					map.put(promotionSKUList.get(i).getPromoCount(), productDTOList);
-                					break;
-                				}
-                			}
-                		}
-                	}
-                	
-                	for (Integer key : map.keySet()) {
-                		PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
-                		promoSKUDTO.setPromo_count(key);
-                		promoSKUDTO.setProducts_selected(map.get(key));
-                		promoSKUList.add(promoSKUDTO);
-                	}
-                	
-                	dto.setPromosku(promoSKUList);
-                	
-                } else {
-                    dto.setPromosku(new ArrayList<PromoSKUDTO>());
                 }
                 dmList.add(dto);
             }

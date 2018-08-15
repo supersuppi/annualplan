@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
-import { HttpClient,HttpHeaders } from "@angular/common/http";
+import { HttpClient,HttpHeaders, HttpParams } from "@angular/common/http";
 
-import { Promotion, PromoStatus, PromoComment, PromotionSKU, ProductSKU } from "../models/index";
+import { Promotion, PromoStatus, PromoComment, PromotionSKU, ProductSKU, AddOrRemoveProducts } from "../models/index";
 
 @Injectable()
 export class SupplierPromotionService{
@@ -10,6 +10,8 @@ export class SupplierPromotionService{
     private promotionSupplierGetURL = "http://localhost:8008/apserver/promotion/supplier/";
     private promotionSupplierSubmitURL = "http://localhost:8008/apserver/promotion/supplier/submit";
     private promotionSupplierSaveURL = "http://localhost:8008/apserver/promotion/save/";
+    private promotionSupplierSaveOrRemoveProductsURL = "http://localhost:8008/apserver/promotion/product/save/";
+    private getSelectedProductsURL = "http://localhost:8008/apserver/promotion/product/fetch/";
     
     private promoSku : PromotionSKU;
     public promoSubject = new Subject<PromotionSKU>();
@@ -30,13 +32,20 @@ export class SupplierPromotionService{
         return this.httpClient.post<PromoStatus>(this.promotionSupplierSubmitURL,data);
     }
 
-    saveSelectedProducts ( count : Number, product : Array<ProductSKU> ) {
-        this.promoSku = new PromotionSKU();
+    saveOrRemoveSelectedProducts( data : AddOrRemoveProducts ): Observable<any> {
+        return this.httpClient.post<AddOrRemoveProducts>( this.promotionSupplierSaveOrRemoveProductsURL, data );
+    }
 
-        this.promoSku.products_selected = product;
-        this.promoSku.promo_count = count;
+    getSelectedProducts( promoId : Number, dmId : any, rowId : any,
+         promoCount: any) : Observable<Array<ProductSKU>>{
 
-        this.promoSubject.next(this.promoSku);
+        return this.httpClient.get<Array<ProductSKU>>(this.getSelectedProductsURL+promoId, {
+            params: {
+                dmId : dmId+1,
+                rowId : rowId+1,
+                promoCount : promoCount
+            }
+        });
     }
 
 }

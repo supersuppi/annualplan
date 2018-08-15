@@ -79,10 +79,12 @@ export class SupplierComponent implements OnInit {
         closeButtonClass: 'close theme-icon-close',
       },
       data: {
-        values : this.promotion.ratecards[rowid].dualmailers[id].value,
+        rowId : rowid,
+        dmId : id,
         brandAndProducts : this.promotion.products,
         parentRef : this.viewContainer,
-        dualMailer : this.promotion.ratecards[rowid].dualmailers[id]
+        dualMailer : this.promotion.ratecards[rowid].dualmailers[id],
+        promoId : this.promotion.promo_id
       }
     });
   }
