@@ -6,23 +6,24 @@ import { Subscription } from 'rxjs';
 import { SupplierPromotionService } from '../../services/index';
 
 @Component({
-  selector: 'app-product-selection-modal',
-  templateUrl: './product-selection-modal.component.html',
-  styleUrls: ['./product-selection-modal.component.scss'],
+  selector: 'app-brand-promotion-modal',
+  templateUrl: './brand-promotion-modal.component.html',
+  styleUrls: ['./brand-promotion-modal.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ProductSelectionModalComponent implements OnInit, IModalDialog {
+export class BrandPromotionModalComponent implements OnInit, IModalDialog {
 
   private internalActionButtons = [];
   private product_skus : Array<ProductSKU>;
   private productArray : Array<Product>;
-  private selectedProducts : Array<ProductSKU>;
+  private savedProducts : Array<ProductSKU>;
   private deSelectedProducts : Array<ProductSKU> = [];
   private newSelectedProducts : Array<ProductSKU> = [];
   private promoCount : Number;
   private rowId : Number;
   private dmId : Number;
   private promoId : Number;
+  private groupName : String;
 
   constructor(private promotionService : SupplierPromotionService) { 
   }
@@ -35,7 +36,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
     this.productArray = options.data['brandAndProducts'];
-    this.selectedProducts = 
+    this.savedProducts = 
       typeof options.data['selectedProducts'] === "undefined" ? [] : options.data['selectedProducts'];
     this.promoCount = options.data['promoCount'];
     this.rowId = options.data['rowId'];
@@ -64,7 +65,6 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
       }, err => {
         console.log("Something went wrong");
       });
-
       return true;
   }
 
@@ -102,10 +102,10 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
       //  we are populating the deselected array.
       // 2) If the product is selected without saving it to promotion then we just need to splice
       // the array witout updating deselected array.
-      let index = this.getIndex(this.selectedProducts, productSelection);
+      let index = this.getIndex(this.savedProducts, productSelection);
       if ( index > -1) {
         this.deSelectedProducts.push(
-          this.selectedProducts.splice(index, 1)[0]);
+          this.savedProducts.splice(index, 1)[0]);
       } else {
         this.newSelectedProducts.splice(
           this.newSelectedProducts.indexOf(productSelection,1)
@@ -128,7 +128,7 @@ export class ProductSelectionModalComponent implements OnInit, IModalDialog {
   // Checkbox is "checked" if the product is already selected. 
   isSelected(product) {
     let isProductSelected : boolean = false;
-    this.selectedProducts.forEach(prod => {
+    this.savedProducts.forEach(prod => {
       if ( prod["sku"] === product["sku"] ) {
         isProductSelected = true;
       }

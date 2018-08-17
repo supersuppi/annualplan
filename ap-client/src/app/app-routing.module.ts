@@ -18,7 +18,7 @@ const appRoute : Routes= [
     { path: 'login', component: LoginComponent },
     { path: 'home', component: HomeComponent, canActivate: [RoleGuardService]},
    // { path: 'home', component: HomeComponent},
-    {path: 'profile', component: ProfileComponent, resolve: {
+    {path: 'profile', component: ProfileComponent, canActivate: [RoleGuardService], resolve: {
         profile : ProfileDataResolver
     }},
     { path: 'supplier', component: SupplierComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_VENDOR'}},

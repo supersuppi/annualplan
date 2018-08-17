@@ -23,11 +23,11 @@ import { AuthService } from './services/auth.service';
 import { JwtHelper } from './helper/JWTHelper';
 import { ProfileDataResolver } from './route-guards/profile-resolve';
 import { NouisliderModule } from 'ng2-nouislider';
-import { ProductSelectionModalComponent } from './modal/product-selection-modal/product-selection-modal.component';
 import { ModalDialogModule } from 'ngx-modal-dialog';
 import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/promotion-reject-modal.component';
 import { AddPromotionComponent } from './modal/add-promotion/add-promotion.component';
 import { SupplierPromotionService } from './services/supplier.promotion.service';
+import { BrandPromotionModalComponent } from './modal/brand-promotion-modal/brand-promotion-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,7 @@ import { SupplierPromotionService } from './services/supplier.promotion.service'
     SupplierComponent,
     ManagerComponent,
     HomeComponent,
-    ProductSelectionModalComponent,
+    BrandPromotionModalComponent,
     PromotionRejectModalComponent,
     AddPromotionComponent
   ],
@@ -56,7 +56,7 @@ import { SupplierPromotionService } from './services/supplier.promotion.service'
   ],
   //For Modal
   entryComponents: [
-    ProductSelectionModalComponent,
+    BrandPromotionModalComponent,
     PromotionRejectModalComponent,
     AddPromotionComponent
   ],

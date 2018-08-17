@@ -38,7 +38,7 @@
                 <label for="newPassword">New Password:</label>
                 <input type="password" formControlName="newPassword" class="form-control">
                 <span class="alert-danger" *ngIf="!userProfileGroup.get('newPassword').valid 
-                    && userProfileGroup.get('confirmPwd').touched && userProfileGroup.hasError('newPasswordNeeded')">
+                    && userProfileGroup.get('newPassword').touched && userProfileGroup.hasError('newPasswordNeeded')">
                   Please enter a valid password to update
                 </span>
               </div>

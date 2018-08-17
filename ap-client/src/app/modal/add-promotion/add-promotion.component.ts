@@ -2,10 +2,10 @@ import { Component, OnInit, ComponentRef, ViewEncapsulation, ViewContainerRef } 
 import { IModalDialog, IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { ModalService } from '../../shared/modal-services/ModalService';
-import { ProductSelectionModalComponent } from '../product-selection-modal/product-selection-modal.component';
 import { ProductSKU } from '../../models/product-sku-model';
 import { DualMailer, Product } from '../../models';
 import { SupplierPromotionService } from '../../services/index';
+import { BrandPromotionModalComponent } from '../brand-promotion-modal/brand-promotion-modal.component';
 
 @Component({
   selector: 'app-add-promotion',
@@ -70,9 +70,9 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   showProductSelectionModal (event, selectedProducts : Array<ProductSKU>) {
 
     this.modalDialogService.openDialog(this.parentRef ,{
-      title: 'Choose Promotion Type',
+      title: 'Brand Promotion',
       placeOnTop: true,
-      childComponent: ProductSelectionModalComponent,
+      childComponent: BrandPromotionModalComponent,
       settings: {
         closeButtonClass: 'close theme-icon-close',
       },
