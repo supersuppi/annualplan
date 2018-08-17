@@ -1,0 +1,32 @@
+1) http://localhost:8008/apserver/promotion/product/save/ 
+
+Request: 
+{
+"dmId":1,
+"promoId":1,
+"rcId":1,
+"productsSelected":[
+	 {"id":4,"sku":11273726,"name":"American Collection - A"}
+	],
+"productsDeselected":[
+		{"id":4,"sku":11273716,"name":"Product-2"}
+	],
+"promoCount":"1"
+}
+
+2) http://localhost:8008/apserver/promotion/product/fetch/1?dmId=1&rowId=1&promoCount=1
+
+Request:
+
+Query Parameters:
+dmId: 1
+rowId: 1
+promoCount: 1
+
+
+Response:
+[
+	{id: 4, sku: 11273726, name: "American Collection - A"}
+	{id: 2, sku: 11273724, name: "Peru Collection - Grandma Kissed A Gaucho"}
+	{id: 1, sku: 11273723, name: "Peru Collection - Don'T Toot My Flute"}
+]
