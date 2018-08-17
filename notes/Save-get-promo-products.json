@@ -1,6 +1,9 @@
-1) http://localhost:8008/apserver/promotion/product/save/ 
+1) Save or remove products
+http://localhost:8008/apserver/promotion/product/save/ 
 
 Request: 
+POST
+
 {
 "dmId":1,
 "promoId":1,
@@ -14,9 +17,14 @@ Request:
 "promoCount":"1"
 }
 
-2) http://localhost:8008/apserver/promotion/product/fetch/1?dmId=1&rowId=1&promoCount=1
+2) Get saved products 
+http://localhost:8008/apserver/promotion/product/fetch/1?dmId=1&rowId=1&promoCount=1
 
 Request:
+GET
+
+Path Variable:
+promo_id: 1
 
 Query Parameters:
 dmId: 1
