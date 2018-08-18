@@ -1,4 +1,4 @@
-import { Component, OnInit, ComponentRef, ViewEncapsulation, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ComponentRef, ViewContainerRef } from '@angular/core';
 import { IModalDialog, IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { ModalService } from '../../shared/modal-services/ModalService';
@@ -6,12 +6,12 @@ import { ProductSKU } from '../../models/product-sku-model';
 import { DualMailer, Product } from '../../models';
 import { SupplierPromotionService } from '../../services/index';
 import { BrandPromotionModalComponent } from '../brand-promotion-modal/brand-promotion-modal.component';
+import { PromotionModalComponent } from '../promotion-modal/promotion-modal.component';
 
 @Component({
   selector: 'app-add-promotion',
   templateUrl: './add-promotion.component.html',
-  styleUrls: ['./add-promotion.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./add-promotion.component.scss']
 })
 export class AddPromotionComponent implements OnInit, IModalDialog {
 
@@ -72,19 +72,17 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
     this.modalDialogService.openDialog(this.parentRef ,{
       title: 'Brand Promotion',
       placeOnTop: true,
-      childComponent: BrandPromotionModalComponent,
+      // childComponent: BrandPromotionModalComponent,
+      childComponent: PromotionModalComponent,
       settings: {
         closeButtonClass: 'close theme-icon-close',
-      },
-      data: {
-        brandAndProducts : this.promotionProducts,
-        promoCount : event.target.id,
-        selectedProducts : selectedProducts,
-        rowId : (+this.rowId)+1,
-        dmId : (+this.dmId)+1,
-        promoId : this.promoId
       }
     });
+
+    this.promotionService.setPromoObject(
+      this.promotionProducts, event.target.id, selectedProducts, (+this.rowId)+1,
+      (+this.dmId)+1, this.promoId
+    );
   }
 
   createTilesArray () {

@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ComponentRef } from '@angular/core';
 import { Product, AddOrRemoveProducts } from '../../models';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 import { ProductSKU } from '../../models/product-sku-model';
 import { Subscription } from 'rxjs';
 import { SupplierPromotionService } from '../../services/index';
+import { PromotionInterface } from '../../shared/interface/PromotionInterface';
 
 @Component({
   selector: 'app-brand-promotion-modal',
   templateUrl: './brand-promotion-modal.component.html',
-  styleUrls: ['./brand-promotion-modal.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./brand-promotion-modal.component.scss']
 })
 export class BrandPromotionModalComponent implements OnInit, IModalDialog {
 
@@ -24,24 +24,32 @@ export class BrandPromotionModalComponent implements OnInit, IModalDialog {
   private dmId : Number;
   private promoId : Number;
   private groupName : String;
+  private promoObject : PromotionInterface;
 
   constructor(private promotionService : SupplierPromotionService) { 
   }
 
   ngOnInit() {
     // Initial value of products to be displayed in modal
+    this.constructObjectForTemplate();
     this.product_skus = this.productArray[0].product_skus;
+  }
+
+  constructObjectForTemplate() {
+    this.promoObject = this.promotionService.getPromoObject();
+
+    this.productArray = this.promoObject.brandAndProducts;
+    this.savedProducts = 
+      typeof this.promoObject.selectedProducts === "undefined" ? [] : this.promoObject.selectedProducts;
+    this.promoCount = this.promoObject.promoCount;
+    this.rowId = this.promoObject.rowId;
+    this.dmId = this.promoObject.dmId;
+    this.promoId = this.promoObject.promoId;
   }
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
-    this.productArray = options.data['brandAndProducts'];
-    this.savedProducts = 
-      typeof options.data['selectedProducts'] === "undefined" ? [] : options.data['selectedProducts'];
-    this.promoCount = options.data['promoCount'];
-    this.rowId = options.data['rowId'];
-    this.dmId = options.data['dmId'];
-    this.promoId = options.data['promoId'];
+
     // Action buttons for modal
     this.internalActionButtons.push({
       text: 'Save Promotion',

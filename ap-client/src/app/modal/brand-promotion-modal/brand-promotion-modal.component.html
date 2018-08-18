@@ -1,40 +1,30 @@
-<div class="modal-body">
-
-  <div class="form-group row">
-    <label for="groupName" class="col-sm-2 col-form-label">Group Name:</label>
-    <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-4">
-      <input type="text" placeholder="Enter the group name"  class="form-control" >
-    </div>
+<div class="top30">
+  <!-- Options to select the brand of product.  -->
+  <div>
+    <label>
+        Please select the brand from the dropdown: 
+    </label>
+    <span>
+      <select name="brandDropdown" (change)="onValueChange($event)">
+        <option *ngFor="let brand of productArray" [ngValue]="brand.brand_name" >{{brand.brand_name}}</option>
+      </select>
+    </span>
   </div>
 
-  <div>
-    <!-- Options to select the brand of product.  -->
-    <div class="row">
-      <label>
-          Please select the brand from the dropdown: 
-      </label>
-      <span>
-        <select name="brandDropdown" (change)="onValueChange($event)">
-          <option *ngFor="let brand of productArray" [ngValue]="brand.brand_name" >{{brand.brand_name}}</option>
-        </select>
-      </span>
-    </div>
+  <br/>
 
-    <br/>
-
-    <!-- Products that can be selected by the supplier. -->
-    <div class="row showScroll">
-      <div class="col-lg-12">
-        <div class="form-check-inline col-lg-5" *ngFor='let product of product_skus'>
-          <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" name="promotionalProducts" id="product.id"
-              value="product.sku" (change)="onProductSelection($event, product)"
-              [checked]="isSelected(product)"> {{ product.name }}
-          </label>
-        </div>
+  <!-- Products that can be selected by the supplier. -->
+  <div class="row showScroll">
+    <div class="col-lg-12">
+      <div class="form-check-inline col-lg-5" *ngFor='let product of product_skus'>
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input" name="promotionalProducts" id="product.id"
+            value="product.sku" (change)="onProductSelection($event, product)"
+            [checked]="isSelected(product)"> {{ product.name }}
+        </label>
       </div>
     </div>
-
   </div>
 
 </div>
+

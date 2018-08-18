@@ -28,6 +28,7 @@ import { PromotionRejectModalComponent } from './modal/promotion-reject-modal/pr
 import { AddPromotionComponent } from './modal/add-promotion/add-promotion.component';
 import { SupplierPromotionService } from './services/supplier.promotion.service';
 import { BrandPromotionModalComponent } from './modal/brand-promotion-modal/brand-promotion-modal.component';
+import { PromotionModalComponent } from './modal/promotion-modal/promotion-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { BrandPromotionModalComponent } from './modal/brand-promotion-modal/bran
     HomeComponent,
     BrandPromotionModalComponent,
     PromotionRejectModalComponent,
-    AddPromotionComponent
+    AddPromotionComponent,
+    PromotionModalComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +60,8 @@ import { BrandPromotionModalComponent } from './modal/brand-promotion-modal/bran
   entryComponents: [
     BrandPromotionModalComponent,
     PromotionRejectModalComponent,
-    AddPromotionComponent
+    AddPromotionComponent,
+    PromotionModalComponent
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.

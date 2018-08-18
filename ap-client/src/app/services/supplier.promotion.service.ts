@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { HttpClient,HttpHeaders, HttpParams } from "@angular/common/http";
 
-import { Promotion, PromoStatus, PromoComment, PromotionSKU, ProductSKU, AddOrRemoveProducts } from "../models/index";
+import { Promotion, PromoStatus, PromoComment, PromotionSKU, ProductSKU, AddOrRemoveProducts, Product } from "../models/index";
+import { PromotionInterface } from "../shared/interface/PromotionInterface";
 
 @Injectable()
 export class SupplierPromotionService{
@@ -15,6 +16,7 @@ export class SupplierPromotionService{
     
     private promoSku : PromotionSKU;
     public promoSubject = new Subject<PromotionSKU>();
+    private promotionObject: PromotionInterface = {} ;
 
     constructor(private httpClient: HttpClient) {}
 
@@ -46,6 +48,20 @@ export class SupplierPromotionService{
                 promoCount : promoCount
             }
         });
+    }
+
+    setPromoObject( productArray : Array<Product>, eventId : Number, selectedProducts : Array<ProductSKU>,
+        rowId : Number, dmId : Number, promoId : Number ) {
+            this.promotionObject.brandAndProducts = productArray;
+            this.promotionObject.promoCount = eventId;
+            this.promotionObject.selectedProducts = selectedProducts;
+            this.promotionObject.rowId = rowId;
+            this.promotionObject.dmId = dmId;
+            this.promotionObject.promoId = promoId;
+    }
+
+    getPromoObject() : PromotionInterface {
+        return this.promotionObject;
     }
 
 }
