@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewContainerRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Promotion, PromoStatus } from "../models/index";
+import { Promotion, PromoStatus, ProductSKU } from "../models/index";
 import { ModalDialogService } from 'ngx-modal-dialog';
 import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.component';
 import { SupplierPromotionService } from '../services/index';
+import { SkuPromotionModalComponent } from '../modal/sku-promotion-modal/sku-promotion-modal.component';
 
 @Component({
   selector: 'app-supplier',
@@ -17,6 +18,7 @@ export class SupplierComponent implements OnInit {
    private pageLoaded:Boolean; //to avoid promotion undefined error
    private hasError:Boolean;
    private activePromoYear:String;
+   private products:Array<ProductSKU>;
 
   constructor(private promotionService: SupplierPromotionService,private _Activatedroute:ActivatedRoute,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
@@ -73,7 +75,7 @@ export class SupplierComponent implements OnInit {
 
     // Showing modal on cell click
     this.modalDialogService.openDialog(this.viewContainer ,{
-      title: 'Dynamic Promotion',
+      title: 'SKU Level Promotion',
       childComponent: AddPromotionComponent,
       settings: {
         closeButtonClass: 'close theme-icon-close',

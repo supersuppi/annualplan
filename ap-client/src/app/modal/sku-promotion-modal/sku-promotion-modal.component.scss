@@ -1,0 +1,14 @@
+.modal-dialog {
+    max-width : 100%;
+    margin: 0.5rem;
+    .showScroll{
+        // Hardcoded value need to find a fix
+        max-height:100px;
+        overflow-y: auto;
+    }
+    
+}
+
+.table {
+    font-size: 12px;
+}

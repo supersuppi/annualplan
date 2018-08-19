@@ -29,6 +29,10 @@ import { AddPromotionComponent } from './modal/add-promotion/add-promotion.compo
 import { SupplierPromotionService } from './services/supplier.promotion.service';
 import { BrandPromotionModalComponent } from './modal/brand-promotion-modal/brand-promotion-modal.component';
 import { PromotionModalComponent } from './modal/promotion-modal/promotion-modal.component';
+import { SkuPromotionModalComponent } from './modal/sku-promotion-modal/sku-promotion-modal.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; 
+
 
 @NgModule({
   declarations: [
@@ -45,7 +49,8 @@ import { PromotionModalComponent } from './modal/promotion-modal/promotion-modal
     BrandPromotionModalComponent,
     PromotionRejectModalComponent,
     AddPromotionComponent,
-    PromotionModalComponent
+    PromotionModalComponent,
+    SkuPromotionModalComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +59,8 @@ import { PromotionModalComponent } from './modal/promotion-modal/promotion-modal
     AppRoutingModule,
     HttpClientModule,
     NouisliderModule,
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
     ModalDialogModule.forRoot()
   ],
   //For Modal
@@ -61,7 +68,8 @@ import { PromotionModalComponent } from './modal/promotion-modal/promotion-modal
     BrandPromotionModalComponent,
     PromotionRejectModalComponent,
     AddPromotionComponent,
-    PromotionModalComponent
+    PromotionModalComponent,
+    SkuPromotionModalComponent
   ],
   providers: [RolesService, UserService,
     // Adding request header interceptors.

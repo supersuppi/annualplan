@@ -1,0 +1,27 @@
+<div class="container">
+  <h4>Search Products</h4>
+  <div class="row">
+      <input class="form-control" type="text" id="search" name="search" [(ngModel)]="filter">      
+  </div>
+  <div class="row">
+    <div class="table-responsive">
+      <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>SKU</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products | filter:filter | paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
+          <td>{{product.name}}</td>
+          <td>{{product.sku}}</td>
+          <td><input type="checkbox" name="i" (change)="addToProductList($event.target.checked, product)"></td>
+        </tr>
+      </tbody>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </table>
+    </div>
+  </div>
+</div>
