@@ -1,9 +1,6 @@
-.modal-dialog {
+.row {
 
-    max-width : 100%;
-    margin: 0.5rem;
-
-    .showScroll{
+    &.showScroll{
         // Hardcoded value need to find a fix
         max-height:100px;
         overflow-y: auto;

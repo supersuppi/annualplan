@@ -11,7 +11,7 @@ import { PromotionInterface } from '../../shared/interface/PromotionInterface';
   templateUrl: './brand-promotion-modal.component.html',
   styleUrls: ['./brand-promotion-modal.component.scss']
 })
-export class BrandPromotionModalComponent implements OnInit, IModalDialog {
+export class BrandPromotionModalComponent implements OnInit {
 
   private internalActionButtons = [];
   private product_skus : Array<ProductSKU>;
@@ -45,24 +45,6 @@ export class BrandPromotionModalComponent implements OnInit, IModalDialog {
     this.rowId = this.promoObject.rowId;
     this.dmId = this.promoObject.dmId;
     this.promoId = this.promoObject.promoId;
-  }
-
-  dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
-    options.actionButtons = this.internalActionButtons;
-
-    // Action buttons for modal
-    this.internalActionButtons.push({
-      text: 'Save Promotion',
-      buttonClass: 'btn btn-primary',
-      onAction: () => this.savePromotion()
-    });
-
-    this.internalActionButtons.push({
-      text: 'Cancel',
-      buttonClass: 'btn btn-danger',
-      onAction: () => true
-    });
-
   }
 
   // Save the products which are selected by supplier.
