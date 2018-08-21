@@ -92,7 +92,7 @@ export class BrandPromotionModalComponent implements OnInit {
       //  we are populating the deselected array.
       // 2) If the product is selected without saving it to promotion then we just need to splice
       // the array witout updating deselected array.
-      let index = this.getIndex(this.savedProducts, productSelection);
+      let index = this.promotionService.getIndex(this.savedProducts, productSelection);
       if ( index > -1) {
         this.deSelectedProducts.push(
           this.savedProducts.splice(index, 1)[0]);
@@ -104,26 +104,9 @@ export class BrandPromotionModalComponent implements OnInit {
     }
   }
 
-  getIndex (selectedProductArray : Array<ProductSKU>, product : ProductSKU ) : number {
-    let index; 
-    for ( let i = 0; i < selectedProductArray.length; i++ ) {
-      if ( selectedProductArray[i].sku == product.sku ) {
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
   // Checkbox is "checked" if the product is already selected. 
   isSelected(product) {
-    let isProductSelected : boolean = false;
-    this.savedProducts.forEach(prod => {
-      if ( prod["sku"] === product["sku"] ) {
-        isProductSelected = true;
-      }
-    });
-    return isProductSelected;
+    return this.promotionService.isSelected(product, this.savedProducts);
   }
 
 }
