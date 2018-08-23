@@ -248,6 +248,8 @@ public class PromotionServiceImpl implements PromotionService {
 			levelSKU.setPromo(requestBody.getPromoId());
 			levelSKU.setRateCard(requestBody.getRcId());
 			levelSKU.setPromoCount(requestBody.getPromoCount());
+			levelSKU.setPromoName(requestBody.getPromoName());
+			levelSKU.setPromoType(requestBody.getPromoType());
 			
 			promotionLevelSKURepository.save(levelSKU);
 		}

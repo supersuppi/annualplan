@@ -8,5 +8,7 @@ export interface PromotionInterface {
     rowId? : Number;
     dmId? : Number;
     promoId? : Number;
+    promoName? : string;
+    promoType? : string;
 
 }

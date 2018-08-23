@@ -2,6 +2,8 @@ package com.gxh.apserver.dto;
 
 import java.util.List;
 
+import com.gxh.apserver.constants.PromotionType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,5 +19,7 @@ public class AddOrRemoveProductRequestDTO {
     private Long promoId;
     private List<ProductDTO> productsSelected;
     private List<ProductDTO> productsDeselected;
+    private String promoName;
+    private PromotionType promoType;
     
 }

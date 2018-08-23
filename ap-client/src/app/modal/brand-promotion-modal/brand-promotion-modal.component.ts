@@ -67,6 +67,8 @@ export class BrandPromotionModalComponent implements OnInit {
     productsSaveOrRemove.productsSelected = this.newSelectedProducts;
     productsSaveOrRemove.productsDeselected = this.deSelectedProducts;
     productsSaveOrRemove.promoCount = this.promoCount;
+    productsSaveOrRemove.promoName = this.promoObject.promoName;
+    productsSaveOrRemove.promoType = "BRAND";
 
     return productsSaveOrRemove;
   }
