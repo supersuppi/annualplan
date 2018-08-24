@@ -221,10 +221,10 @@ public class PromotionServiceImpl implements PromotionService {
             Date promoDate = DateUtil.convertFromStringTODate(statusDTO.getPromoYear());
 			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
 
-			Promotion currentPromo = promo.get();
-            currentPromo.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
+			Promotion currentPromotion = promo.get();
+            currentPromotion.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
 
-            promotionRepository.save(currentPromo);
+            promotionRepository.save(currentPromotion);
             return true;
 		} else {
 			return false;	

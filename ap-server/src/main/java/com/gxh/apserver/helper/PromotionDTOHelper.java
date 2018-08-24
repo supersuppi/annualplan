@@ -138,6 +138,7 @@ public class PromotionDTOHelper {
         promoDTO.setRatecards(rows);
         //Set Budget
         promoDTO.setBudget(BudgetCalculator.getBudget(promoBudget.get()));
+        logger.info("<<< createDTO");
         return promoDTO;
     }
 
