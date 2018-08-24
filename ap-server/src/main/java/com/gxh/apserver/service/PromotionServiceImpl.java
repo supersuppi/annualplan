@@ -195,7 +195,7 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoYear,PromotionStatus.SUBMITTED);
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoYear);
 
             if(promo.isPresent()) {
                 logger.info("Promo is present");
@@ -203,10 +203,7 @@ public class PromotionServiceImpl implements PromotionService {
 
             } else {
                 logger.info("Promo is not present");
-                PromoDTO promoDTO = new PromoDTO();
-                promoDTO.setHasError(true);
-                promoDTO.setErrorMessage("Suppiler Doenot have any active promo");
-                return promoDTO;
+                throw new ResourceNotFoundException("Suppiler Does not have any active promo");
             }
         } else {
             throw new ResourceNotFoundException("Supplier not found with ID:"+supplierID);

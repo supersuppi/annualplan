@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService{
 		UserContact userContact = userContactsRepository.findByEmailAddress(emailAddress);
 		UserDTO userDTO = new UserDTO();
 		
-		userDTO.setFirstName(userContact.getFirstName());
+ 		userDTO.setFirstName(userContact.getFirstName());
 		userDTO.setLastName(userContact.getLastName());
 		userDTO.setPhone(userContact.getPhone());
 		

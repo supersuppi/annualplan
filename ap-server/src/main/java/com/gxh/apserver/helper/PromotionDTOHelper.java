@@ -63,6 +63,11 @@ public class PromotionDTOHelper {
                 promoDTO.setIsEditable(true);
                 return this.createDTO(promoDTO,supplier,promo);
 
+            case ACCEPTED:
+                promoDTO.setStatus(PromotionStatus.ACCEPTED);
+                promoDTO.setIsEditable(false);
+                return this.createDTO(promoDTO,supplier,promo);
+
             default:
                 throw new InvalidStatusException("Invalid Status of the user");
         }
