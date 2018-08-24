@@ -1,19 +1,11 @@
 <div class="container" *ngIf ="pageLoaded">
-  
-  <div class="d-flex flex-row" id="banner">
-    <div class="p-2"><h2>Vendor : {{homeContent.supplierName}}</h2></div>
-  </div>
 
-  <div *ngIf="homeContent.role === 'CM'">
-    <label>Vendors: </label>
-    <select (change)="filterForeCasts($event.target.value)">
-        <option value="0">--All--</option>
-        <option *ngFor="let vendor of summaries" value={{summary}}>
-            {{summary}}
-        </option>
-    </select>
+  <div class="container">
+      <div class="row">
+        <h4>Welcome, {{homeContent.userName}}</h4>
+      </div>
   </div>
-  
+  <br>
   <div class="card">
     <div class="card-body">
       <h5>My Dashboard</h5>
@@ -21,40 +13,27 @@
       <div class="row col-lg-12">
 
         <span class="column col-lg-3" *ngIf='homeContent.activePromoYear != null'>
-          <img src="../../assets/images/pieChart.png" alt="pie-chart">
-          <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Active Promotion</a></figcaption>
+          <img src="../../assets/images/calendar.png" alt="pie-chart">
+          <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Annual Planning</a></figcaption>
         </span>
 
         <span class="column col-lg-3" *ngIf='homeContent.activePromoYear == null'>
-          <img src="../../assets/images/pieChart.png" alt="pie-chart">
-          <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">No Active Promotion</a></figcaption>
+          <img src="../../assets/images/calendar.png" alt="pie-chart">
+          <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Annual Planning</a></figcaption>
         </span>
 
         <span  class="column col-lg-3">
-          <img src="../../assets/images/barChart.png" alt="bar-chart">
-          <figcaption class="imgCaption">Budget vs Actual</figcaption>
+          <img src="../../assets/images/tags.png" alt="bar-chart">
+          <figcaption class="imgCaption">Promotional Planning</figcaption>
         </span>
-        <span  class="column col-lg-3" *ngIf="homeContent.role === 'CM'">
-          <img src="../../assets/images/calendar.png" alt="calendar" class="imgWithDropdown">
-          <figcaption class="dropdownCaption">
-              <select name="" id="">
-                  <option value="all">All</option>
-                  <option value="2018">2018</option>
-                  <option value="2017">2017</option>
-              </select>
-          </figcaption>
+        <span  class="column col-lg-3">
+          <img src="../../assets/images/checklist.png" alt="bar-chart">
+          <figcaption class="imgCaption">New Product Form</figcaption>
         </span>
-        <span  class="column col-lg-3" *ngIf="homeContent.role === 'CM'">
-          <img src="../../assets/images/tags.png" alt="tags" class="imgWithDropdown">
-          <figcaption class="dropdownCaption">
-              <select name="" id="">
-                  <option value="all">All</option>
-                  <option value="test1">Test1</option>
-                  <option value="test2">Test2</option>
-              </select>
-          </figcaption>
+        <span  class="column col-lg-3">
+          <img src="../../assets/images/checklist-edit.png" alt="bar-chart">
+          <figcaption class="imgCaption">Product Change Form</figcaption>
         </span>
-
       </div>
       <br>
       <!-- Inbox Component -->
@@ -73,7 +52,7 @@
                   <tr *ngFor="let row of comments; let i = index;">
                     <td>{{row.senderName}}</td>
                     <td>{{row.comment}}</td>
-                    <td>{{row.sentOn}}</td>
+                    <td>{{row.sentOn | slice:0:10}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -83,20 +62,23 @@
         <p>No Messages!</p>
       </div>
       <!-- Slider component -->
-      <h5>Promotional Timeline</h5>
+      <h5>Promotional Year</h5>
       <div class="row">
         <!-- <form [formGroup]="form1"> -->
-            <nouislider [config]="someKeyboardConfig" [(ngModel)]="sample" (ngModelChange)="onSliderChange($event)"></nouislider>
+            <nouislider [config]="someKeyboardConfig" [(ngModel)]="timelineYear" (ngModelChange)="onSliderChange($event)"></nouislider>
         <!-- </form> -->
       </div>
+      <br>
+      <div class="d-flex flex-row-reverse">
+        <button type="button" class="btn btn-success" (click)="displaySupplierPromotion()" >See Promotion</button>
+      </div>
+
+      <div class="container">
+        <div class="row">
+            <h5> Promotion TimeLine </h5>
+            <div  [chartData]="gantt_ChartData" [chartOptions]="gantt_chart_options" GanttChart></div>
+        </div>
+      </div>
     </div>
-
-    <div class="d-flex flex-row-reverse">
-      <button type="button" class="btn btn-success" (click)="displaySupplierPromotion()" >See Promotion</button>
-    </div>
-
-
-  </div>
-
 
 </div>

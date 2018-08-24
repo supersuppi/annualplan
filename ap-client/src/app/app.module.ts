@@ -32,7 +32,9 @@ import { PromotionModalComponent } from './modal/promotion-modal/promotion-modal
 import { SkuPromotionModalComponent } from './modal/sku-promotion-modal/sku-promotion-modal.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; 
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GanttChartComponent } from './helper/gantt-chart.component';
+import { TruncatePipe } from './helper/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     PromotionRejectModalComponent,
     AddPromotionComponent,
     PromotionModalComponent,
-    SkuPromotionModalComponent
+    SkuPromotionModalComponent,
+    GanttChartComponent,
+    TruncatePipe
   ],
   imports: [
     BrowserModule,
@@ -61,6 +65,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     NouisliderModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,
+    BrowserAnimationsModule,
     ModalDialogModule.forRoot()
   ],
   //For Modal

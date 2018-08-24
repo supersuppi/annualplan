@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewContainerRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Promotion, PromoStatus, ProductSKU } from "../models/index";
+import { Promotion, PromoStatus, ProductSKU, RateCard, DualMailer } from "../models/index";
 import { ModalDialogService } from 'ngx-modal-dialog';
 import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.component';
 import { SupplierPromotionService } from '../services/index';
 import { SkuPromotionModalComponent } from '../modal/sku-promotion-modal/sku-promotion-modal.component';
+import { map } from '../../../node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-supplier',
@@ -19,6 +20,7 @@ export class SupplierComponent implements OnInit {
    private hasError:Boolean;
    private activePromoYear:String;
    private products:Array<ProductSKU>;
+   private productDMBudgetList:Array<CalculatedBudget>;
 
   constructor(private promotionService: SupplierPromotionService,private _Activatedroute:ActivatedRoute,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
@@ -36,11 +38,25 @@ export class SupplierComponent implements OnInit {
       console.debug("Get SupplierPromotion Call Success");
       this.promotion = sPromotion;
       this.pageLoaded =true;
+      //Create budget table data
+      this.initBudgetTableData(sPromotion.ratecards);
     },
     error => { 
       this.hasError = true;
       console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
     });
+  }
+
+  initBudgetTableData(ratecards:Array<RateCard>) {
+    this.productDMBudgetList = new Array();
+    for (let ratecard of ratecards) {
+     let dualMailers:Array<DualMailer> = ratecard.dualmailers;
+     for (let dm of dualMailers) {
+       if(dm.value!=0) {
+        this.createOrUpdateBudget(ratecard,dm)
+       }
+      }
+   }
   }
 
   saveSupplierPromotion() {
@@ -94,4 +110,43 @@ export class SupplierComponent implements OnInit {
   refreshData() {
     this.getSupplierPromotion(Number(localStorage.getItem('supplierID')),this.activePromoYear);
   }
+
+  //Event called on every table cell value change
+  onValueChange(row,dm){
+    if(dm.value!=0) {
+      this.createOrUpdateBudget(row,dm)
+    }
+  }
+
+  private createOrUpdateBudget(ratecard,dm) {
+    //Check is rateplan is already present
+    let itemIndex = this.productDMBudgetList.findIndex(item => item.packageName === ratecard.pname);
+    if(itemIndex === -1){
+      //Not present,create new
+      let newBudget = new CalculatedBudget();
+      newBudget.packageName = ratecard.pname
+      newBudget.totalSelected = dm.value
+      let spent:number = dm.value * ratecard.prate
+      newBudget.totalSpent = spent
+      this.productDMBudgetList.push(newBudget)
+    } else {
+      //Already present,Update
+      let presentBudget = this.productDMBudgetList[itemIndex];
+      //If value is 0 remove from budget list
+      if(dm.value==0){
+        this.productDMBudgetList.splice(itemIndex, 1);
+      } else {
+        presentBudget.packageName = ratecard.pname
+        presentBudget.totalSelected = dm.value
+        let spent = dm.value * ratecard.prate
+        presentBudget.totalSpent = spent
+      } 
+    }
+  }
+}
+//Modal Class for Budget calculation table
+class CalculatedBudget {
+  packageName:string;
+  totalSelected:number;
+  totalSpent:number;
 }

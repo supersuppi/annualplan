@@ -55,7 +55,7 @@
                 <td><p>{{row.prate}}$</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1"/>
+                  <input *ngIf="!promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
                   <p *ngIf="promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                   <p *ngIf="!promotion.isEditable && promotion.status === 'SUBMITTED'" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
@@ -64,5 +64,29 @@
             
          </table>
     </div>
+
+    <div class="table-responsive" *ngIf ="productDMBudgetList.length != 0">
+      <h4>Budget Breakdown</h4>
+      <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Selected Package</th>
+              <th scope="col">Total</th>
+              <th scope="col">Total Spent</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr *ngFor="let row of productDMBudgetList;let rowid = index">
+
+              <td><p>{{row.packageName}}</p></td>
+              <td><p>{{row.totalSelected}}</p></td>
+              <td><p>{{row.totalSpent}}$</p></td>
+
+            </tr>
+          </tbody>
+          
+       </table>
+  </div>
 
  </div>

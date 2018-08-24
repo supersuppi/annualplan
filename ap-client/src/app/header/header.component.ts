@@ -18,7 +18,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       private userService : UserService) { }
 
   ngOnInit() {
-    console.log("Header component is loaded");
     this.subscription = this.userService.userLoggedIn.subscribe(
       (data) => {
         console.log(data.loggedIn);

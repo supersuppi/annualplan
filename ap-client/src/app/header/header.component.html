@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="">GXH Annual Planner</a>
+    <a class="navbar-brand" href="">GXH Annual Promotion Planner</a>
 
     <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex" *ngIf="loggedInUser">
         <li class="dropdown" appDropdown>
@@ -11,5 +11,9 @@
             </ul>
         </li>
     </ul>
+
+    <li class="nav-item" *ngIf="loggedInUser" role="button">
+        <a class="nav-link textcolor" (click)="onLogout()">Logout</a>
+    </li>
 
 </nav>

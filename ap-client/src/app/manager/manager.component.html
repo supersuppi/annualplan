@@ -1,22 +1,35 @@
-<div class="container">
+<div class="container" *ngIf ="hasError">
+    <h3>No Data Found!</h3>
+</div>
+
+<div class="container" *ngIf ="pageLoaded">
 
     <div class="d-flex flex-row">
         <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Status: </strong> {{promotion.status}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Total Budget: </strong>{{promotion.budget.allocated}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Used Budget: </strong>{{promotion.budget.used}}</span></div>
-    </div>
+    </div> 
     
     <div class="d-flex flex-row-reverse">
-          <div class="p-2">
+        <div class="p-2">
+            <select (change)="onSelect($event.target.value)">
+              <option *ngFor="let s of suppliers" [value]="s.supplierID">
+                {{s.supplierName}}
+              </option>
+            </select> 
+          </div>
+          <div class="p-2" *ngIf ="promotion.status === 'SUBMITTED'">
             <button type="button" class="btn btn-success" (click)="acceptPromotion()">Accept</button>
           </div>
-          <div class="p-2">
+          <div class="p-2" *ngIf ="promotion.status === 'SUBMITTED'">
             <button type="button" class="btn btn-danger" (click)="rejectPromotion()">Reject</button>
           </div>
     </div>
-  
-    <div class="table-responsive" *ngIf ="pageLoaded">
+
+    <div class="table-responsive">
+       <h4>Supplier : {{currentSupplierName}} </h4>
+       <br>
           <table class="table table-sm">
               <thead>
                 <tr>
@@ -47,12 +60,36 @@
                   <td><p>{{row.prate}}$</p></td>
   
                   <td *ngFor="let dm of row.dualmailers; let i = index">
-                    <p>{{dm.value}}</p>
+                    <p (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                   </td>
                 </tr>
               </tbody>
            </table>
     </div>
+
+    <div class="table-responsive" *ngIf ="productDMBudgetList.length != 0">
+      <h4>Budget Breakdown</h4>
+      <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Selected Package</th>
+              <th scope="col">Total</th>
+              <th scope="col">Total Spent</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr *ngFor="let row of productDMBudgetList;let rowid = index">
+
+              <td><p>{{row.packageName}}</p></td>
+              <td><p>{{row.totalSelected}}</p></td>
+              <td><p>{{row.totalSpent}}$</p></td>
+
+            </tr>
+          </tbody>
+          
+       </table>
+  </div>
   
    </div>
   
