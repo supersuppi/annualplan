@@ -51,13 +51,14 @@ export class SupplierPromotionService{
     }
 
     setPromoObject( productArray : Array<Product>, eventId : Number, selectedProducts : Array<ProductSKU>,
-        rowId : Number, dmId : Number, promoId : Number ) {
+        rowId : Number, dmId : Number, promoId : Number, promoName : string) {
             this.promotionObject.brandAndProducts = productArray;
             this.promotionObject.promoCount = eventId;
             this.promotionObject.selectedProducts = selectedProducts;
             this.promotionObject.rowId = rowId;
             this.promotionObject.dmId = dmId;
             this.promotionObject.promoId = promoId;
+            this.promotionObject.promoName = promoName;
     }
 
     getPromoObject() : PromotionInterface {

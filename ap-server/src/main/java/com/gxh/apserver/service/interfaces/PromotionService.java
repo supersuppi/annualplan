@@ -31,6 +31,6 @@ public interface PromotionService {
     
     public void saveOrRemoveSelectedProducts( AddOrRemoveProductRequestDTO requestBody ) throws ParseException;
 
-	public List<ProductDTO> getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
+	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
 		throws ParseException;
 }

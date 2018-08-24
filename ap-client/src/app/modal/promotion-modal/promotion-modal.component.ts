@@ -1,4 +1,4 @@
-import { Component, OnInit, ComponentRef, ViewEncapsulation, ViewChild  } from '@angular/core';
+import { Component, OnInit, ComponentRef, ViewEncapsulation, ViewChild } from '@angular/core';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
 import { BrandPromotionModalComponent } from '../brand-promotion-modal/brand-promotion-modal.component';
 import { SkuPromotionModalComponent } from '../sku-promotion-modal/sku-promotion-modal.component';
@@ -17,14 +17,22 @@ export class PromotionModalComponent implements OnInit, IModalDialog {
   private brandPromoComp : BrandPromotionModalComponent;
   @ViewChild(SkuPromotionModalComponent)
   private skuPromoComp : SkuPromotionModalComponent;
+  private tabEnabled : string = "";
 
   constructor() { }
 
   ngOnInit() {
+    if (typeof this.promotionType === 'undefined'
+      || this.promotionType === null) {
+      this.promotionType = 'SINGLE';
+    } else {
+      this.tabEnabled = this.promotionType;
+    }
   }
 
   dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
     options.actionButtons = this.internalActionButtons;
+    this.promotionType = options.data["promoType"]; 
     // Action buttons for modal
     this.internalActionButtons.push({
       text: 'Save Promotion',

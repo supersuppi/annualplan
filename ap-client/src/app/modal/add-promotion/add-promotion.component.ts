@@ -28,6 +28,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   private promoNameModel : string = null;
   private productsData: any;
   private addPromoEvent : any;
+  private promoType : string;
   
   constructor(private modalService: ModalService, 
     private modalDialogService: ModalDialogService,
@@ -64,7 +65,9 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
       this.promoId, this.dmId, this.rowId, event.target.id
     ).subscribe( (data) => {
       // this.showProductSelectionModal (event, data);
-      this.productsData = data;
+      this.productsData = data["products_selected"];
+      this.promoNameModel = data["promoName"];
+      this.promoType = data["promoType"];
       this.addPromoEvent = event;
       this.showDiv = +event.target.id;
     }, err => {
@@ -74,6 +77,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   }
 
   proceedToPromotion() {
+    this.showDiv = 0;
     this.showProductSelectionModal (this.addPromoEvent, this.productsData);
   }
 
@@ -87,12 +91,15 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
       childComponent: PromotionModalComponent,
       settings: {
         closeButtonClass: 'close theme-icon-close',
+      },
+      data : {
+        promoType : this.promoType
       }
     });
 
     this.promotionService.setPromoObject(
       this.promotionProducts, event.target.id, selectedProducts, (+this.rowId)+1,
-      (+this.dmId)+1, this.promoId);
+      (+this.dmId)+1, this.promoId,this.promoNameModel);
   }
 
   createTilesArray () {

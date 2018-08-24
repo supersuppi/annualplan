@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+import com.gxh.apserver.constants.PromotionType;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,4 +16,6 @@ import java.util.List;
 public class PromoSKUDTO {
     private Integer promo_count;
     private List<ProductDTO> products_selected;
+    private PromotionType promoType;
+    private String promoName;
 }

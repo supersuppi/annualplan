@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -22,6 +23,7 @@ import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
 import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
+import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
@@ -262,11 +264,22 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
-	public List<ProductDTO> getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
+	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
 			throws ParseException {
 		
+		PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 		Optional<List<Product>> prodOptionalList = productRepository.findAllSelectedProducts(promoId, dmId, rowId, promoCount);
+		Optional<List<PromotionLevelSKU>> optionalPromo = promotionLevelSKURepository.findByRowData(dmId, rowId,
+				promoId, promoCount);
+		
+		if (optionalPromo.isPresent()) {
+			List<PromotionLevelSKU> products = optionalPromo.get().stream().limit(1).collect(Collectors.toList());
+			products.forEach( promoLevelSku -> {
+				promoSKUDTO.setPromoName(promoLevelSku.getPromoName());
+				promoSKUDTO.setPromoType(promoLevelSku.getPromoType());
+			});
+		}
 		
 		if( prodOptionalList.isPresent() ) {
 			prodOptionalList.get().forEach( product -> {
@@ -278,10 +291,12 @@ public class PromotionServiceImpl implements PromotionService {
 				
 				productDTOList.add(productDTO);
 			}); 
-			return productDTOList;
+//			return productDTOList;
 		}
-			
-		return productDTOList;
+		
+		promoSKUDTO.setProducts_selected(productDTOList);
+		
+		return promoSKUDTO;
 		
 	}
 }
