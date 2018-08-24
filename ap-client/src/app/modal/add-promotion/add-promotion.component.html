@@ -2,10 +2,24 @@
 
   <div class="row" *ngIf="numberOfTiles > 0;else addTiles">
     <div class="col-lg-12">
-      <div class="col-lg-4" *ngFor="let tile of tilesArray">
-          <button class="btn btn-success" id="{{tile}}" (click)="addPromotion($event)">
-              Add Promotion {{tile}}
-            </button>
+      <div class="col-lg-12" *ngFor="let tile of tilesArray;let i of index">
+          <button class="btn btn-success bottomPadding" id="{{tile}}" (click)="addPromotion($event)">
+            Add Promotion {{tile}}
+          </button>
+
+          <div class="card" *ngIf="showDiv===i">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="promoName">Promotion Name:</label>
+                <div class="row">
+                  <input type="text" class="form-control col-lg-8" [(ngModel)]="promoNameModel"
+                    aria-describedby="promoName" [disabled]="" placeholder="Enter a promotion name">
+                  <button class="btn btn-primary marginLeft col-lg-3"
+                    [disabled]="promoNameModel == null || promoNameModel.length == 0" (click)="proceedToPromotion()">Continue</button>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>

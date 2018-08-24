@@ -1,5 +1,7 @@
-import { Component, OnInit, ComponentRef, ViewEncapsulation, Renderer2,  } from '@angular/core';
+import { Component, OnInit, ComponentRef, ViewEncapsulation, ViewChild  } from '@angular/core';
 import { IModalDialog, IModalDialogOptions } from 'ngx-modal-dialog';
+import { BrandPromotionModalComponent } from '../brand-promotion-modal/brand-promotion-modal.component';
+import { SkuPromotionModalComponent } from '../sku-promotion-modal/sku-promotion-modal.component';
 
 @Component({
   selector: 'app-promotion-modal',
@@ -11,8 +13,12 @@ export class PromotionModalComponent implements OnInit, IModalDialog {
 
   private internalActionButtons = [];
   private promotionType: string = 'BRAND';
+  @ViewChild(BrandPromotionModalComponent)
+  private brandPromoComp : BrandPromotionModalComponent;
+  @ViewChild(SkuPromotionModalComponent)
+  private skuPromoComp : SkuPromotionModalComponent;
 
-  constructor(private renderer : Renderer2) { }
+  constructor() { }
 
   ngOnInit() {
   }
@@ -23,7 +29,7 @@ export class PromotionModalComponent implements OnInit, IModalDialog {
     this.internalActionButtons.push({
       text: 'Save Promotion',
       buttonClass: 'btn btn-primary',
-      onAction: () => true
+      onAction: () => this.savePromotion()
     });
 
     this.internalActionButtons.push({
@@ -32,6 +38,17 @@ export class PromotionModalComponent implements OnInit, IModalDialog {
       onAction: () => true
     });
 
+  }
+
+  savePromotion () {
+
+    if (this.promotionType === 'SINGLE' ) {
+      this.skuPromoComp.saveSKUPromotion();
+    } else {
+      this.brandPromoComp.savePromotion();
+    }
+
+    return true;
   }
 
   showSinglePromotion(event) {

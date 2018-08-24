@@ -24,6 +24,10 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   private rowId : Number;
   private dmId : Number;
   private promoId : Number;
+  private showDiv : Number = 0;
+  private promoNameModel : string = null;
+  private productsData: any;
+  private addPromoEvent : any;
   
   constructor(private modalService: ModalService, 
     private modalDialogService: ModalDialogService,
@@ -59,18 +63,25 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
     this.promotionService.getSelectedProducts(
       this.promoId, this.dmId, this.rowId, event.target.id
     ).subscribe( (data) => {
-      this.showProductSelectionModal (event, data)
+      // this.showProductSelectionModal (event, data);
+      this.productsData = data;
+      this.addPromoEvent = event;
+      this.showDiv = +event.target.id;
     }, err => {
       console.log("Something went wrong");
     });
 
   }
 
+  proceedToPromotion() {
+    this.showProductSelectionModal (this.addPromoEvent, this.productsData);
+  }
+
   //Showing modal on cell click
   showProductSelectionModal (event, selectedProducts : Array<ProductSKU>) {
 
     this.modalDialogService.openDialog(this.parentRef ,{
-      title: 'Brand Promotion',
+      title: "Promotion Name : "+this.promoNameModel,
       placeOnTop: true,
       // childComponent: BrandPromotionModalComponent,
       childComponent: PromotionModalComponent,
@@ -81,7 +92,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
 
     this.promotionService.setPromoObject(
       this.promotionProducts, event.target.id, selectedProducts, (+this.rowId)+1,
-      (+this.dmId)+1, this.promoId
+      (+this.dmId)+1, this.promoId, this.promoNameModel
     );
   }
 

@@ -11,7 +11,7 @@ import { PromotionInterface } from '../../shared/interface/PromotionInterface';
   templateUrl: './brand-promotion-modal.component.html',
   styleUrls: ['./brand-promotion-modal.component.scss']
 })
-export class BrandPromotionModalComponent implements OnInit, IModalDialog {
+export class BrandPromotionModalComponent implements OnInit {
 
   private internalActionButtons = [];
   private product_skus : Array<ProductSKU>;
@@ -47,24 +47,6 @@ export class BrandPromotionModalComponent implements OnInit, IModalDialog {
     this.promoId = this.promoObject.promoId;
   }
 
-  dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<string>>) {
-    options.actionButtons = this.internalActionButtons;
-
-    // Action buttons for modal
-    this.internalActionButtons.push({
-      text: 'Save Promotion',
-      buttonClass: 'btn btn-primary',
-      onAction: () => this.savePromotion()
-    });
-
-    this.internalActionButtons.push({
-      text: 'Cancel',
-      buttonClass: 'btn btn-danger',
-      onAction: () => true
-    });
-
-  }
-
   // Save the products which are selected by supplier.
   savePromotion() {
     this.promotionService.saveOrRemoveSelectedProducts(this.constructDataToUpdate()).subscribe(
@@ -85,6 +67,8 @@ export class BrandPromotionModalComponent implements OnInit, IModalDialog {
     productsSaveOrRemove.productsSelected = this.newSelectedProducts;
     productsSaveOrRemove.productsDeselected = this.deSelectedProducts;
     productsSaveOrRemove.promoCount = this.promoCount;
+    productsSaveOrRemove.promoName = this.promoObject.promoName;
+    productsSaveOrRemove.promoType = "BRAND";
 
     return productsSaveOrRemove;
   }
@@ -110,7 +94,7 @@ export class BrandPromotionModalComponent implements OnInit, IModalDialog {
       //  we are populating the deselected array.
       // 2) If the product is selected without saving it to promotion then we just need to splice
       // the array witout updating deselected array.
-      let index = this.getIndex(this.savedProducts, productSelection);
+      let index = this.promotionService.getIndex(this.savedProducts, productSelection);
       if ( index > -1) {
         this.deSelectedProducts.push(
           this.savedProducts.splice(index, 1)[0]);
@@ -122,26 +106,9 @@ export class BrandPromotionModalComponent implements OnInit, IModalDialog {
     }
   }
 
-  getIndex (selectedProductArray : Array<ProductSKU>, product : ProductSKU ) : number {
-    let index; 
-    for ( let i = 0; i < selectedProductArray.length; i++ ) {
-      if ( selectedProductArray[i].sku == product.sku ) {
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
   // Checkbox is "checked" if the product is already selected. 
   isSelected(product) {
-    let isProductSelected : boolean = false;
-    this.savedProducts.forEach(prod => {
-      if ( prod["sku"] === product["sku"] ) {
-        isProductSelected = true;
-      }
-    });
-    return isProductSelected;
+    return this.promotionService.isSelected(product, this.savedProducts);
   }
 
 }

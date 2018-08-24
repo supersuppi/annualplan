@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ComponentRef, ViewEncapsulation } from '@angular/core';
 import { IModalDialog, IModalDialogOptions,IModalDialogSettings } from 'ngx-modal-dialog';
-import { Product, ProductSKU } from '../../models';
+import { Product, ProductSKU, AddOrRemoveProducts } from '../../models';
 import { SupplierPromotionService } from '../../services';
 import { PromotionInterface } from '../../shared/interface/PromotionInterface';
 
@@ -48,37 +48,52 @@ export class SkuPromotionModalComponent implements OnInit {
     this.promoId = this.promoObject.promoId;
   }
 
-  dialogInit(reference: ComponentRef<IModalDialog>, options: Partial<IModalDialogOptions<String>>) {
-    options.actionButtons = this.internalActionButtons;
-    this.products = options.data['products'];
-    
-    // Action buttons for modal
-    this.internalActionButtons.push({
-      text: 'Save Promotion',
-      buttonClass: 'btn btn-primary',
-      onAction: () => this.saveSKUPromotion()
-    });
-
-    this.internalActionButtons.push({
-      text: 'Cancel',
-      buttonClass: 'btn btn-danger',
-      onAction: () => true
-    });
-
+  saveSKUPromotion(){
+    this.promotionService.saveOrRemoveSelectedProducts(this.constructDataToUpdate()).subscribe(
+      () => {
+        console.log("Db updated");
+      }, err => {
+        console.log("Something went wrong");
+      });
+      return true;
   }
 
-  saveSKUPromotion(){
-    return true;
+  constructDataToUpdate () {
+    let productsSaveOrRemove : AddOrRemoveProducts = new AddOrRemoveProducts(); 
+
+    productsSaveOrRemove.dmId = this.dmId;
+    productsSaveOrRemove.promoId = this.promoId;
+    productsSaveOrRemove.rcId = this.rowId;
+    productsSaveOrRemove.productsSelected = this.newSelectedProducts;
+    productsSaveOrRemove.productsDeselected = this.deSelectedProducts;
+    productsSaveOrRemove.promoCount = this.promoCount;
+
+    return productsSaveOrRemove;
   }
 
   addToProductList(isChecked,product) {
     console.log(isChecked);
     console.log(product);
     if(isChecked) {
-      //Add to selected product list
+      this.newSelectedProducts.push(product);
     } else {
       //remove selected product from list
+      let index = this.promotionService.getIndex(this.savedProducts, product);
+      if (index > -1){
+        this.deSelectedProducts.push(
+          this.savedProducts.splice(index, 1)[0]);
+      } else {
+        this.newSelectedProducts.splice(
+          this.newSelectedProducts.indexOf(product)
+        );
+      }
     }
+  }
+
+  isSelected(product) {
+    return this.promotionService.isSelected(
+      product, this.savedProducts
+    );
   }
 
 }

@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import com.gxh.apserver.constants.PromotionType;
+
 @Getter
 @Setter
 @Entity
@@ -29,4 +31,11 @@ public class PromotionLevelSKU {
     
     @Column(name = "promo_count")
     private int promoCount;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "promotion_type")
+    private PromotionType promoType;
+    
+    @Column(name="Promotion_name")
+    private String promoName;
 }

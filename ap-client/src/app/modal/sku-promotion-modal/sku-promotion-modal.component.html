@@ -17,7 +17,8 @@
         <tr *ngFor="let product of products | filter:filter | paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
           <td>{{product.name}}</td>
           <td>{{product.sku}}</td>
-          <td><input type="checkbox" name="i" (change)="addToProductList($event.target.checked, product)"></td>
+          <td><input type="checkbox" name="i" [checked]="isSelected(product)"
+            (change)="addToProductList($event.target.checked, product)"></td>
         </tr>
       </tbody>
       <pagination-controls (pageChange)="p = $event"></pagination-controls>

@@ -64,4 +64,25 @@ export class SupplierPromotionService{
         return this.promotionObject;
     }
 
+    getIndex (selectedProductArray : Array<ProductSKU>, product : ProductSKU ) : number {
+        let index; 
+        for ( let i = 0; i < selectedProductArray.length; i++ ) {
+            if ( selectedProductArray[i].sku == product.sku ) {
+            index = i;
+            break;
+            }
+        }
+        return index;
+    }
+
+    isSelected(product: ProductSKU, savedProducts: Array<ProductSKU>): boolean {
+        let isProductSelected : boolean = false;
+        savedProducts.forEach(prod => {
+            if ( prod["sku"] === product["sku"] ) {
+            isProductSelected = true;
+            }
+        });
+        return isProductSelected;
+    }
+
 }
