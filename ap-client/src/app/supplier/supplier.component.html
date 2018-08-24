@@ -4,13 +4,13 @@
 
 <div class="container" *ngIf ="pageLoaded">
   <div class="d-flex flex-row">
-      <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear}}</span></div>
+      <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear | date: 'y'}}</span></div>
       <div class="p-2"><span class="alert alert-info"><strong>Status: </strong> {{promotion.status}}</span></div>
       <div class="p-2"><span class="alert alert-info"><strong>Total Budget: </strong>{{promotion.budget.allocated}}</span></div>
       <div class="p-2"><span class="alert alert-info"><strong>Used Budget: </strong>{{promotion.budget.used}}</span></div>
       <div class="p-2"><span class="alert alert-info"><strong>Budget Available: </strong>{{promotion.budget.diff}}</span></div>
   </div>
-  
+  <br>
   <div class="d-flex flex-row-reverse" *ngIf="promotion.status === 'ACTIVE' || promotion.status === 'REJECTED'">
     <div class="p-2">
       <button class="btn btn-primary" (click)="promotion.isEditable=!promotion.isEditable" *ngIf="promotion.isEditable">Edit</button>
@@ -20,11 +20,12 @@
       <button type="button" class="btn btn-warning" (click)="saveSupplierPromotion()" *ngIf="promotion.isEditable">Save</button>
     </div>
     <div class="p-2">
-      <button type="button" class="btn btn-success" (click)="submitSupplierPromotion()" *ngIf="promotion.isEditable">Submit</button>
+      <button type="button" class="btn btn-success" (click)="submitSupplierPromotion()" *ngIf="promotion.isEditable && promoSaved">Submit</button>
     </div>
   </div>
 
     <div class="table-responsive">
+        <h3>Annual Promotion</h3>
         <table class="table table-sm">
             <thead>
               <tr>
@@ -52,12 +53,12 @@
 
                 <td><p>{{row.pname}}</p></td>
                 <td><p>{{row.pcode}}</p></td>
-                <td><p>{{row.prate}}$</p></td>
+                <td><p>${{row.prate}}</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
                   <input *ngIf="!promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
                   <p *ngIf="promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
-                  <p *ngIf="!promotion.isEditable && promotion.status === 'SUBMITTED'" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <p *ngIf="!promotion.isEditable && promotion.status === 'SUBMITTED' || promotion.status === 'ACCEPTED'" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
               </tr>
             </tbody>
@@ -78,11 +79,9 @@
           
           <tbody>
             <tr *ngFor="let row of productDMBudgetList;let rowid = index">
-
               <td><p>{{row.packageName}}</p></td>
               <td><p>{{row.totalSelected}}</p></td>
-              <td><p>{{row.totalSpent}}$</p></td>
-
+              <td><p>${{row.totalSpent}}</p></td>
             </tr>
           </tbody>
           

@@ -13,7 +13,7 @@ import { ManagerPromotionService } from '../../services/index';
 export class PromotionRejectModalComponent implements OnInit {
 
   private internalActionButtons = [];
-  private promoComment : PromoComment;
+  public promoComment : PromoComment;
    
   constructor(private promotionService: ManagerPromotionService) { }
 

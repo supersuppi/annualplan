@@ -5,7 +5,7 @@
 <div class="container" *ngIf ="pageLoaded">
 
     <div class="d-flex flex-row">
-        <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear}}</span></div>
+        <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear | date: 'y'}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Status: </strong> {{promotion.status}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Total Budget: </strong>{{promotion.budget.allocated}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Used Budget: </strong>{{promotion.budget.used}}</span></div>
@@ -57,7 +57,7 @@
   
                   <td><p>{{row.pname}}</p></td>
                   <td><p>{{row.pcode}}</p></td>
-                  <td><p>{{row.prate}}$</p></td>
+                  <td><p>${{row.prate}}</p></td>
   
                   <td *ngFor="let dm of row.dualmailers; let i = index">
                     <p (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
@@ -80,11 +80,9 @@
           
           <tbody>
             <tr *ngFor="let row of productDMBudgetList;let rowid = index">
-
               <td><p>{{row.packageName}}</p></td>
               <td><p>{{row.totalSelected}}</p></td>
-              <td><p>{{row.totalSpent}}$</p></td>
-
+              <td><p>${{row.totalSpent}}</p></td>
             </tr>
           </tbody>
           

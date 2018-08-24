@@ -16,18 +16,20 @@ export class SupplierComponent implements OnInit {
 
    private promotion:Promotion;
    private promoStatus:PromoStatus;
-   private pageLoaded:Boolean; //to avoid promotion undefined error
-   private hasError:Boolean;
+   public pageLoaded:Boolean; //to avoid promotion undefined error
+   public hasError:Boolean;
    private activePromoYear:String;
    private products:Array<ProductSKU>;
    private productDMBudgetList:Array<CalculatedBudget>;
+   private promoSaved:Boolean;
 
   constructor(private promotionService: SupplierPromotionService,private _Activatedroute:ActivatedRoute,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
-    this.pageLoaded =false;
-    this.hasError =false;
+    this.pageLoaded = false;
+    this.hasError = false;
+    this.promoSaved = false;
     this.activePromoYear = this._Activatedroute.snapshot.params['pyear'];
     let sid:Number = Number(localStorage.getItem('supplierID'))
     this.getSupplierPromotion(sid,this.activePromoYear);
@@ -38,6 +40,7 @@ export class SupplierComponent implements OnInit {
       console.debug("Get SupplierPromotion Call Success");
       this.promotion = sPromotion;
       this.pageLoaded =true;
+      console.debug(sPromotion);
       //Create budget table data
       this.initBudgetTableData(sPromotion.ratecards);
     },
@@ -63,6 +66,7 @@ export class SupplierComponent implements OnInit {
     this.promotionService.saveSupplierPromotions(this.promotion).subscribe((response:String) => {
       console.debug("POST saveSupplierPromotion Call Success");
       console.log(response);
+      this.promoSaved = true;
       this.refreshData();
     },
     error => { 

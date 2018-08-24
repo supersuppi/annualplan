@@ -21,8 +21,8 @@ export class ManagerComponent implements OnInit {
   private currentSupplierID:Number;
   private currentSupplierName:String;
   private suppliers:Array<SupplierHomeData>;
-  private pageLoaded:Boolean;//to avoid promotion undefined error
-  private hasError:Boolean;
+  public pageLoaded:Boolean;//to avoid promotion undefined error
+  public hasError:Boolean;
   private productDMBudgetList:Array<CalculatedBudget>;
   
   constructor(private promotionService:ManagerPromotionService,private modalDialogService: ModalDialogService,
@@ -76,7 +76,7 @@ export class ManagerComponent implements OnInit {
       this.promotionService.changePromotionStatus(this.promoStatus).subscribe((response:PromoStatus) => {
         console.debug("Get acceptPromotion Call Success");
         console.log(response.statusChangeSuccess);
-        this.goBack();
+        this.refreshData();
       },
       error => { 
           console.error("ERROR! ManagerComponent:acceptPromotion = "+JSON.stringify(error));
@@ -113,8 +113,8 @@ export class ManagerComponent implements OnInit {
       });
     }
 
-    goBack() {
-      this.router.navigate(['/home']);
+    refreshData() {
+      this.getSupplierPromotion(this.currentSupplierID,this.activePromoYear);
     }
 
     onSelect(sID) {
@@ -134,7 +134,7 @@ export class ManagerComponent implements OnInit {
       this.promotionService.savePromotionRejectComment(this.promoComment).subscribe((response:any) => {
         console.debug("save PromotionRejectComment Call Success");
         console.log(response);
-        this.goBack();
+        this.refreshData();
       },
       error => { 
           console.error("ERROR! PromotionRejectModalComponent:sendMessage = "+error);

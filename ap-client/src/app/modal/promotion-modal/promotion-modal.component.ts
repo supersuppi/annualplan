@@ -12,7 +12,7 @@ import { SkuPromotionModalComponent } from '../sku-promotion-modal/sku-promotion
 export class PromotionModalComponent implements OnInit, IModalDialog {
 
   private internalActionButtons = [];
-  private promotionType: string = 'BRAND';
+  public promotionType: string = 'BRAND';
   @ViewChild(BrandPromotionModalComponent)
   private brandPromoComp : BrandPromotionModalComponent;
   @ViewChild(SkuPromotionModalComponent)

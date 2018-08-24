@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   private homeContent:UserHomeData;
   private comments:Array<HomeComment>;
   private supplierID:Number;
-  private pageLoaded:Boolean; //to avoid promotion undefined error
+  public pageLoaded:Boolean; //to avoid promotion undefined error
   timelineYear: number;
   selectedYear:Number;
 

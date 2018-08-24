@@ -14,8 +14,8 @@ import { PromotionInterface } from '../../shared/interface/PromotionInterface';
 export class BrandPromotionModalComponent implements OnInit {
 
   private internalActionButtons = [];
-  private product_skus : Array<ProductSKU>;
-  private productArray : Array<Product>;
+  public product_skus : Array<ProductSKU>;
+  public productArray : Array<Product>;
   private savedProducts : Array<ProductSKU>;
   private deSelectedProducts : Array<ProductSKU> = [];
   private newSelectedProducts : Array<ProductSKU> = [];

@@ -15,7 +15,7 @@ import { PromotionModalComponent } from '../promotion-modal/promotion-modal.comp
 })
 export class AddPromotionComponent implements OnInit, IModalDialog {
 
-  private numberOfTiles : Number;
+  public numberOfTiles : Number;
   private tilesArray : Array<Number> = [];
   private internalActionButtons = [];
   private promotionProducts: Array<Product>;
@@ -92,8 +92,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
 
     this.promotionService.setPromoObject(
       this.promotionProducts, event.target.id, selectedProducts, (+this.rowId)+1,
-      (+this.dmId)+1, this.promoId, this.promoNameModel
-    );
+      (+this.dmId)+1, this.promoId);
   }
 
   createTilesArray () {
