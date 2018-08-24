@@ -17,4 +17,8 @@ public interface PromotionLevelSKURepository extends JpaRepository<PromotionLeve
 	@Query(" delete from PromotionLevelSKU p where p.promo = ?3 and p.rateCard = ?2 "
 			+ "and p.dualMailer = ?1 and p.product = ?4 and p.promoCount = ?5 ") 
     public void deleteByRowData(Long dmId, Long rcId, Long promoId, Long productId, int prmoCount);
+
+	@Query(" select p from  PromotionLevelSKU p where p.promo = ?3 and p.rateCard = ?2 "
+			+ "and p.dualMailer = ?1 and p.promoCount = ?4 ") 
+    public Optional<List<PromotionLevelSKU>> findByRowData(Long dmId, Long rcId, Long promoId, int prmoCount);
 }

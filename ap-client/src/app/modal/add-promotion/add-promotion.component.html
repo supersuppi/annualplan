@@ -13,13 +13,14 @@
                 <label for="promoName">Promotion Name:</label>
                 <div class="row">
                   <input type="text" class="form-control col-lg-8" [(ngModel)]="promoNameModel"
-                    aria-describedby="promoName" [disabled]="" placeholder="Enter a promotion name">
+                    aria-describedby="promoName"  placeholder="Enter a promotion name">
                   <button class="btn btn-primary marginLeft col-lg-3"
                     [disabled]="promoNameModel == null || promoNameModel.length == 0" (click)="proceedToPromotion()">Continue</button>
                 </div>
               </div>
             </div>
           </div>
+          
       </div>
     </div>
   </div>

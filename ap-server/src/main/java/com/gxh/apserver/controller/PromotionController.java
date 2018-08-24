@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.gxh.apserver.dto.PromoDTO;
+import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
@@ -52,18 +53,18 @@ public class PromotionController extends BaseController {
     }
     
 	@GetMapping(value = "/product/fetch/{promoId}")
-	public ResponseEntity<List<ProductDTO>> getSelectedProducts(@PathVariable("promoId") Long promoId,
+	public ResponseEntity<PromoSKUDTO> getSelectedProducts(@PathVariable("promoId") Long promoId,
 			@RequestParam Long dmId, @RequestParam Long rowId, @RequestParam int promoCount) {
 
-		List<ProductDTO> productDTOList;
+		PromoSKUDTO promoSKUDTO;
 
 		try {
-			productDTOList = promotionService.getSavedProductsForPromoCount(promoId, dmId, rowId, promoCount);
+			promoSKUDTO = promotionService.getSavedProductsForPromoCount(promoId, dmId, rowId, promoCount);
 		} catch (ParseException e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		return new ResponseEntity<List<ProductDTO>>(productDTOList, HttpStatus.OK);
+		return new ResponseEntity<PromoSKUDTO>(promoSKUDTO, HttpStatus.OK);
 	}
     
     @PostMapping(value = "/manager/status/update")
