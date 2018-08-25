@@ -59,13 +59,13 @@ public class PromotionServiceImpl implements PromotionService {
     private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
 
     @Override
-    public PromoDTO getSupplierPromo(Long supplierID,Date promoYear) throws ResourceNotFoundException,InvalidStatusException {
+    public PromoDTO getSupplierPromo(Long supplierID,String promoYear) throws ResourceNotFoundException,InvalidStatusException,ParseException {
         logger.info(">>> getSupplierPromo");
-        logger.info(">>> data -"+supplierID+"=="+promoYear.toString());
+        logger.info(">>> data -"+supplierID+"=="+promoYear);
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoYear);
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
 
             if(promo.isPresent()) {
                 logger.info("Promo is present");
@@ -193,12 +193,13 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public PromoDTO getSupplierPromoForManager(Long supplierID, Date promoYear) throws ResourceNotFoundException, InvalidStatusException {
+    public PromoDTO getSupplierPromoForManager(Long supplierID, String promoYear) throws ResourceNotFoundException,InvalidStatusException,ParseException {
         logger.info(">>> getSupplierPromoForManager");
+        logger.info(">>> data -"+supplierID+"=="+promoYear);
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoYear);
+            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
 
             if(promo.isPresent()) {
                 logger.info("Promo is present");

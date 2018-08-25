@@ -97,7 +97,7 @@ public class PromotionController extends BaseController {
 
     @GetMapping("/supplier/{id}/{year}")
      ResponseEntity<PromoDTO> getSupplierPromo(@PathVariable("id") Long supplierID,
-                                               @PathVariable("year") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) Date promoYear) {
+                                               @PathVariable("year") String promoYear) {
         PromoDTO promoDTO;
 
         try {
@@ -107,6 +107,9 @@ public class PromotionController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (InvalidStatusException ex) {
             logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (ParseException exp) {
+            logger.error(exp.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -138,7 +141,7 @@ public class PromotionController extends BaseController {
     
     @GetMapping("/manager/{id}/{year}")
     ResponseEntity<PromoDTO> getSupplierPromoForManager(@PathVariable("id") Long supplierID,
-                                              @PathVariable("year") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) Date promoYear) {
+                                              @PathVariable("year") String promoYear) {
         PromoDTO promoDTO;
 
         try {
