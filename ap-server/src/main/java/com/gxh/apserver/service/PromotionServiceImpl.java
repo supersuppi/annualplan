@@ -61,6 +61,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public PromoDTO getSupplierPromo(Long supplierID,Date promoYear) throws ResourceNotFoundException,InvalidStatusException {
         logger.info(">>> getSupplierPromo");
+        logger.info(">>> data -"+supplierID+"=="+promoYear.toString());
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
