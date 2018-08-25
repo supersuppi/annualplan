@@ -149,8 +149,11 @@ public class PromotionController extends BaseController {
         } catch (ResourceNotFoundException e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } catch (InvalidStatusException e) {
-            logger.error(e.getMessage());
+        } catch (InvalidStatusException ex) {
+            logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (ParseException exp) {
+            logger.error(exp.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
