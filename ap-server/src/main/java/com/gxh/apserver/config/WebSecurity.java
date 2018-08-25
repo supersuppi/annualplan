@@ -83,7 +83,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	
 	/**
 	 * 
-	 *  Ui is running on port 4200 and server is on port 8008,
+	 *  Ui is running on port 4200 and server is on port 8080,
 	 *  to enable communication between them we need to include CORS configuration.
 	 */
 	@Bean
