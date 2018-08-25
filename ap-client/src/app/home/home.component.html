@@ -13,25 +13,25 @@
       <div class="row col-lg-12">
 
         <span class="column col-lg-3" *ngIf='homeContent.activePromoYear != null'>
-          <img src="../../assets/images/calendar.png" alt="pie-chart">
+          <img src="./assets/images/calendar.png" alt="pie-chart">
           <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Annual Planning</a></figcaption>
         </span>
 
         <span class="column col-lg-3" *ngIf='homeContent.activePromoYear == null'>
-          <img src="../../assets/images/calendar.png" alt="pie-chart">
+          <img src="./assets/images/calendar.png" alt="pie-chart">
           <figcaption class="imgCaption" *ngIf="homeContent.role === 'VENDOR'"><a  [routerLink]="['/supplier',homeContent.activePromoYear]">Annual Planning</a></figcaption>
         </span>
 
         <span  class="column col-lg-3">
-          <img src="../../assets/images/tags.png" alt="bar-chart">
+          <img src="./assets/images/tags.png" alt="bar-chart">
           <figcaption class="imgCaption">Promotional Planning</figcaption>
         </span>
         <span  class="column col-lg-3">
-          <img src="../../assets/images/checklist.png" alt="bar-chart">
+          <img src="./assets/images/checklist.png" alt="bar-chart">
           <figcaption class="imgCaption">New Product Form</figcaption>
         </span>
         <span  class="column col-lg-3">
-          <img src="../../assets/images/checklist-edit.png" alt="bar-chart">
+          <img src="./assets/images/checklist-edit.png" alt="bar-chart">
           <figcaption class="imgCaption">Product Change Form</figcaption>
         </span>
       </div>

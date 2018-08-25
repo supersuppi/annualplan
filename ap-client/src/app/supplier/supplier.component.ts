@@ -51,6 +51,7 @@ export class SupplierComponent implements OnInit {
   }
 
   initBudgetTableData(ratecards:Array<RateCard>) {
+    console.debug(">>initBudgetTableData");
     this.productDMBudgetList = new Array();
     for (let ratecard of ratecards) {
      let dualMailers:Array<DualMailer> = ratecard.dualmailers;
@@ -60,6 +61,7 @@ export class SupplierComponent implements OnInit {
        }
       }
    }
+   console.debug("<<initBudgetTableData");
   }
 
   saveSupplierPromotion() {

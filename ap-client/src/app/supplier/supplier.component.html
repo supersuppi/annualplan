@@ -56,9 +56,9 @@
                 <td><p>${{row.prate}}</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
-                  <p *ngIf="promotion.isEditable && ( promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
-                  <p *ngIf="!promotion.isEditable && promotion.status === 'SUBMITTED' || promotion.status === 'ACCEPTED'" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <input *ngIf="!promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
+                  <p *ngIf="promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <p *ngIf="!promotion.isEditable && (promotion.status === 'SUBMITTED' || promotion.status === 'ACCEPTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
               </tr>
             </tbody>

@@ -124,6 +124,7 @@ export class ManagerComponent implements OnInit {
       } else {
         let supObj = this.suppliers[itemIndex];
         this.currentSupplierName = supObj.supplierName;
+        this.currentSupplierID = supObj.supplierID;
         this.getSupplierPromotion(supObj.supplierID,this.activePromoYear);
       }
     }
