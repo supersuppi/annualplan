@@ -7,7 +7,7 @@ import { UserHomeData } from '../models/index';
 @Injectable()
 export class HomeService{
 
-    private homeDataUrl = "http://localhost:8008/apserver/home/details/";
+    private homeDataUrl = "http://localhost:8080/apserver/home/details/";
 
     constructor(private httpClient: HttpClient) {}
 

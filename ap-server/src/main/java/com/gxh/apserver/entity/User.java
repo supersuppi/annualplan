@@ -18,7 +18,7 @@ import lombok.Setter;
 // @JsonIgnoreProperties(value = {"password", "updatedAt"}, allowGetters = true)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

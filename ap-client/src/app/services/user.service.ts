@@ -19,7 +19,7 @@ export class UserService {
     userLoggedIn = new Subject<UserInfoHeader>();
     showNameInHeader = new Subject<any>();
     public userInfo : UserInfoHeader = {}; 
-    userUrl = "http://localhost:8008/apserver/user";
+    userUrl = "http://localhost:8080/apserver/user";
 
     constructor(private httpClient : HttpClient) {}
 

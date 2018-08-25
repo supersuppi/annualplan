@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "manager")
 public class Manager {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

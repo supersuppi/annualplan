@@ -8,11 +8,11 @@ import { PromotionInterface } from "../shared/interface/PromotionInterface";
 @Injectable()
 export class SupplierPromotionService{
 
-    private promotionSupplierGetURL = "http://localhost:8008/apserver/promotion/supplier/";
-    private promotionSupplierSubmitURL = "http://localhost:8008/apserver/promotion/supplier/submit";
-    private promotionSupplierSaveURL = "http://localhost:8008/apserver/promotion/save/";
-    private promotionSupplierSaveOrRemoveProductsURL = "http://localhost:8008/apserver/promotion/product/save/";
-    private getSelectedProductsURL = "http://localhost:8008/apserver/promotion/product/fetch/";
+    private promotionSupplierGetURL = "http://localhost:8080/apserver/promotion/supplier/";
+    private promotionSupplierSubmitURL = "http://localhost:8080/apserver/promotion/supplier/submit";
+    private promotionSupplierSaveURL = "http://localhost:8080/apserver/promotion/save/";
+    private promotionSupplierSaveOrRemoveProductsURL = "http://localhost:8080/apserver/promotion/product/save/";
+    private getSelectedProductsURL = "http://localhost:8080/apserver/promotion/product/fetch/";
     
     private promoSku : PromotionSKU;
     public promoSubject = new Subject<PromotionSKU>();

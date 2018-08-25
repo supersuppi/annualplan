@@ -13,7 +13,7 @@ import com.gxh.apserver.constants.PromotionType;
 @Table(name = "promotion_level_sku")
 public class PromotionLevelSKU {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

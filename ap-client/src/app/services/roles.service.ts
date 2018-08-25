@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 @Injectable()
 export class RolesService{
 
-    private rolesUrl = "http://localhost:8008/apserver/user/role/";
+    private rolesUrl = "http://localhost:8080/apserver/user/role/";
 
     constructor(private httpClient: HttpClient) {}
 

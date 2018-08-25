@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "dual_mailer")
 public class DualMailer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

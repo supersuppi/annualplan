@@ -20,7 +20,7 @@ import lombok.Setter;
 @Table(name = "user_contact")
 public class UserContact {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "first_name",length = 20)

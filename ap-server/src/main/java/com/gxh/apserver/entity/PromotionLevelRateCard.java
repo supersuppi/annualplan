@@ -16,7 +16,7 @@ import lombok.Setter;
 @Table(name = "promotion_level_ratecard")
 public class PromotionLevelRateCard {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

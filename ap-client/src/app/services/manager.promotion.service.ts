@@ -6,9 +6,9 @@ import { Observable } from "rxjs";
 @Injectable()
 export class ManagerPromotionService {
 
-    private promotionSupplierForManagerURL = "http://localhost:8008/apserver/promotion/manager/";
-    private promotionManagerStatusUpdateURL = "http://localhost:8008/apserver/promotion/manager/status/update";
-    private promotionManagerPromoRejectURL = "http://localhost:8008/apserver/promotion//manager/comment/save";
+    private promotionSupplierForManagerURL = "http://localhost:8080/apserver/promotion/manager/";
+    private promotionManagerStatusUpdateURL = "http://localhost:8080/apserver/promotion/manager/status/update";
+    private promotionManagerPromoRejectURL = "http://localhost:8080/apserver/promotion//manager/comment/save";
 
     constructor(private httpClient: HttpClient) {}
 
