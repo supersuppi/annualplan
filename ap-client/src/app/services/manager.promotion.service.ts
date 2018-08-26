@@ -2,13 +2,14 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Promotion, PromoStatus, PromoComment } from "../models";
 import { Observable } from "rxjs";
+import { ServerConfig } from "../config/server.config";
 
 @Injectable()
 export class ManagerPromotionService {
 
-    private promotionSupplierForManagerURL = "http://localhost:8080/apserver/promotion/manager/";
-    private promotionManagerStatusUpdateURL = "http://localhost:8080/apserver/promotion/manager/status/update";
-    private promotionManagerPromoRejectURL = "http://localhost:8080/apserver/promotion//manager/comment/save";
+    private promotionSupplierForManagerURL = ServerConfig.API_ENDPOINT+"promotion/manager/";
+    private promotionManagerStatusUpdateURL = ServerConfig.API_ENDPOINT+"promotion/manager/status/update";
+    private promotionManagerPromoRejectURL = ServerConfig.API_ENDPOINT+"promotion//manager/comment/save";
 
     constructor(private httpClient: HttpClient) {}
 

@@ -4,6 +4,7 @@ import { User } from "../models/user-model";
 import { Observable, Subject } from "rxjs";
 import { UserContact } from "../models/user-contact-model";
 import { map } from "rxjs/operators";
+import { ServerConfig } from "../config/server.config";
 
 // interface to create an object of required attributes.
 interface UserInfoHeader {
@@ -19,7 +20,7 @@ export class UserService {
     userLoggedIn = new Subject<UserInfoHeader>();
     showNameInHeader = new Subject<any>();
     public userInfo : UserInfoHeader = {}; 
-    userUrl = "http://localhost:8080/apserver/user";
+    userUrl = ServerConfig.API_ENDPOINT+"user";
 
     constructor(private httpClient : HttpClient) {}
 

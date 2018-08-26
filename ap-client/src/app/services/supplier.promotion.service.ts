@@ -1,18 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { HttpClient,HttpHeaders, HttpParams } from "@angular/common/http";
-
 import { Promotion, PromoStatus, PromoComment, PromotionSKU, ProductSKU, AddOrRemoveProducts, Product } from "../models/index";
 import { PromotionInterface } from "../shared/interface/PromotionInterface";
+import { ServerConfig } from "../config/server.config";
 
 @Injectable()
 export class SupplierPromotionService{
 
-    private promotionSupplierGetURL = "http://localhost:8080/apserver/promotion/supplier/";
-    private promotionSupplierSubmitURL = "http://localhost:8080/apserver/promotion/supplier/submit";
-    private promotionSupplierSaveURL = "http://localhost:8080/apserver/promotion/save/";
-    private promotionSupplierSaveOrRemoveProductsURL = "http://localhost:8080/apserver/promotion/product/save/";
-    private getSelectedProductsURL = "http://localhost:8080/apserver/promotion/product/fetch/";
+    private promotionSupplierGetURL = ServerConfig.API_ENDPOINT+"promotion/supplier/";
+    private promotionSupplierSubmitURL = ServerConfig.API_ENDPOINT+"promotion/supplier/submit";
+    private promotionSupplierSaveURL = ServerConfig.API_ENDPOINT+"promotion/save/";
+    private promotionSupplierSaveOrRemoveProductsURL = ServerConfig.API_ENDPOINT+"promotion/product/save/";
+    private getSelectedProductsURL = ServerConfig.API_ENDPOINT+"promotion/product/fetch/";
     
     private promoSku : PromotionSKU;
     public promoSubject = new Subject<PromotionSKU>();

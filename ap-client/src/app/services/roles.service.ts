@@ -2,11 +2,12 @@ import { Injectable } from "@angular/core";
 import { Subject, Observable } from "rxjs";
 import { Roles } from "../models/roles-model";
 import { HttpClient } from "@angular/common/http";
+import { ServerConfig } from "../config/server.config";
 
 @Injectable()
 export class RolesService{
 
-    private rolesUrl = "http://localhost:8080/apserver/user/role/";
+    private rolesUrl = ServerConfig.API_ENDPOINT+"user/role/";
 
     constructor(private httpClient: HttpClient) {}
 

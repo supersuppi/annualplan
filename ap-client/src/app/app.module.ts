@@ -35,6 +35,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GanttChartComponent } from './helper/gantt-chart.component';
 import { TruncatePipe } from './helper/truncate.pipe';
+import { ServerConfig } from './config/server.config';
+
 
 @NgModule({
   declarations: [
@@ -76,7 +78,7 @@ import { TruncatePipe } from './helper/truncate.pipe';
     PromotionModalComponent,
     SkuPromotionModalComponent
   ],
-  providers: [RolesService, UserService,
+  providers: [RolesService, UserService,ServerConfig,
     // Adding request header interceptors.
     {
       provide:HTTP_INTERCEPTORS,

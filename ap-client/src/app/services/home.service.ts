@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-
 import { UserHomeData } from '../models/index';
+import { ServerConfig } from "../config/server.config";
 
 @Injectable()
 export class HomeService{
 
-    private homeDataUrl = "http://localhost:8080/apserver/home/details/";
+    private homeDataUrl = ServerConfig.API_ENDPOINT+"home/details/";
 
     constructor(private httpClient: HttpClient) {}
 
