@@ -6,6 +6,7 @@ import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.comp
 import { SupplierPromotionService } from '../services/index';
 import { SkuPromotionModalComponent } from '../modal/sku-promotion-modal/sku-promotion-modal.component';
 import { map } from '../../../node_modules/rxjs/operators';
+import { SKULevelPromoData } from '../models/sku-product-details';
 
 @Component({
   selector: 'app-supplier',
@@ -22,6 +23,9 @@ export class SupplierComponent implements OnInit {
    private products:Array<ProductSKU>;
    private productDMBudgetList:Array<CalculatedBudget>;
    private promoSaved:Boolean;
+   //hover variables
+   public skuPromoDataList:Array<SKULevelPromoData>;
+ 
 
   constructor(private promotionService: SupplierPromotionService,private _Activatedroute:ActivatedRoute,
     private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
@@ -112,6 +116,28 @@ export class SupplierComponent implements OnInit {
       }
     });
   }
+
+  onHover(rowId,dmId){
+    let totalPromoCounts = this.promotion.ratecards[rowId].dualmailers[dmId].value;
+    this.skuPromoDataList = new Array();
+    for (let i = 1; i <= totalPromoCounts; i++) { 
+      this.promotionService.getSelectedProducts(this.promotion.promo_id, dmId, rowId, i)
+      .subscribe( (data) => {
+        let skudata = new SKULevelPromoData();
+        skudata.productsSelected = data["products_selected"];
+        skudata.promoName = data["promoName"];
+        skudata.promoType = data["promoType"];
+        this.skuPromoDataList.push(skudata);
+      }, err => {
+        console.log("Something went wrong");
+      });
+      } 
+  }
+
+  onHoverLeave() {
+    this.skuPromoDataList = new Array();
+  }
+
 
   refreshData() {
     this.getSupplierPromotion(Number(localStorage.getItem('supplierID')),this.activePromoYear);

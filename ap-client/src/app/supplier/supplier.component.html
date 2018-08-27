@@ -57,8 +57,8 @@
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
                   <input *ngIf="!promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
-                  <p *ngIf="promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
-                  <p *ngIf="!promotion.isEditable && (promotion.status === 'SUBMITTED' || promotion.status === 'ACCEPTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <p [ngbPopover]="popContent" triggers="mouseenter:mouseleave" [popoverTitle]="popTitle" (mouseenter)="onHover(rowid,i)" (mouseleave)="onHoverLeave()" *ngIf="promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <p [ngbPopover]="popContent" triggers="mouseenter:mouseleave" [popoverTitle]="popTitle" (mouseenter)="onHover(rowid,i)" (mouseleave)="onHoverLeave()" *ngIf="!promotion.isEditable && (promotion.status === 'SUBMITTED' || promotion.status === 'ACCEPTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
               </tr>
             </tbody>
@@ -88,4 +88,23 @@
        </table>
   </div>
 
+  <ng-template #popContent>
+    <div class="popupArea" *ngFor="let row of skuPromoDataList;let rowid = index">
+      <div> Promotion number is <b>{{rowid+1}}</b> and type is <b>{{row.promoType}}</b>!
+        <br></div>
+        <div>
+            <p><b>PRODUCTS:</b></p>
+            <ul *ngFor="let product of row.productsSelected" >
+                <li>{{product.name}}</li>
+            </ul>
+        </div>
+    </div>
+  </ng-template>
+  <ng-template #popTitle><b>Promotion Details</b></ng-template>
+
  </div>
+
+
+
+
+ 

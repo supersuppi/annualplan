@@ -36,6 +36,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GanttChartComponent } from './helper/gantt-chart.component';
 import { TruncatePipe } from './helper/truncate.pipe';
 import { ServerConfig } from './config/server.config';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { ServerConfig } from './config/server.config';
     Ng2SearchPipeModule,
     NgxPaginationModule,
     BrowserAnimationsModule,
+    NgbModule,
     ModalDialogModule.forRoot()
   ],
   //For Modal

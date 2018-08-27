@@ -60,7 +60,7 @@
                   <td><p>${{row.prate}}</p></td>
   
                   <td *ngFor="let dm of row.dualmailers; let i = index">
-                    <p (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                    <p [ngbPopover]="popContent" triggers="mouseenter:mouseleave" [popoverTitle]="popTitle" (mouseenter)="onHover(rowid,i)" (mouseleave)="onHoverLeave()" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                   </td>
                 </tr>
               </tbody>
@@ -88,6 +88,20 @@
           
        </table>
   </div>
+
+  <ng-template #popContent>
+      <div class="popupArea" *ngFor="let row of skuPromoDataList;let rowid = index">
+        <div> Promotion number is <b>{{rowid+1}}</b> and type is <b>{{row.promoType}}</b>!
+          <br></div>
+          <div>
+              <p><b>PRODUCTS:</b></p>
+              <ul *ngFor="let product of row.productsSelected" >
+                  <li>{{product.name}}</li>
+              </ul>
+          </div>
+      </div>
+    </ng-template>
+    <ng-template #popTitle><b>Promotion Details</b></ng-template>
   
    </div>
   

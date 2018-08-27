@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Promotion,PromoStatus,PromoComment, SupplierHomeData, RateCard, DualMailer } from "../models/index";
 import { ModalDialogService } from 'ngx-modal-dialog';
 import { PromotionRejectModalComponent } from '../modal/promotion-reject-modal/promotion-reject-modal.component';
-import { ManagerPromotionService } from '../services/index';
+import { ManagerPromotionService, SupplierPromotionService } from '../services/index';
 import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.component';
+import { SKULevelPromoData } from '../models/sku-product-details';
 
 @Component({
   selector: 'app-manager',
@@ -24,8 +25,10 @@ export class ManagerComponent implements OnInit {
   public pageLoaded:Boolean;//to avoid promotion undefined error
   public hasError:Boolean;
   private productDMBudgetList:Array<CalculatedBudget>;
+  //hover variables
+  public skuPromoDataList:Array<SKULevelPromoData>;
   
-  constructor(private promotionService:ManagerPromotionService,private modalDialogService: ModalDialogService,
+  constructor(private spromotionService: SupplierPromotionService,private promotionService:ManagerPromotionService,private modalDialogService: ModalDialogService,
     private viewContainer: ViewContainerRef,private _Activatedroute:ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
@@ -111,6 +114,27 @@ export class ManagerComponent implements OnInit {
           }
         ]
       });
+    }
+
+    onHover(rowId,dmId){
+      let totalPromoCounts = this.promotion.ratecards[rowId].dualmailers[dmId].value;
+      this.skuPromoDataList = new Array();
+      for (let i = 1; i <= totalPromoCounts; i++) { 
+        this.spromotionService.getSelectedProducts(this.promotion.promo_id, dmId, rowId, i)
+        .subscribe( (data) => {
+          let skudata = new SKULevelPromoData();
+          skudata.productsSelected = data["products_selected"];
+          skudata.promoName = data["promoName"];
+          skudata.promoType = data["promoType"];
+          this.skuPromoDataList.push(skudata);
+        }, err => {
+          console.log("Something went wrong");
+        });
+        } 
+    }
+  
+    onHoverLeave() {
+      this.skuPromoDataList = new Array();
     }
 
     refreshData() {

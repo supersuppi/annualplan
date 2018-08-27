@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 
   //Year Slider Config
   someKeyboardConfig: any = {
-    start: [2017],
+    start: [2018],
     step: 1,
     range: {
       min: 2017,
