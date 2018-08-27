@@ -1,18 +1,14 @@
 package com.gxh.apserver.service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.repository.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +16,32 @@ import org.springframework.stereotype.Service;
 
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
-import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Manager;
+import com.gxh.apserver.entity.PromoComments;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.PromotionLevelRateCard;
+import com.gxh.apserver.entity.PromotionLevelSKU;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.helper.PromotionDTOHelper;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.ManagerRepository;
+import com.gxh.apserver.repository.interfaces.ProductRepository;
+import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
+import com.gxh.apserver.repository.interfaces.SupplierRepository;
 import com.gxh.apserver.service.interfaces.PromotionService;
 import com.gxh.apserver.util.DateUtil;
 
@@ -267,38 +281,7 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Override
 	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
-			throws ParseException {
-		
-		PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
-		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
-		Optional<List<Product>> prodOptionalList = productRepository.findAllSelectedProducts(promoId, dmId, rowId, promoCount);
-		Optional<List<PromotionLevelSKU>> optionalPromo = promotionLevelSKURepository.findByRowData(dmId, rowId,
-				promoId, promoCount);
-		
-		if (optionalPromo.isPresent()) {
-			List<PromotionLevelSKU> products = optionalPromo.get().stream().limit(1).collect(Collectors.toList());
-			products.forEach( promoLevelSku -> {
-				promoSKUDTO.setPromoName(promoLevelSku.getPromoName());
-				promoSKUDTO.setPromoType(promoLevelSku.getPromoType());
-			});
-		}
-		
-		if( prodOptionalList.isPresent() ) {
-			prodOptionalList.get().forEach( product -> {
-				ProductDTO productDTO = new ProductDTO();
-				
-				productDTO.setId(product.getId());
-				productDTO.setName(product.getMarketingShortName());
-				productDTO.setSku(product.getGXHID());
-				
-				productDTOList.add(productDTO);
-			}); 
-//			return productDTOList;
-		}
-		
-		promoSKUDTO.setProducts_selected(productDTOList);
-		
-		return promoSKUDTO;
-		
+			throws ParseException {	
+		return promotionDTOHelper.getPromoSKUDTO(promoId, dmId, rowId, promoCount);
 	}
 }

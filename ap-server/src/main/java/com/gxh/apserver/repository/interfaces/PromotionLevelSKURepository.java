@@ -21,4 +21,7 @@ public interface PromotionLevelSKURepository extends JpaRepository<PromotionLeve
 	@Query(" select p from  PromotionLevelSKU p where p.promo = ?3 and p.rateCard = ?2 "
 			+ "and p.dualMailer = ?1 and p.promoCount = ?4 ") 
     public Optional<List<PromotionLevelSKU>> findByRowData(Long dmId, Long rcId, Long promoId, int prmoCount);
+	
+	@Query("select psku.promoCount from PromotionLevelSKU psku where psku.promo = ?1")
+    Optional<List<Integer>> findAllPromoCountByPromoID(Long promoID);
 }
