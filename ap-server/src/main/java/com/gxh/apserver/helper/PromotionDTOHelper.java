@@ -1,23 +1,44 @@
 package com.gxh.apserver.helper;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.gxh.apserver.dto.*;
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.util.BudgetCalculator;
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.BrandProductDTO;
+import com.gxh.apserver.dto.DualMailerDTO;
+import com.gxh.apserver.dto.ProductDTO;
+import com.gxh.apserver.dto.PromoDTO;
+import com.gxh.apserver.dto.PromoSKUDTO;
+import com.gxh.apserver.dto.RateCardDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Product;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.PromotionLevelRateCard;
+import com.gxh.apserver.entity.PromotionLevelSKU;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
-import com.gxh.apserver.repository.interfaces.*;
-import javax.transaction.Transactional;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.ProductRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
+import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
+import com.gxh.apserver.util.BudgetCalculator;
 
 
 @Component
@@ -81,6 +102,7 @@ public class PromotionDTOHelper {
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(promo.getId());
         Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
+        Optional<List<Integer>> promoLevelSKUPromoCounts = promotionLevelSKURepository.findAllPromoCountByPromoID(promo.getId());
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
@@ -120,7 +142,8 @@ public class PromotionDTOHelper {
             List<DualMailerDTO> dmList = new ArrayList<>();
             for (DualMailer dm : dms) {
                 DualMailerDTO dto = null;
-
+                List<PromoSKUDTO> selectedProductList = new ArrayList<>();
+                
                 dto = new DualMailerDTO();
                 dto.setId(row.getPcode()+dm.getCode());
                 if(ratecardDms.isPresent()) {
@@ -128,6 +151,20 @@ public class PromotionDTOHelper {
                 } else {
                     dto.setValue(0);
                 }
+                //Add selected products for promo
+                if(promoLevelSKUPromoCounts.isPresent()) {
+               	 for (Integer promoCount : promoLevelSKUPromoCounts.get()) {
+               		PromoSKUDTO pskuDTO = null;
+					try {
+						pskuDTO = getPromoSKUDTO(promo.getId(),dm.getId(),rateCard.getId(),promoCount);
+					} catch (ParseException e) {
+						logger.error(e.getMessage());
+					}
+               		selectedProductList.add(pskuDTO);
+               	 }
+                }
+                dto.setPromosku(selectedProductList);
+                
                 dmList.add(dto);
             }
             row.setDualmailers(dmList);
@@ -140,6 +177,40 @@ public class PromotionDTOHelper {
         promoDTO.setBudget(BudgetCalculator.getBudget(promoBudget.get()));
         logger.info("<<< createDTO");
         return promoDTO;
+    }
+    
+    public PromoSKUDTO getPromoSKUDTO(Long promoId, Long dmId, Long rowId, int promoCount)
+			throws ParseException {
+    	logger.info(">>> getPromoSKUDTO");
+    	PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
+		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
+		Optional<List<Product>> prodOptionalList = productRepository.findAllSelectedProducts(promoId, dmId, rowId, promoCount);
+		Optional<List<PromotionLevelSKU>> optionalPromo = promotionLevelSKURepository.findByRowData(dmId, rowId,
+				promoId, promoCount);
+		
+		if (optionalPromo.isPresent()) {
+			List<PromotionLevelSKU> products = optionalPromo.get().stream().limit(1).collect(Collectors.toList());
+			products.forEach( promoLevelSku -> {
+				promoSKUDTO.setPromoName(promoLevelSku.getPromoName());
+				promoSKUDTO.setPromoType(promoLevelSku.getPromoType());
+			});
+		}
+		
+		if( prodOptionalList.isPresent() ) {
+			prodOptionalList.get().forEach( product -> {
+				ProductDTO productDTO = new ProductDTO();
+				
+				productDTO.setId(product.getId());
+				productDTO.setName(product.getMarketingShortName());
+				productDTO.setSku(product.getGXHID());
+				
+				productDTOList.add(productDTO);
+			}); 
+		}
+		promoSKUDTO.setProducts_selected(productDTOList);
+		logger.info("<<< getPromoSKUDTO");
+		
+		return promoSKUDTO;
     }
 
 }
