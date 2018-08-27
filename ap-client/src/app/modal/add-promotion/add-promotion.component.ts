@@ -74,7 +74,6 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
 
   //Showing modal on cell click
   showProductSelectionModal (event, selectedProducts : Array<ProductSKU>) {
-
     this.modalDialogService.openDialog(this.parentRef ,{
       title: "Select Promotion",
       placeOnTop: true,
@@ -82,6 +81,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
       childComponent: PromotionModalComponent,
       settings: {
         closeButtonClass: 'close theme-icon-close',
+        modalDialogClass: 'modal-lg modal-dialog modal-dialog-centered'
       },
       data : {
         promoType : this.promoType,
