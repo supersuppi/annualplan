@@ -7,8 +7,7 @@ import { PromotionInterface } from '../../shared/interface/PromotionInterface';
 @Component({
   selector: 'app-sku-promotion-modal',
   templateUrl: './sku-promotion-modal.component.html',
-  styleUrls: ['./sku-promotion-modal.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./sku-promotion-modal.component.scss']
 })
 export class SkuPromotionModalComponent implements OnInit {
   private internalActionButtons = [];

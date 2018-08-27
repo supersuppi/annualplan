@@ -1,22 +1,25 @@
-<div class="modal-body">
+<div class="card-body">
+  <label for="promoName">Promotion Name:</label>
+  <div class="form-group">
+    <div class="row">
+      <input type="text" class="form-control col-lg-8" [(ngModel)]="promoNameModel"
+        aria-describedby="promoName"  placeholder="Enter a promotion name" [disabled]="promoNameInputDisabled">
+    </div>
+  </div>
+</div>
 
-  <ul class="nav nav-pills nav-fill">
-    <div class="nav-item" [ngClass]="tabEnabled === 'BRAND' ? 'disableAnchor' : ''">
-      <a class="nav-link" [ngClass]="promotionType === 'SINGLE' ? 'active' : '' " 
-        (click)="showSinglePromotion($event)" >Single Promotion</a>
-    </div>
-    <div class="nav-item" [ngClass]="tabEnabled === 'SINGLE' ? 'disableAnchor' : ''">
-      <a class="nav-link" [ngClass]="promotionType === 'BRAND' ? 'active' : '' " 
-        (click)="showBrandPromotion($event)" >Brand Promotion</a>
-    </div>
-  </ul>
-  <div class="row">
-    
-  </div>
-  <div *ngIf="promotionType === 'BRAND'">
-    <app-brand-promotion-modal></app-brand-promotion-modal>
-  </div>
-  <div *ngIf="promotionType === 'SINGLE'">
-    <app-sku-promotion-modal></app-sku-promotion-modal>
-  </div>
+<div>
+  <span>
+    <select name="promoTypeDropdown" [(ngModel)]="promotionType">
+      <option  value="BRAND" [disabled]="optionEnabled === 'SINGLE' ? true : false">Brand Group</option>
+      <option  value="SINGLE" [disabled]="optionEnabled === 'BRAND' ? true : false">Single Sku</option>
+    </select>
+  </span>
+</div>
+
+<div *ngIf="promotionType === 'BRAND'">
+  <app-brand-promotion-modal></app-brand-promotion-modal>
+</div>
+<div *ngIf="promotionType === 'SINGLE'">
+  <app-sku-promotion-modal></app-sku-promotion-modal>
 </div>

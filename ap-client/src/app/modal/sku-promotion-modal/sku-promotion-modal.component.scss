@@ -1,6 +1,5 @@
 .modal-dialog {
-    max-width : 100%;
-    margin: 0.5rem;
+    
     .showScroll{
         // Hardcoded value need to find a fix
         max-height:100px;
@@ -11,4 +10,8 @@
 
 .table {
     font-size: 12px;
+}
+
+.top30 {
+    margin-top: 30px;
 }
