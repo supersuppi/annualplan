@@ -62,14 +62,4 @@ export class PromotionModalComponent implements OnInit, IModalDialog {
     return true;
   }
 
-  showSinglePromotion(event) {
-    console.log("Single promo clicked");
-    this.promotionType = 'SINGLE';
-  }
-
-  showBrandPromotion(event) {
-    console.log("Brand promo clicked");
-    this.promotionType = 'BRAND';
-  }
-
 }

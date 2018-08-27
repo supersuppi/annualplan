@@ -122,7 +122,7 @@ public class PromotionDTOHelper {
                 productDTOs = new ArrayList<ProductDTO>();
                 mapProduct.put(product.getBrand().getName(), productDTOs);
             }
-            productDTOs.add(new ProductDTO(product.getId(),product.getGXHID(),product.getMarketingShortName()));
+            productDTOs.add(new ProductDTO(product.getId(),product.getGXHID(),product.getMarketingShortName(), product.getBarcode().getBarcode1()));
         }
 
         //Create BrandproductDTO and set it to promo dto as products
@@ -203,6 +203,7 @@ public class PromotionDTOHelper {
 				productDTO.setId(product.getId());
 				productDTO.setName(product.getMarketingShortName());
 				productDTO.setSku(product.getGXHID());
+				productDTO.setBarcode(product.getBarcode().getBarcode1());
 				
 				productDTOList.add(productDTO);
 			}); 
