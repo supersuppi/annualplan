@@ -151,20 +151,6 @@ public class PromotionDTOHelper {
                 } else {
                     dto.setValue(0);
                 }
-                //Add selected products for promo
-                if(promoLevelSKUPromoCounts.isPresent()) {
-               	 for (Integer promoCount : promoLevelSKUPromoCounts.get()) {
-               		PromoSKUDTO pskuDTO = null;
-					try {
-						pskuDTO = getPromoSKUDTO(promo.getId(),dm.getId(),rateCard.getId(),promoCount);
-					} catch (ParseException e) {
-						logger.error(e.getMessage());
-					}
-               		selectedProductList.add(pskuDTO);
-               	 }
-                }
-                dto.setPromosku(selectedProductList);
-                
                 dmList.add(dto);
             }
             row.setDualmailers(dmList);

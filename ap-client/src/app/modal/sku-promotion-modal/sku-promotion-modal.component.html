@@ -1,8 +1,10 @@
+<div class="container">
 <div class="top30">
-  <h4>Search Products</h4>
+  <p><strong>Search Products:</strong></p>
   <div class="row">
       <input class="form-control" type="text" id="search" name="search" [(ngModel)]="filter">      
   </div>
+  <br>
   <div class="row">
     <div class="table-responsive">
       <table class="table table-sm">
@@ -23,8 +25,10 @@
             (change)="addToProductList($event.target.checked, product)"></td>
         </tr>
       </tbody>
+      <br>
       <pagination-controls (pageChange)="p = $event"></pagination-controls>
       </table>
     </div>
   </div>
+</div>
 </div>
