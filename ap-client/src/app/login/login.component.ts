@@ -40,7 +40,11 @@ export class LoginComponent implements OnInit {
             console.log(data);
             this.storeUserInLocalStorage(response, data);
             console.log("Login Success");
-            this.router.navigate(['/home']);
+            if (localStorage.getItem('role') === 'ROLE_ADMIN') {
+              this.router.navigate(['/admin/register']);
+            } else {
+              this.router.navigate(['/home']);
+            }
         }, err => {
           console.log("Something went wrong");
           this.invalidCreds = true;
