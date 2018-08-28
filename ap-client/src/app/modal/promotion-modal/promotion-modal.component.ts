@@ -54,9 +54,9 @@ export class PromotionModalComponent implements OnInit, IModalDialog {
   savePromotion () {
 
     if (this.promotionType === 'SINGLE' ) {
-      this.skuPromoComp.saveSKUPromotion();
+      this.skuPromoComp.saveSKUPromotion(this.promoNameModel);
     } else {
-      this.brandPromoComp.savePromotion();
+      this.brandPromoComp.savePromotion(this.promoNameModel);
     }
 
     return true;

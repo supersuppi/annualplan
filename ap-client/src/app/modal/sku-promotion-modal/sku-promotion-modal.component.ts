@@ -47,8 +47,8 @@ export class SkuPromotionModalComponent implements OnInit {
     this.promoId = this.promoObject.promoId;
   }
 
-  saveSKUPromotion(){
-    this.promotionService.saveOrRemoveSelectedProducts(this.constructDataToUpdate()).subscribe(
+  saveSKUPromotion( promoName : string ){
+    this.promotionService.saveOrRemoveSelectedProducts(this.constructDataToUpdate(promoName)).subscribe(
       () => {
         console.log("Db updated");
       }, err => {
@@ -57,7 +57,7 @@ export class SkuPromotionModalComponent implements OnInit {
       return true;
   }
 
-  constructDataToUpdate () {
+  constructDataToUpdate (promoName : string) {
     let productsSaveOrRemove : AddOrRemoveProducts = new AddOrRemoveProducts(); 
 
     productsSaveOrRemove.dmId = this.dmId;
@@ -66,7 +66,7 @@ export class SkuPromotionModalComponent implements OnInit {
     productsSaveOrRemove.productsSelected = this.newSelectedProducts;
     productsSaveOrRemove.productsDeselected = this.deSelectedProducts;
     productsSaveOrRemove.promoCount = this.promoCount;
-    productsSaveOrRemove.promoName = this.promoObject.promoName;
+    productsSaveOrRemove.promoName = promoName;
     productsSaveOrRemove.promoType = "SINGLE";
 
     return productsSaveOrRemove;
