@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApServerApplication extends SpringBootServletInitializer {
 
 	//This is required for standalone app, to deploy in tomcat: uncomment for prod deploy
-//	@Override
-//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//		return application.sources(ApServerApplication.class);
-//	}
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(ApServerApplication.class);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApServerApplication.class, args);
