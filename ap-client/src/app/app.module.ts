@@ -37,6 +37,11 @@ import { GanttChartComponent } from './helper/gantt-chart.component';
 import { TruncatePipe } from './helper/truncate.pipe';
 import { ServerConfig } from './config/server.config';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { PromotionComponent } from './dashboard/admindashboard/promotion/promotion.component';
+import { RatecardComponent } from './dashboard/admindashboard/ratecard/ratecard.component';
+import { DualmailerComponent } from './dashboard/admindashboard/dualmailer/dualmailer.component';
+import { LifemailerComponent } from './dashboard/admindashboard/lifemailer/lifemailer.component';
+import { AdminService } from './services/admin.service';
 
 
 @NgModule({
@@ -57,7 +62,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     PromotionModalComponent,
     SkuPromotionModalComponent,
     GanttChartComponent,
-    TruncatePipe
+    TruncatePipe,
+    PromotionComponent,
+    RatecardComponent,
+    DualmailerComponent,
+    LifemailerComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +89,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     PromotionModalComponent,
     SkuPromotionModalComponent
   ],
-  providers: [RolesService, UserService,ServerConfig,
+  providers: [RolesService, UserService,ServerConfig,AdminService,
     // Adding request header interceptors.
     {
       provide:HTTP_INTERCEPTORS,
