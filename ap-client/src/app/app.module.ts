@@ -42,6 +42,7 @@ import { RatecardComponent } from './dashboard/admindashboard/ratecard/ratecard.
 import { DualmailerComponent } from './dashboard/admindashboard/dualmailer/dualmailer.component';
 import { LifemailerComponent } from './dashboard/admindashboard/lifemailer/lifemailer.component';
 import { AdminService } from './services/admin.service';
+import { ManagePromotionComponent } from './dashboard/admindashboard/promotion/manage-promotion/manage-promotion.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { AdminService } from './services/admin.service';
     PromotionComponent,
     RatecardComponent,
     DualmailerComponent,
-    LifemailerComponent
+    LifemailerComponent,
+    ManagePromotionComponent
   ],
   imports: [
     BrowserModule,

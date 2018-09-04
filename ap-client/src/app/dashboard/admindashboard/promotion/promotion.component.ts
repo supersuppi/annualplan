@@ -16,9 +16,9 @@ export class PromotionComponent implements OnInit {
   }
 
   onSubmit(f:NgForm){
-    //console.log(f.value)
     let promo = new Promotion()
     promo.name = f.value.promoName;
+    promo.userName = localStorage.getItem('username');
     promo.ratecards = Object.values(f.value.ratecards);
     promo.dualmailers = Object.values(f.value.dualmailers);
 
@@ -28,7 +28,15 @@ export class PromotionComponent implements OnInit {
     error => { 
         console.error("ERROR! PromotionComponent:saveAdminPromotion = "+error);
     });
+  }
 
+  activatePromo(){
+    this.adminService.activateAdminPromotion().subscribe((response:any) => {
+      console.info("activatePromo called");
+    },
+    error => { 
+        console.error("ERROR! PromotionComponent:activatePromo = "+error);
+    });
   }
 
 }
