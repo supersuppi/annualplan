@@ -38,7 +38,7 @@ import com.gxh.apserver.repository.interfaces.ProductRepository;
 import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
-import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
 import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
 import com.gxh.apserver.repository.interfaces.SupplierRepository;
@@ -58,7 +58,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Autowired
     private DualMailerRepository dualMailerRepository;
     @Autowired
-    private PromotionRepository promotionRepository;
+    private AnnualPromotionRepository annualPromotionRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -79,15 +79,15 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
+            Optional<Promotion> promo = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
 
             if(promo.isPresent()) {
-                logger.info("Promo is present");
+                logger.info("Promotion is present");
                 return promotionDTOHelper.getPromoDTO(supplier.get(),promo.get());
 
             } else {
-                logger.info("Promo is not present");
-                throw new ResourceNotFoundException("Promo is not present for supplier with ID:"+supplierID);
+                logger.info("Promotion is not present");
+                throw new ResourceNotFoundException("Promotion is not present for supplier with ID:"+supplierID);
             }
         } else {
             throw new ResourceNotFoundException("Supplier not found with ID:"+supplierID);
@@ -105,8 +105,8 @@ public class PromotionServiceImpl implements PromotionService {
         logger.info(">>> saveSupplierPromo");
 
         Optional<Supplier> supplier = supplierRepository.findById(promoDTO.getUserid());
-        Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoDTO.getPromoyear()));
-        Optional<List<RateCard>> rateCards = rateCardRepository.findRateCardBYPromotionID(currentPromotion.get());
+        Optional<Promotion> currentPromotion = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoDTO.getPromoyear()));
+        Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(currentPromotion.get());
         List<DualMailer> dms = dualMailerRepository.findAll();
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
         Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
@@ -114,7 +114,7 @@ public class PromotionServiceImpl implements PromotionService {
         int totalBudget = 0;
         Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();
         if(ratecardDms.isPresent()) {
-            logger.info("Updating Promo");
+            logger.info("Updating Promotion");
             for (PromotionLevelRateCard rcdm : ratecardDms.get()) {
                 //(K,V) = (rateCardID+DuailmailerID, PromotionLevelRateCard object)
                 rcdmMap.put(rcdm.getRateCard().toString()+rcdm.getDualMailer().toString(),rcdm);
@@ -150,7 +150,7 @@ public class PromotionServiceImpl implements PromotionService {
             supplierPromotionBudgetRepository.save(CurrentPromoBudget);
 
         } else {
-            logger.info("Saving new Promo");
+            logger.info("Saving new Promotion");
             //loop DC:Rate card
             for(int i=0;i<rateCards.get().size();i++) {
                 RateCard rateCard = rateCards.get().get(i);
@@ -187,7 +187,7 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Manager> manager = managerRepository.findById(promoCommentDTO.getManagerid());
 
         Date promoDate = DateUtil.convertFromStringTODate(promoCommentDTO.getPromoYear());
-        Optional<Promotion> currentPromotion = promotionRepository.findSupplierPromotionByYear(supplier.get(),promoDate);
+        Optional<Promotion> currentPromotion = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),promoDate);
 
         //save comment
         PromoComments newComment = new PromoComments();
@@ -201,7 +201,7 @@ public class PromotionServiceImpl implements PromotionService {
         Promotion promo = currentPromotion.get();
         promo.setStatus(PromotionStatus.REJECTED);
 
-        promotionRepository.save(promo);
+        annualPromotionRepository.save(promo);
 
         return true;
     }
@@ -213,14 +213,14 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
+            Optional<Promotion> promo = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
 
             if(promo.isPresent()) {
-                logger.info("Promo is present");
+                logger.info("Promotion is present");
                 return promotionDTOHelper.getPromoDTO(supplier.get(),promo.get());
 
             } else {
-                logger.info("Promo is not present");
+                logger.info("Promotion is not present");
                 throw new ResourceNotFoundException("Suppiler Does not have any active promo");
             }
         } else {
@@ -235,12 +235,12 @@ public class PromotionServiceImpl implements PromotionService {
 		
 		if(supplier.isPresent()) {
             Date promoDate = DateUtil.convertFromStringTODate(statusDTO.getPromoYear());
-			Optional<Promotion> promo = promotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
+			Optional<Promotion> promo = annualPromotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
 
 			Promotion currentPromotion = promo.get();
             currentPromotion.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
 
-            promotionRepository.save(currentPromotion);
+            annualPromotionRepository.save(currentPromotion);
             return true;
 		} else {
 			return false;	

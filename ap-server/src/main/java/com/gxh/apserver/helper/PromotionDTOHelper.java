@@ -35,7 +35,7 @@ import com.gxh.apserver.repository.interfaces.DualMailerRepository;
 import com.gxh.apserver.repository.interfaces.ProductRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
-import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
 import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
 import com.gxh.apserver.util.BudgetCalculator;
@@ -54,7 +54,7 @@ public class PromotionDTOHelper {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private PromotionRepository promotionRepository;
+    private AnnualPromotionRepository annualPromotionRepository;
     @Autowired
     private PromotionLevelSKURepository promotionLevelSKURepository;
     @Autowired
@@ -64,7 +64,7 @@ public class PromotionDTOHelper {
         logger.info(">>> buildPromoDTO");
         PromoDTO promoDTO = new PromoDTO();
         //Details about this promotion
-        promoDTO.setPromoyear(promo.getYear().toString());
+        promoDTO.setPromoyear(promo.getCreatedAt().toString());
         promoDTO.setUserid(supplier.getId());
         promoDTO.setPromo_id(promo.getId());
 
@@ -84,8 +84,8 @@ public class PromotionDTOHelper {
                 promoDTO.setIsEditable(true);
                 return this.createDTO(promoDTO,supplier,promo);
 
-            case ACCEPTED:
-                promoDTO.setStatus(PromotionStatus.ACCEPTED);
+            case COMPLETED:
+                promoDTO.setStatus(PromotionStatus.COMPLETED);
                 promoDTO.setIsEditable(false);
                 return this.createDTO(promoDTO,supplier,promo);
 
@@ -97,7 +97,7 @@ public class PromotionDTOHelper {
     @Transactional
     private PromoDTO createDTO(PromoDTO promoDTO,Supplier supplier,Promotion promo) {
         logger.info(">>> createDTO");
-        Optional<List<RateCard>> rateCards = rateCardRepository.findRateCardBYPromotionID(promo);
+        Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(promo);
         List<DualMailer> dms = dualMailerRepository.findAll();
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(promo.getId());
@@ -108,7 +108,7 @@ public class PromotionDTOHelper {
         Map<String,Integer> rcdmMap = new HashMap<>();
 
         if(ratecardDms.isPresent()) {
-            logger.info("Promo is present - Getting Level 1 promotion");
+            logger.info("Promotion is present - Getting Level 1 promotion");
             ratecardDms.get().forEach(promotionLevelRateCard ->
                     rcdmMap.put(promotionLevelRateCard.getRateCard().toString()+promotionLevelRateCard.getDualMailer().toString(),promotionLevelRateCard.getValue()));
         }

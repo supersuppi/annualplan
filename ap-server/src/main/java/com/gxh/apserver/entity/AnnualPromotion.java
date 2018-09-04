@@ -1,28 +1,34 @@
 package com.gxh.apserver.entity;
 
+import javax.persistence.*;
+
 import com.gxh.apserver.constants.PromotionStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "promotion")
-public class Promotion {
-    @Id
+@Table(name = "annual_promotion")
+public class AnnualPromotion {
+	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "name", length=150)
-    private String name;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "promotion_id", referencedColumnName = "id")
+    private Promotion promo;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
+    private Supplier supplier;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status",length=20)
+	@Column(name = "status",length=20)
     private PromotionStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -42,5 +48,4 @@ public class Promotion {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     private User modifiedByUser;
-
 }

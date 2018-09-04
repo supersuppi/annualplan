@@ -7,7 +7,6 @@ import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.repository.interfaces.*;
 import com.gxh.apserver.service.interfaces.HomeService;
 import com.gxh.apserver.util.BudgetCalculator;
-import com.gxh.apserver.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class HomeServiceImpl implements HomeService {
     @Autowired
     private SupplierRepository supplierRepository;
     @Autowired
-    private PromotionRepository promotionRepository;
+    private AnnualPromotionRepository annualPromotionRepository;
     @Autowired
     private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
     @Autowired
@@ -85,7 +84,7 @@ public class HomeServiceImpl implements HomeService {
     }
 
     protected SupplierHomeDTO getSupplierDetails(Supplier supplier,SupplierHomeDTO supHomeDTO){
-        Optional<List<Promotion>> promotions = promotionRepository.findAllPromotionBySupplierID(supplier);
+        Optional<List<Promotion>> promotions = annualPromotionRepository.findAllPromotionBySupplierID(supplier);
         Optional<List<PromoComments>> comments = promoCommentRepository.findAllCommentsBySupplierID(supplier);
 
         supHomeDTO.setSupplierID(supplier.getId());
@@ -97,11 +96,11 @@ public class HomeServiceImpl implements HomeService {
         promotions.get().forEach(promo -> {
             //Set Active promo
             if (promo.getStatus().equals(PromotionStatus.ACTIVE)){
-                supHomeDTO.setActivePromoYear(promo.getYear().toString());
+                supHomeDTO.setActivePromoYear(promo.getCreatedAt().toString());
             }
             // Set Budget
             Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
-            promoYears.add(new PromoYearDetailDTO(promo.getYear().toString(), BudgetCalculator.getBudget(promoBudget.get())));
+            promoYears.add(new PromoYearDetailDTO(promo.getCreatedAt().toString(), BudgetCalculator.getBudget(promoBudget.get())));
         });
         supHomeDTO.setPromoYearDetails(promoYears);
         // Set Comments

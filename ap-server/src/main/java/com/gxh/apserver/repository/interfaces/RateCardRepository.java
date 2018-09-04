@@ -11,5 +11,7 @@ import java.util.Optional;
 
 public interface RateCardRepository extends JpaRepository<RateCard, Long> {
     @Query("select rc from RateCard rc where rc.promotion = ?1")
-    Optional<List<RateCard>> findRateCardBYPromotionID(Promotion promo);
+    Optional<List<RateCard>> findAllRateCardBYPromotionID(Promotion promo);
+    @Query("select rc from RateCard rc where rc.promotion = ?1")
+    List<RateCard> findRateCardBYPromotionID(Promotion promo);
 }

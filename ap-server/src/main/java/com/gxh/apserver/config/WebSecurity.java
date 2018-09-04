@@ -74,6 +74,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 			//TODO remove this 2 lines of code during prod , this is to bypass security
 			.antMatchers(HttpMethod.POST, "/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/**").permitAll()
+				.antMatchers(HttpMethod.PUT, "/**").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
