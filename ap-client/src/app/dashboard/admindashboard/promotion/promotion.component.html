@@ -1,25 +1,19 @@
 <h4>Enter Promotion Details</h4>
 <div class="container">
-    <div class="d-flex flex-row-reverse">
-          <div class="p-2" >
-            <button type="button" class="btn btn-success" (click)="activatePromo()">Activate</button>
-          </div>
-    </div> 
-  <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
     <div class="row">
       <div class="col">
         <label>Promo Name:</label>
-        <input type="text" class="form-control" name="promoName" ngModel>
+        <input type="text" class="form-control" [(ngModel)]="promoName">
       </div>
     </div>
     <br>
-    <app-ratecard></app-ratecard>
+    <h4>Rate Cards</h4>
+    <ng2-smart-table [settings]="ratecardSettings" [source]="ratecardData"></ng2-smart-table>
     <br>
-    <app-dualmailer></app-dualmailer>
+    <h4>Dual Mailer</h4>
+    <ng2-smart-table [settings]="dualmailerSettings" [source]="dualmailerData"></ng2-smart-table>
     <br>
     <div class="row">
-      <button type="submit" class="btn btn-primary">Save</button>
+      <button class="btn btn-primary" (click)="savePromo()">Save</button>
     </div>
-  </form>
-  
 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AdminService } from '../../../../services/admin.service';
 
 @Component({
   selector: 'app-manage-promotion',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManagePromotionComponent implements OnInit {
 
-  constructor() { }
+  constructor(private adminService:AdminService) { }
 
   ngOnInit() {
   }

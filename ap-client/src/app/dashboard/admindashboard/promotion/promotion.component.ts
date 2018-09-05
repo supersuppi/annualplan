@@ -9,34 +9,81 @@ import { AdminService } from '../../../services/admin.service';
   styleUrls: ['./promotion.component.scss']
 })
 export class PromotionComponent implements OnInit {
+  promoName:any;
 
   constructor(private adminService:AdminService) { }
 
   ngOnInit() {
   }
 
-  onSubmit(f:NgForm){
-    let promo = new Promotion()
-    promo.name = f.value.promoName;
-    promo.userName = localStorage.getItem('username');
-    promo.ratecards = Object.values(f.value.ratecards);
-    promo.dualmailers = Object.values(f.value.dualmailers);
+  ratecardSettings = {
+    actions : {
+      columnTitle:'Actions',
+      position:'left'
+    },
+    columns: {
+      code: {
+        title: 'Code',
+        sort:false,
+        filter: false
+      },
+      name: {
+        title: 'Package Name',
+        sort:false,
+        filter: false
+      },
+      rate: {
+        title: 'Rate',
+        sort:false,
+        filter: false
+      }
+    }
+  };
+  ratecardData = [];
 
+  dualmailerSettings = {
+    actions : {
+      columnTitle:'Actions',
+      position:'left'
+    },
+    columns: {
+      code: {
+        title: 'Code',
+        sort:false,
+        filter: false
+      },
+      startDate: {
+        title: 'Start-Date',
+        sort:false,
+        filter: false
+      },
+      endDate: {
+        title: 'End-Date',
+        sort:false,
+        filter: false
+      }
+    }
+  };
+  dualmailerData = [];
+
+  savePromo(){
+    let promo = new Promotion()
+    promo.name = this.promoName;
+    promo.userName = localStorage.getItem('username');
+    promo.ratecards = this.ratecardData;
+    promo.dualmailers = this.dualmailerData;
+
+    console.log(promo);
     this.adminService.saveAdminPromotion(promo).subscribe((response:any) => {
       console.info("saveAdminPromotion called");
+      //Reset data
+      this.ratecardData = [];
+      this.dualmailerData = [];
+      this.promoName = '';
     },
     error => { 
         console.error("ERROR! PromotionComponent:saveAdminPromotion = "+error);
     });
   }
-
-  activatePromo(){
-    this.adminService.activateAdminPromotion().subscribe((response:any) => {
-      console.info("activatePromo called");
-    },
-    error => { 
-        console.error("ERROR! PromotionComponent:activatePromo = "+error);
-    });
-  }
-
+  
 }

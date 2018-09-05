@@ -26,14 +26,10 @@ export class AdmindashboardComponent implements OnInit {
   }
 
   newPromotion() {
-    console.log("promotion tab clicked");
-    // navigate to 'admin/register' route, for admin to view his profile.
     this.router.navigate(['promotion/new'], {relativeTo: this.route});
   }
 
   showPromotion() {
-    console.log("promotion tab clicked");
-    // navigate to 'admin/register' route, for admin to view his profile.
     this.router.navigate(['promotion/show'], {relativeTo: this.route});
   }
 

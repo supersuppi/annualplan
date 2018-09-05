@@ -38,11 +38,9 @@ import { TruncatePipe } from './helper/truncate.pipe';
 import { ServerConfig } from './config/server.config';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { PromotionComponent } from './dashboard/admindashboard/promotion/promotion.component';
-import { RatecardComponent } from './dashboard/admindashboard/ratecard/ratecard.component';
-import { DualmailerComponent } from './dashboard/admindashboard/dualmailer/dualmailer.component';
-import { LifemailerComponent } from './dashboard/admindashboard/lifemailer/lifemailer.component';
 import { AdminService } from './services/admin.service';
 import { ManagePromotionComponent } from './dashboard/admindashboard/promotion/manage-promotion/manage-promotion.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
 @NgModule({
@@ -65,9 +63,6 @@ import { ManagePromotionComponent } from './dashboard/admindashboard/promotion/m
     GanttChartComponent,
     TruncatePipe,
     PromotionComponent,
-    RatecardComponent,
-    DualmailerComponent,
-    LifemailerComponent,
     ManagePromotionComponent
   ],
   imports: [
@@ -80,6 +75,7 @@ import { ManagePromotionComponent } from './dashboard/admindashboard/promotion/m
     Ng2SearchPipeModule,
     NgxPaginationModule,
     BrowserAnimationsModule,
+    Ng2SmartTableModule,
     NgbModule,
     ModalDialogModule.forRoot()
   ],
