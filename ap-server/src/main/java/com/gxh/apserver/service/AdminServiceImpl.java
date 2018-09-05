@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +43,6 @@ public class AdminServiceImpl implements AdminService {
             logger.info("User Found.");
             Optional<Promotion> mainPromo = promotionRepository.findPromotionByUser(user);
 
-            if(mainPromo.isPresent()){
-                logger.info("Promotion Present.Updating.");
-                //TODO: update existing promo
-            } else {
                 logger.info("Promotion not present.Creating new.");
                 Promotion newPromo = new Promotion();
                 newPromo.setCreatedByUser(user);
@@ -67,8 +64,6 @@ public class AdminServiceImpl implements AdminService {
 
                 logger.info("Saving DualMailers.");
                 adminPromoDTO.getDualmailers().forEach((dualMailer) -> {
-                    //Don't save empty values
-                    if(dualMailer.getEndDate()!= null || dualMailer.getStartDate()!=null){
                         DualMailer newDualMailer = new DualMailer();
                         newDualMailer.setPromotion(savedPromo);
                         newDualMailer.setCode(dualMailer.getCode());
@@ -79,31 +74,34 @@ public class AdminServiceImpl implements AdminService {
                             logger.error(e.getMessage());
                         }
                         dualMailerRepository.save(newDualMailer);
-                    }
                 });
             }
-        } else {
-            throw new ResourceNotFoundException("User didn't find:"+adminPromoDTO.getUserName());
-        }
         logger.info("<<< saveAdminPromotion");
         return true;
     }
 
     @Override
-    public AdminPromoDTO getPromotionByStatus(PromotionStatus status) throws ParseException {
+    public List<AdminPromoDTO> getPromotionsByStatus(PromotionStatus status) throws ParseException {
         logger.info(">>> getPromotionByStatus");
-        Optional<Promotion> promo = promotionRepository.findPromotionByStatus(status);
-        if(promo.isPresent()) {
+        Optional<List<Promotion>> promoList = promotionRepository.findAllPromotionByStatus(status);
 
-        }
+        List<AdminPromoDTO> promodtoList = new ArrayList<>();
+        promoList.get().forEach((promotion -> {
+            AdminPromoDTO pdto = new AdminPromoDTO();
+            pdto.setName(promotion.getName());
+            pdto.setPid(promotion.getId());
+            pdto.setPstatus(promotion.getStatus().toString());
 
-        return null;
+            promodtoList.add(pdto);
+        }));
+        logger.info("<<< getPromotionByStatus");
+        return promodtoList;
     }
 
     @Override
-    public boolean activatePromotion() {
+    public boolean activatePromotion(Long promoID) {
         logger.info(">>> activatePromotion");
-        Optional<Promotion> promo = promotionRepository.findPromotionByStatus(PromotionStatus.DRAFT);
+        Optional<Promotion> promo = promotionRepository.findById(promoID);
         if(promo.isPresent()) {
             logger.info("Found promotion with state DRAFT.Activating");
             Promotion currentPromo = promo.get();

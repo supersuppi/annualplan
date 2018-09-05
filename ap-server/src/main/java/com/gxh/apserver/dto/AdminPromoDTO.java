@@ -10,6 +10,8 @@ import java.util.List;
 public class AdminPromoDTO {
     private String name;
     private String userName;
+    private Long pid;
+    private String pstatus;
     private List<AdminMailerDTO> dualmailers;
     private List<AdminRCDTO> ratecards;
 }

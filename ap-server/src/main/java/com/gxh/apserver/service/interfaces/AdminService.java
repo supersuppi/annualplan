@@ -4,9 +4,10 @@ import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AdminPromoDTO;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface AdminService {
     boolean savePromotion(AdminPromoDTO adminPromoDTO) throws ParseException;
-    AdminPromoDTO getPromotionByStatus(PromotionStatus status) throws ParseException;
-    boolean activatePromotion();
+    List<AdminPromoDTO> getPromotionsByStatus(PromotionStatus status) throws ParseException;
+    boolean activatePromotion(Long promoID);
 }

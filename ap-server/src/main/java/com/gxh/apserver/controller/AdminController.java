@@ -3,6 +3,7 @@ package com.gxh.apserver.controller;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
 import com.gxh.apserver.dto.AdminPromoDTO;
+import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.service.interfaces.AdminService;
 import com.gxh.apserver.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -29,9 +31,9 @@ public class AdminController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/promotion/activate")
-    public ResponseEntity<String> activatePromotionStatus() {
-        boolean success = adminService.activatePromotion();
+    @GetMapping("/activate/promotion/{pid)")
+    public ResponseEntity<String> activatePromotionStatus(@PathVariable("pid") Long promoID) {
+        boolean success = adminService.activatePromotion(promoID);
         if(success){
             return ResponseEntity.status(HttpStatus.OK).build();
         }else{
@@ -40,13 +42,13 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/promotion/draft")
-    public ResponseEntity<String> getDraftPromotion() {
+    public ResponseEntity<List<AdminPromoDTO>> getDraftPromotion() {
         try {
-            AdminPromoDTO adminPromoDTO = adminService.getPromotionByStatus(PromotionStatus.DRAFT);
+            List<AdminPromoDTO> adminPromoDTO = adminService.getPromotionsByStatus(PromotionStatus.DRAFT);
+            return new ResponseEntity<List<AdminPromoDTO>>(adminPromoDTO, HttpStatus.OK);
         } catch (ParseException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

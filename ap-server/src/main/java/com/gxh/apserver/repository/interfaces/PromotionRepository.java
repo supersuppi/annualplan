@@ -6,6 +6,7 @@ import com.gxh.apserver.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PromotionRepository extends JpaRepository<Promotion,Long> {
@@ -14,6 +15,6 @@ public interface PromotionRepository extends JpaRepository<Promotion,Long> {
     Optional<Promotion> findPromotionByUser(User user);
 
     @Query("select p from Promotion p where p.status = ?1")
-    Optional<Promotion> findPromotionByStatus(PromotionStatus status);
+    Optional<List<Promotion>> findAllPromotionByStatus(PromotionStatus status);
 
 }
