@@ -5,6 +5,7 @@ import com.gxh.apserver.dto.*;
 import com.gxh.apserver.entity.*;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.repository.interfaces.*;
+import com.gxh.apserver.service.interfaces.AdminService;
 import com.gxh.apserver.service.interfaces.HomeService;
 import com.gxh.apserver.util.BudgetCalculator;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,16 +35,20 @@ public class HomeServiceImpl implements HomeService {
     private ManagerRepository managerRepository;
     @Autowired
     private PromoCommentRepository promoCommentRepository;
+    @Autowired
+    private AdminService adminService;
 
     @Override
-    public HomeDTO getUserHomeContent(String emailAddress) throws ResourceNotFoundException {
+    public HomeDTO getUserHomeContent(String emailAddress) throws ResourceNotFoundException,ParseException {
         User user = userRepository.findByEmail(emailAddress);
+        List<AdminPromoDTO> adminPromoDTO = adminService.getPromotionsByStatus(PromotionStatus.ACTIVE);
 
         if(user.getRole().getName().equalsIgnoreCase("VENDOR")) {
             SupplierHomeDTO supHomeDTO = new SupplierHomeDTO();
             supHomeDTO.setUserID(user.getId());
             supHomeDTO.setUserName(user.getEmail());
             supHomeDTO.setRole(user.getRole().getName());
+            supHomeDTO.setActivePromotions(adminPromoDTO);
 
             return getDetailsForSupplier(user,supHomeDTO);
         } else if(user.getRole().getName().equalsIgnoreCase("CM")) {
@@ -50,6 +56,7 @@ public class HomeServiceImpl implements HomeService {
             managerHomeDTO.setUserID(user.getId());
             managerHomeDTO.setUserName(user.getEmail());
             managerHomeDTO.setRole(user.getRole().getName());
+            managerHomeDTO.setActivePromotions(adminPromoDTO);
 
             return getDetailsForManager(user,managerHomeDTO);
         } else {
