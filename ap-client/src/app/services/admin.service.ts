@@ -8,7 +8,8 @@ import { Promotion } from "../form-model/admin.promotion";
 @Injectable()
 export class AdminService{
     private adminSavePromoUrl = ServerConfig.API_ENDPOINT+"admin/promotion/save";
-    private adminActivatePromoUrl = ServerConfig.API_ENDPOINT+"admin/promotion/activate";
+    private adminActivatePromoUrl = ServerConfig.API_ENDPOINT+"admin/activate/promotion";
+    private getDraftPromotionsUrl = ServerConfig.API_ENDPOINT+"admin/promotion/draft";
 
     constructor(private httpClient: HttpClient) {}
 
@@ -16,7 +17,11 @@ export class AdminService{
         return this.httpClient.post<any>(this.adminSavePromoUrl,data);
     }
 
-    activateAdminPromotion(): Observable<Object>{
-        return this.httpClient.get<any>(this.adminActivatePromoUrl);
+    activateAdminPromotion(pid:Number): Observable<Object>{
+        return this.httpClient.get<any>(this.adminActivatePromoUrl+"/"+pid);
+    }
+
+    getDraftPromotion(): Observable<Array<Promotion>>{
+        return this.httpClient.get<Array<Promotion>>(this.getDraftPromotionsUrl);
     }
 }

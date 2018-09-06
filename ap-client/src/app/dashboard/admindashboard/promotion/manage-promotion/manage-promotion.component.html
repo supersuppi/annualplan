@@ -1,3 +1,22 @@
-<p>
-  manage-promotion works!
-</p>
+<div class="container">
+<div class="row">
+  <div class="table-responsive">
+    <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Promotion Name</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let promo of promotions; let i = index">
+        <td>{{promo.name}}</td>
+        <td>{{promo.pstatus}}</td>
+        <td> <button type="button" class="btn btn-success" (click)="activatePromotion(promo.pid)">Activate</button></td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
+</div>
+</div>

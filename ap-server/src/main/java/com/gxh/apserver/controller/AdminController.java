@@ -31,7 +31,7 @@ public class AdminController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/activate/promotion/{pid)")
+    @GetMapping("/activate/promotion/{pid}")
     public ResponseEntity<String> activatePromotionStatus(@PathVariable("pid") Long promoID) {
         boolean success = adminService.activatePromotion(promoID);
         if(success){
