@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gxh.apserver.constants.AnnualPromotionStatus;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
+import com.gxh.apserver.entity.AnnualPromotion;
 import com.gxh.apserver.entity.DualMailer;
 import com.gxh.apserver.entity.Manager;
 import com.gxh.apserver.entity.PromoComments;
@@ -38,6 +40,7 @@ import com.gxh.apserver.repository.interfaces.ProductRepository;
 import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
 import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
 import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
@@ -60,8 +63,6 @@ public class PromotionServiceImpl implements PromotionService {
     @Autowired
     private AnnualPromotionRepository annualPromotionRepository;
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private PromotionLevelRateCardRepository promotionLevelRateCardRepository;
     @Autowired
     private PromotionDTOHelper promotionDTOHelper;
@@ -71,15 +72,17 @@ public class PromotionServiceImpl implements PromotionService {
     private PromotionLevelSKURepository promotionLevelSKURepository;
     @Autowired
     private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
+    @Autowired
+    private PromotionRepository promotionRepository;
 
     @Override
-    public PromoDTO getSupplierPromo(Long supplierID,String promoYear) throws ResourceNotFoundException,InvalidStatusException,ParseException {
+    public PromoDTO getSupplierPromo(Long supplierID,Long promoID) throws ResourceNotFoundException,InvalidStatusException,ParseException {
         logger.info(">>> getSupplierPromo");
-        logger.info(">>> data -"+supplierID+"=="+promoYear);
+        logger.debug(">>> data -"+supplierID+"=="+promoID);
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
+            Optional<Promotion> promo = promotionRepository.findById(promoID);
 
             if(promo.isPresent()) {
                 logger.info("Promotion is present");
@@ -105,7 +108,8 @@ public class PromotionServiceImpl implements PromotionService {
         logger.info(">>> saveSupplierPromo");
 
         Optional<Supplier> supplier = supplierRepository.findById(promoDTO.getUserid());
-        Optional<Promotion> currentPromotion = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoDTO.getPromoyear()));
+        Optional<Promotion> currentPromotion = promotionRepository.findById(promoDTO.getPromo_id());
+        Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), currentPromotion.get());
         Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(currentPromotion.get());
         List<DualMailer> dms = dualMailerRepository.findAll();
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
@@ -113,8 +117,8 @@ public class PromotionServiceImpl implements PromotionService {
 
         int totalBudget = 0;
         Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();
-        if(ratecardDms.isPresent()) {
-            logger.info("Updating Promotion");
+        if(currentAnnualPromotion.isPresent()) {
+            logger.info("Updating Current Annual Promotion");
             for (PromotionLevelRateCard rcdm : ratecardDms.get()) {
                 //(K,V) = (rateCardID+DuailmailerID, PromotionLevelRateCard object)
                 rcdmMap.put(rcdm.getRateCard().toString()+rcdm.getDualMailer().toString(),rcdm);
@@ -130,6 +134,7 @@ public class PromotionServiceImpl implements PromotionService {
                     prc = rcdmMap.get(rateCard.getId().toString()+dm.getId().toString());
 
                     prc.setPromo(currentPromotion.get().getId());
+                    prc.setAnnualpromo(currentAnnualPromotion.get().getId());
                     prc.setRateCard(rateCard.getId());
                     prc.setDualMailer(dm.getId());
                     prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
@@ -150,7 +155,19 @@ public class PromotionServiceImpl implements PromotionService {
             supplierPromotionBudgetRepository.save(CurrentPromoBudget);
 
         } else {
-            logger.info("Saving new Promotion");
+            logger.info("Saving New Annual Promotion");
+            //Create annual promotion
+            AnnualPromotion ap = new AnnualPromotion();
+            ap.setCreatedByUser(supplier.get().getSupplierAppUser());
+            //TODO: modifiedby to br read from dto
+            ap.setModifiedByUser(supplier.get().getSupplierAppUser());
+            ap.setPromo(currentPromotion.get());
+            ap.setSupplier(supplier.get());
+            ap.setPromo(currentPromotion.get());
+            ap.setStatus(AnnualPromotionStatus.DRAFT);
+            
+            AnnualPromotion savedAP = annualPromotionRepository.saveAndFlush(ap);
+            
             //loop DC:Rate card
             for(int i=0;i<rateCards.get().size();i++) {
                 RateCard rateCard = rateCards.get().get(i);
@@ -158,12 +175,14 @@ public class PromotionServiceImpl implements PromotionService {
                     DualMailer dm = dms.get(j);
 
                     PromotionLevelRateCard prc = null;
+                    
                     prc = new PromotionLevelRateCard();
-
+                    prc.setAnnualpromo(savedAP.getId());
                     prc.setPromo(currentPromotion.get().getId());
                     prc.setRateCard(rateCard.getId());
                     prc.setDualMailer(dm.getId());
                     prc.setValue(promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue());
+                    
                     //Calculate budget ( Rateplan cost x number of tiles
                     totalBudget += rateCard.getRateCardDollar() * promoDTO.getRatecards().get(i).getDualmailers().get(j).getValue();
 
@@ -187,7 +206,8 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Manager> manager = managerRepository.findById(promoCommentDTO.getManagerid());
 
         Date promoDate = DateUtil.convertFromStringTODate(promoCommentDTO.getPromoYear());
-        Optional<Promotion> currentPromotion = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),promoDate);
+        Optional<Promotion> currentPromotion = promotionRepository.findById(promoCommentDTO.getPromoID());
+        Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), currentPromotion.get());
 
         //save comment
         PromoComments newComment = new PromoComments();
@@ -198,8 +218,8 @@ public class PromotionServiceImpl implements PromotionService {
 
         promoCommentRepository.save(newComment);
 
-        Promotion promo = currentPromotion.get();
-        promo.setStatus(PromotionStatus.REJECTED);
+        AnnualPromotion promo = currentAnnualPromotion.get();
+        promo.setStatus(AnnualPromotionStatus.REJECTED);
 
         annualPromotionRepository.save(promo);
 
@@ -207,17 +227,18 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public PromoDTO getSupplierPromoForManager(Long supplierID, String promoYear) throws ResourceNotFoundException,InvalidStatusException,ParseException {
+    public PromoDTO getSupplierPromoForManager(Long supplierID, Long promoID) throws ResourceNotFoundException,InvalidStatusException,ParseException {
         logger.info(">>> getSupplierPromoForManager");
-        logger.info(">>> data -"+supplierID+"=="+promoYear);
+        logger.info(">>> data -"+supplierID+"=="+promoID);
         Optional<Supplier> supplier = supplierRepository.findById(supplierID);
 
         if(supplier.isPresent()) {
-            Optional<Promotion> promo = annualPromotionRepository.findSupplierPromotionByYear(supplier.get(),DateUtil.convertFromStringTODate(promoYear));
+        	Optional<Promotion> currentPromotion = promotionRepository.findById(promoID);
+            Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), currentPromotion.get());
 
-            if(promo.isPresent()) {
+            if(currentAnnualPromotion.isPresent()) {
                 logger.info("Promotion is present");
-                return promotionDTOHelper.getPromoDTO(supplier.get(),promo.get());
+                return promotionDTOHelper.getPromoDTO(supplier.get(),currentPromotion.get());
 
             } else {
                 logger.info("Promotion is not present");
@@ -235,12 +256,13 @@ public class PromotionServiceImpl implements PromotionService {
 		
 		if(supplier.isPresent()) {
             Date promoDate = DateUtil.convertFromStringTODate(statusDTO.getPromoYear());
-			Optional<Promotion> promo = annualPromotionRepository.findSupplierPromotionByYearAndStatus(supplier.get(),promoDate,PromotionStatus.valueOf(statusDTO.getCurrentStatus()));
+            Optional<Promotion> promotion = promotionRepository.findById(statusDTO.getPromoid());
+            Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), promotion.get());
 
-			Promotion currentPromotion = promo.get();
-            currentPromotion.setStatus(PromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
+            AnnualPromotion currentAP = currentAnnualPromotion.get();
+            currentAP.setStatus(AnnualPromotionStatus.valueOf(statusDTO.getStatusChangeTo()));
 
-            annualPromotionRepository.save(currentPromotion);
+            annualPromotionRepository.save(currentAP);
             return true;
 		} else {
 			return false;	

@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class PromoCommentDTO {
     private String promoYear;
+    private Long promoID;
+    private Long annualpromoID;
     private Long supplierid;
     private Long managerid;
     private String comment;

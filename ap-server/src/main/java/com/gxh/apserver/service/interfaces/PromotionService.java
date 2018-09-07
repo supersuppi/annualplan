@@ -14,7 +14,7 @@ import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 
 public interface PromotionService {
-    PromoDTO getSupplierPromo(Long supplierID,String promoYear) throws ResourceNotFoundException,
+    PromoDTO getSupplierPromo(Long supplierID,Long promoID) throws ResourceNotFoundException,
             InvalidStatusException,ParseException;
     
     List<PromoDTO> getAllSupplierPromo(Long supplierID) throws ResourceNotFoundException,
@@ -26,7 +26,7 @@ public interface PromotionService {
     
     boolean changePromotionStatus(StatusChangeDTO promoDTO) throws ParseException;
     
-    PromoDTO getSupplierPromoForManager(Long supplierID,String promoYear) throws ResourceNotFoundException,
+    PromoDTO getSupplierPromoForManager(Long supplierID,Long promoID) throws ResourceNotFoundException,
             InvalidStatusException,ParseException;
     
     public void saveOrRemoveSelectedProducts( AddOrRemoveProductRequestDTO requestBody ) throws ParseException;

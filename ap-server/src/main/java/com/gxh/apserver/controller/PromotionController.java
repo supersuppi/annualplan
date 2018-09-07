@@ -95,13 +95,13 @@ public class PromotionController extends BaseController {
         }
     }
 
-    @GetMapping("/supplier/{id}/{year}")
+    @GetMapping("/supplier/{id}/{pid}")
      ResponseEntity<PromoDTO> getSupplierPromo(@PathVariable("id") Long supplierID,
-                                               @PathVariable("year") String promoYear) {
+                                               @PathVariable("pid") Long promoID) {
         PromoDTO promoDTO;
 
         try {
-            promoDTO = promotionService.getSupplierPromo(supplierID,promoYear);
+            promoDTO = promotionService.getSupplierPromo(supplierID,promoID);
         } catch (ResourceNotFoundException e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -139,13 +139,12 @@ public class PromotionController extends BaseController {
         return responseEntity;
     }
     
-    @GetMapping("/manager/{id}/{year}")
-    ResponseEntity<PromoDTO> getSupplierPromoForManager(@PathVariable("id") Long supplierID,
-                                              @PathVariable("year") String promoYear) {
+    @GetMapping("/manager/{sid}/{pid}")
+    ResponseEntity<PromoDTO> getSupplierPromoForManager(@PathVariable("sid") Long supplierID,@PathVariable("pid") Long promoID) {
         PromoDTO promoDTO;
 
         try {
-            promoDTO = promotionService.getSupplierPromoForManager(supplierID,promoYear);
+            promoDTO = promotionService.getSupplierPromoForManager(supplierID,promoID);
         } catch (ResourceNotFoundException e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

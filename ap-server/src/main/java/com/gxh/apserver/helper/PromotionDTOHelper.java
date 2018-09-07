@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gxh.apserver.constants.AnnualPromotionStatus;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.BrandProductDTO;
 import com.gxh.apserver.dto.DualMailerDTO;
@@ -22,6 +23,7 @@ import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.RateCardDTO;
+import com.gxh.apserver.entity.AnnualPromotion;
 import com.gxh.apserver.entity.DualMailer;
 import com.gxh.apserver.entity.Product;
 import com.gxh.apserver.entity.Promotion;
@@ -67,42 +69,48 @@ public class PromotionDTOHelper {
         promoDTO.setPromoyear(promo.getCreatedAt().toString());
         promoDTO.setUserid(supplier.getId());
         promoDTO.setPromo_id(promo.getId());
-
-        switch (promo.getStatus()) {
-            case ACTIVE:
-                promoDTO.setStatus(PromotionStatus.ACTIVE);
-                promoDTO.setIsEditable(true);
-                return this.createDTO(promoDTO,supplier,promo);
-
-            case SUBMITTED:
-                promoDTO.setStatus(PromotionStatus.SUBMITTED);
-                promoDTO.setIsEditable(false);
-                return this.createDTO(promoDTO,supplier,promo);
-
-            case REJECTED:
-                promoDTO.setStatus(PromotionStatus.REJECTED);
-                promoDTO.setIsEditable(true);
-                return this.createDTO(promoDTO,supplier,promo);
-
-            case COMPLETED:
-                promoDTO.setStatus(PromotionStatus.COMPLETED);
-                promoDTO.setIsEditable(false);
-                return this.createDTO(promoDTO,supplier,promo);
-
-            default:
-                throw new InvalidStatusException("Invalid Status of the user");
+        
+        Optional<AnnualPromotion> annualPromo = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier,promo);
+        
+        if(annualPromo.isPresent()) {
+        	switch (annualPromo.get().getStatus()) {
+		    	case DRAFT:
+		            promoDTO.setStatus(AnnualPromotionStatus.DRAFT);
+		            promoDTO.setIsEditable(true);
+		            return this.createDTO(promoDTO,supplier,promo,annualPromo.get());
+		            
+		    	case SUBMITTED:
+	                promoDTO.setStatus(AnnualPromotionStatus.SUBMITTED);
+	                promoDTO.setIsEditable(false);
+	                return this.createDTO(promoDTO,supplier,promo,annualPromo.get());
+	                
+		    	case REJECTED:
+	                promoDTO.setStatus(AnnualPromotionStatus.REJECTED);
+	                promoDTO.setIsEditable(true);
+	                return this.createDTO(promoDTO,supplier,promo,annualPromo.get());
+	                
+		    	default:
+	                throw new InvalidStatusException("Invalid Status of the promotion");
+	                	
+        	}
+        } else {
+        	//new annual promotion set as draft
+        	promoDTO.setStatus(AnnualPromotionStatus.DRAFT);
+            promoDTO.setIsEditable(true);
+            return this.createDTO(promoDTO,supplier,promo,new AnnualPromotion());
         }
+
     }
 
     @Transactional
-    private PromoDTO createDTO(PromoDTO promoDTO,Supplier supplier,Promotion promo) {
+    private PromoDTO createDTO(PromoDTO promoDTO,Supplier supplier,Promotion promo,AnnualPromotion annualPromo) {
         logger.info(">>> createDTO");
+        
         Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(promo);
-        List<DualMailer> dms = dualMailerRepository.findAll();
+        List<DualMailer> dms = dualMailerRepository.findAllDMbyPromotion(promo);
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
-        Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(promo.getId());
+        Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoAndAnnualPromoID(promo.getId(),annualPromo.getId());
         Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
-        Optional<List<Integer>> promoLevelSKUPromoCounts = promotionLevelSKURepository.findAllPromoCountByPromoID(promo.getId());
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
@@ -142,7 +150,6 @@ public class PromotionDTOHelper {
             List<DualMailerDTO> dmList = new ArrayList<>();
             for (DualMailer dm : dms) {
                 DualMailerDTO dto = null;
-                List<PromoSKUDTO> selectedProductList = new ArrayList<>();
                 
                 dto = new DualMailerDTO();
                 dto.setId(row.getPcode()+dm.getCode());

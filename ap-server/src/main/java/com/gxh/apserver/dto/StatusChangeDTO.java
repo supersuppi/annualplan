@@ -13,4 +13,6 @@ public class StatusChangeDTO {
 	private String promoYear;
 	private Boolean statusChangeSuccess;
 	private Long supplierid;
+	private Long promoid;
+	private Long annualpromoid;
 }
