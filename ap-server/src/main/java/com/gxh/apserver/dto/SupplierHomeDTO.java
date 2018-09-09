@@ -2,6 +2,7 @@ package com.gxh.apserver.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gxh.apserver.entity.Manager;
+import com.gxh.apserver.entity.Notification;
 import lombok.Data;
 
 import java.util.List;

@@ -36,12 +36,15 @@ public class HomeServiceImpl implements HomeService {
     private AdminService adminService;
     @Autowired
     private PromotionRepository promotionRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Override
     public HomeDTO getUserHomeContent(String emailAddress) throws ResourceNotFoundException,ParseException {
         logger.info(">>> getUserHomeContent");
         User user = userRepository.findByEmail(emailAddress);
         List<AdminPromoDTO> adminPromoDTO = adminService.getPromotionsByStatus(PromotionStatus.ACTIVE);
+        List<Notification> notifications = notificationRepository.findAll();
 
         if(user.getRole().getName().equalsIgnoreCase("VENDOR")) {
             SupplierHomeDTO supHomeDTO = new SupplierHomeDTO();
@@ -49,6 +52,7 @@ public class HomeServiceImpl implements HomeService {
             supHomeDTO.setUserName(user.getEmail());
             supHomeDTO.setRole(user.getRole().getName());
             supHomeDTO.setActivePromotions(adminPromoDTO);
+            supHomeDTO.setNotifications(notifications);
 
             return getDetailsForSupplier(user,supHomeDTO);
         } else if(user.getRole().getName().equalsIgnoreCase("CM")) {
@@ -56,6 +60,7 @@ public class HomeServiceImpl implements HomeService {
             managerHomeDTO.setUserID(user.getId());
             managerHomeDTO.setUserName(user.getEmail());
             managerHomeDTO.setRole(user.getRole().getName());
+            managerHomeDTO.setNotifications(notifications);
 
             return getDetailsForManager(user,managerHomeDTO,adminPromoDTO);
         } else {

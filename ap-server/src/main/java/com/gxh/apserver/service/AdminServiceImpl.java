@@ -32,6 +32,8 @@ public class AdminServiceImpl implements AdminService {
     private RateCardRepository rateCardRepository;
     @Autowired
     private DualMailerRepository dualMailerRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Override
     @Transactional
@@ -114,9 +116,17 @@ public class AdminServiceImpl implements AdminService {
             Promotion currentPromo = promo.get();
             currentPromo.setStatus(PromotionStatus.ACTIVE);
             promotionRepository.save(currentPromo);
+
+            //Create Notification
+            Notification notification = new Notification();
+            notification.setMessage("Promotion "+currentPromo.getName()+" "+"is active now");
+            notificationRepository.save(notification);
+
+            logger.info("notification created");
             logger.info("<<< activatePromotion");
             return true;
         }
+
         logger.info("<<< activatePromotion");
         return false;
     }

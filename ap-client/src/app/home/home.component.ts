@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
   promotionSuppliers:Array<Supplier>;
   private promoID:Number;
   private comments:Array<HomeComment>;
+  notifications:any;
   private supplierID:Number;
   public pageLoaded:Boolean; //to avoid promotion undefined error
   timelineYear: number;
@@ -137,6 +138,7 @@ export class HomeComponent implements OnInit {
     this.promoID = homeData.activePromotions[0].pid;//Default Promotion ID
     this.promotionSuppliers = homeData.activePromotions[0].suppliers;//Default suppliers of Promotion ID
     this.comments = (homeData.comments == null ? new Array() : homeData.comments);
+    this.notifications = (homeData.notifications == null ? new Array() : homeData.notifications);
     localStorage.setItem('promoID', homeData.activePromotions[0].pid.toString());
   }
 

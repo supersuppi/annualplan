@@ -5,4 +5,5 @@ export class UserHomeData {
     public userName:String;
     public role:String;
     public activePromotions:Array<Promotion>;
+    public notifications:Array<any>;
 }

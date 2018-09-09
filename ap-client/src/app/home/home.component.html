@@ -41,6 +41,31 @@
         </span>
       </div>
       <br>
+      <!-- Notification Component -->
+      <h5> Notifications</h5>
+      <div class="row col-lg-12" *ngIf="notifications.length != 0">
+          <div class="table-responsive" >
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Sender</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of notifications; let i = index;">
+                    <td>Admin</td>
+                    <td>{{row.message}}</td>
+                    <td>{{row.createdAt | slice:0:10}}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+      </div>
+      <div class="row col-lg-12" *ngIf="notifications.length === 0">
+          <p>No Messages!</p>
+      </div>
       <!-- Inbox Component -->
       <h5> Inbox</h5>
       <div class="row col-lg-12" *ngIf="comments.length != 0">
