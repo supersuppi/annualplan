@@ -24,7 +24,7 @@ const appRoute : Routes= [
     }},
     { path: 'supplier', component: SupplierComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_VENDOR'}},
     { path: 'manager', component: ManagerComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_CM'}},
-    { path: 'admin', component: AdmindashboardComponent,
+    { path: 'admin', component: AdmindashboardComponent,canActivate: [RoleGuardService],
         children: [
             {path: 'register', component: RegisterdashboardComponent, resolve:{
                 roles : RoleDropdownResolver
