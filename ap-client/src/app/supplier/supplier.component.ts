@@ -7,6 +7,7 @@ import { SupplierPromotionService } from '../services/index';
 import { SkuPromotionModalComponent } from '../modal/sku-promotion-modal/sku-promotion-modal.component';
 import { map } from '../../../node_modules/rxjs/operators';
 import { SKULevelPromoData } from '../models/sku-product-details';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
   selector: 'app-supplier',
@@ -16,10 +17,13 @@ import { SKULevelPromoData } from '../models/sku-product-details';
 export class SupplierComponent implements OnInit {
 
    private promotion:Promotion;
+   dualMailers:Array<DualMailer>
    private promoStatus:PromoStatus;
    public pageLoaded:Boolean; //to avoid promotion undefined error
    public hasError:Boolean;
-   private activePromoYear:String;
+   private activePromoID:Number;
+   private supplierID:Number;
+   private activeAnnualPromoID:String;
    private products:Array<ProductSKU>;
    private productDMBudgetList:Array<CalculatedBudget>;
    private promoSaved:Boolean;
@@ -28,15 +32,16 @@ export class SupplierComponent implements OnInit {
  
 
   constructor(private promotionService: SupplierPromotionService,private _Activatedroute:ActivatedRoute,
-    private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
+    private toast:ToastNotificationService,private modalDialogService: ModalDialogService, private viewContainer: ViewContainerRef) {}
 
   ngOnInit() {
     this.pageLoaded = false;
     this.hasError = false;
     this.promoSaved = false;
-    this.activePromoYear = this._Activatedroute.snapshot.params['pyear'];
-    let sid:Number = Number(localStorage.getItem('supplierID'))
-    this.getSupplierPromotion(sid,this.activePromoYear);
+    this.activePromoID = Number(localStorage.getItem('promoID'));
+   // this.activeAnnualPromoID = this._Activatedroute.snapshot.params['annualPromoID'];
+    this.supplierID = Number(localStorage.getItem('supplierID'))
+    this.getSupplierPromotion(this.supplierID,this.activePromoID.toString());
   }
 
   getSupplierPromotion(id:Number,promoyear:String) {
@@ -51,6 +56,7 @@ export class SupplierComponent implements OnInit {
     error => { 
       this.hasError = true;
       console.error("ERROR! SupplierComponent:getSupplierPromotion = "+error);
+      this.toast.showError("Something went wrong!Try again");
     });
   }
 
@@ -58,8 +64,8 @@ export class SupplierComponent implements OnInit {
     console.debug(">>initBudgetTableData");
     this.productDMBudgetList = new Array();
     for (let ratecard of ratecards) {
-     let dualMailers:Array<DualMailer> = ratecard.dualmailers;
-     for (let dm of dualMailers) {
+    this.dualMailers = ratecard.dualmailers;
+     for (let dm of this.dualMailers) {
        if(dm.value!=0) {
         this.createOrUpdateBudget(ratecard,dm)
        }
@@ -73,25 +79,29 @@ export class SupplierComponent implements OnInit {
       console.debug("POST saveSupplierPromotion Call Success");
       console.log(response);
       this.promoSaved = true;
+      this.toast.showSuccess("Promotion Saved");
       this.refreshData();
     },
     error => { 
       this.hasError = true;
-      console.error("ERROR! saveSupplierPromotion:getSupplierPromotion = "+error);
+      console.error("ERROR! SupplierComponent:saveSupplierPromotion = "+error);
+      this.toast.showError("Something went wrong!Try again");
     });
   }
 
   submitSupplierPromotion() {
     console.debug("promo year"+this.promotion.promoyear);
-    this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"SUBMITTED",this.promotion.promoyear)
+    this.promoStatus = new PromoStatus(this.activePromoID,this.promotion.userid,this.promotion.status,"SUBMITTED",this.promotion.promoyear)
     this.promotionService.submitSupplierPromotion(this.promoStatus).subscribe((response:PromoStatus) => {
       console.debug("POST submitSupplierPromotion Call Success");
       console.log(response);
+      this.toast.showSuccess("Promotion Submitted");
       this.refreshData();
     },
     error => { 
       this.hasError = true;
         console.error("ERROR! submitSupplierPromotion = "+error);
+        this.toast.showError("Something went wrong!Try again");
     });
   }
 
@@ -112,7 +122,8 @@ export class SupplierComponent implements OnInit {
         brandAndProducts : this.promotion.products,
         parentRef : this.viewContainer,
         dualMailer : this.promotion.ratecards[rowid].dualmailers[id],
-        promoId : this.promotion.promo_id
+        promoId : Number(localStorage.getItem('promoID')),
+        supplierId : Number(localStorage.getItem('supplierID'))
       }
     });
   }
@@ -121,11 +132,12 @@ export class SupplierComponent implements OnInit {
     let totalPromoCounts = this.promotion.ratecards[rowId].dualmailers[dmId].value;
     this.skuPromoDataList = new Array();
     for (let i = 1; i <= totalPromoCounts; i++) { 
-      this.promotionService.getSelectedProducts(this.promotion.promo_id, dmId, rowId, i)
+      this.promotionService.getSelectedProducts(this.supplierID,this.activePromoID, dmId, rowId, i)
       .subscribe( (data) => {
         let skudata = new SKULevelPromoData();
         skudata.productsSelected = data["products_selected"];
         skudata.promoName = data["promoName"];
+        console.log(data["promoName"]);
         skudata.promoType = data["promoType"];
         this.skuPromoDataList.push(skudata);
       }, err => {
@@ -140,7 +152,7 @@ export class SupplierComponent implements OnInit {
 
 
   refreshData() {
-    this.getSupplierPromotion(Number(localStorage.getItem('supplierID')),this.activePromoYear);
+    this.getSupplierPromotion(Number(localStorage.getItem('supplierID')),this.activePromoID.toString());
   }
 
   //Event called on every table cell value change

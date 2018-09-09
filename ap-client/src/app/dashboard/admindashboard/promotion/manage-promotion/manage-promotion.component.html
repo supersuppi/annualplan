@@ -1,4 +1,5 @@
-<div class="container">
+<h4>Promotion Details:</h4>
+<div class="container" *ngIf="promotions.length != 0">
 <div class="row">
   <div class="table-responsive">
     <table class="table table-sm">
@@ -19,4 +20,7 @@
     </table>
   </div>
 </div>
+</div>
+<div class="container" *ngIf="promotions.length == 0">
+  <h5>No Promotion Present</h5>
 </div>

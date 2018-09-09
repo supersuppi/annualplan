@@ -1,6 +1,7 @@
 package com.gxh.apserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gxh.apserver.constants.PromotionStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -36,14 +37,13 @@ public class PromoComments {
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private Manager manager;
 
-    @Column(name = "sender_id")
-    private Long sender;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "admin_id", referencedColumnName = "id")
+    private User admin;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "promotion_id", nullable = false)
+    @JoinColumn(name = "annualpromotion_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Promotion promotion;
-
-
+    private AnnualPromotion annualpromotion;
 
 }

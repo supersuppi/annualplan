@@ -6,6 +6,7 @@ import { PromotionRejectModalComponent } from '../modal/promotion-reject-modal/p
 import { ManagerPromotionService, SupplierPromotionService } from '../services/index';
 import { AddPromotionComponent } from '../modal/add-promotion/add-promotion.component';
 import { SKULevelPromoData } from '../models/sku-product-details';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
   selector: 'app-manager',
@@ -19,39 +20,40 @@ export class ManagerComponent implements OnInit {
   private promoStatus:PromoStatus;
   private promoComment : PromoComment;
   private activePromoYear:String;
+  private activePromoID:Number;
   private currentSupplierID:Number;
   private currentSupplierName:String;
+  private currentSupplier:SupplierHomeData;
   private suppliers:Array<SupplierHomeData>;
   public pageLoaded:Boolean;//to avoid promotion undefined error
-  public hasError:Boolean;
   private productDMBudgetList:Array<CalculatedBudget>;
   //hover variables
   public skuPromoDataList:Array<SKULevelPromoData>;
+  dualMailers:Array<DualMailer>;
+  supplier:SupplierHomeData;
   
   constructor(private spromotionService: SupplierPromotionService,private promotionService:ManagerPromotionService,private modalDialogService: ModalDialogService,
-    private viewContainer: ViewContainerRef,private _Activatedroute:ActivatedRoute, private router: Router) { }
+    private viewContainer: ViewContainerRef,private _Activatedroute:ActivatedRoute, private router: Router,private toast:ToastNotificationService) { }
 
   ngOnInit() {
     this.pageLoaded =false;
-    this.hasError =false;
     this.suppliers = JSON.parse(localStorage.getItem('suppliers'))
-    if(this.suppliers.length != 0) {
-      //Default Supplier
-      let supplier:SupplierHomeData = this.suppliers[0];
-      this.activePromoYear = this._Activatedroute.snapshot.params['pyear'];
-      
-      this.currentSupplierID = supplier.supplierID;
-      this.currentSupplierName = supplier.supplierName;
-      //TODO: replace hardcoded year with get date value
-      this.getSupplierPromotion(this.currentSupplierID,this.activePromoYear);
-    }
+    this.supplier = JSON.parse(localStorage.getItem('supplier'))
+    this.activePromoID = Number(localStorage.getItem('promoID'));
+ 
+    //Default Supplier
+    let supplier:SupplierHomeData = this.supplier;
+    this.currentSupplierID = supplier.supplierID;
+    this.currentSupplierName = supplier.supplierName;
+    this.getSupplierPromotion(this.currentSupplierID,this.activePromoID.toString());
+  
    }
 
    initBudgetTableData(ratecards:Array<RateCard>) {
     this.productDMBudgetList = new Array();
     for (let ratecard of ratecards) {
-     let dualMailers:Array<DualMailer> = ratecard.dualmailers;
-     for (let dm of dualMailers) {
+     this.dualMailers = ratecard.dualmailers;
+     for (let dm of this.dualMailers) {
        if(dm.value!=0) {
         this.createOrUpdateBudget(ratecard,dm)
        }
@@ -59,8 +61,8 @@ export class ManagerComponent implements OnInit {
    }
   }
 
-   getSupplierPromotion(id:Number,promoyear:String) {
-    this.promotionService.getSupplierPromotionsForManager(id,promoyear).subscribe((sPromotion:Promotion) => {
+   getSupplierPromotion(id:Number,promoID:String) {
+    this.promotionService.getSupplierPromotionsForManager(id,promoID).subscribe((sPromotion:Promotion) => {
         console.debug("Get SupplierPromotion Call Success");
         this.promotion = sPromotion;
         this.pageLoaded =true;
@@ -69,27 +71,29 @@ export class ManagerComponent implements OnInit {
       },
       error => { 
           console.error("ERROR! ManagerComponent:getSupplierPromotion = "+JSON.stringify(error));
-          this.hasError = true;
+          this.toast.showError("Could not find promotion for supplier");
       });
     }
 
     acceptPromotion() {
       console.debug("acceptPromotion");
-      this.promoStatus = new PromoStatus(this.promotion.userid,this.promotion.status,"ACCEPTED",this.promotion.promoyear)
+      this.promoStatus = new PromoStatus(this.activePromoID,this.promotion.userid,this.promotion.status,"ACCEPTED",this.promotion.promoyear)
       this.promotionService.changePromotionStatus(this.promoStatus).subscribe((response:PromoStatus) => {
         console.debug("Get acceptPromotion Call Success");
         console.log(response.statusChangeSuccess);
+        this.toast.showSuccess("Promotion Accepted.This Supplier will be notified");
         this.refreshData();
       },
       error => { 
           console.error("ERROR! ManagerComponent:acceptPromotion = "+JSON.stringify(error));
+          this.toast.showError("Something went wrong!Try again");
       });
     }
 
     rejectPromotion() {
       console.debug("rejectPromotion");
 
-      this.promoComment = new PromoComment(this.promotion.promoyear,this.currentSupplierID,1)
+      this.promoComment = new PromoComment(this.activePromoID.toString(),this.currentSupplierID,1)
 
       this.modalDialogService.openDialog(this.viewContainer ,{
         title: 'Promotion Rejection Message',
@@ -120,7 +124,7 @@ export class ManagerComponent implements OnInit {
       let totalPromoCounts = this.promotion.ratecards[rowId].dualmailers[dmId].value;
       this.skuPromoDataList = new Array();
       for (let i = 1; i <= totalPromoCounts; i++) { 
-        this.spromotionService.getSelectedProducts(this.promotion.promo_id, dmId, rowId, i)
+        this.spromotionService.getSelectedProducts(this.currentSupplierID,this.activePromoID, dmId, rowId, i)
         .subscribe( (data) => {
           let skudata = new SKULevelPromoData();
           skudata.productsSelected = data["products_selected"];
@@ -138,7 +142,7 @@ export class ManagerComponent implements OnInit {
     }
 
     refreshData() {
-      this.getSupplierPromotion(this.currentSupplierID,this.activePromoYear);
+      this.getSupplierPromotion(this.currentSupplierID,this.activePromoID.toString());
     }
 
     onSelect(sID) {
@@ -149,7 +153,7 @@ export class ManagerComponent implements OnInit {
         let supObj = this.suppliers[itemIndex];
         this.currentSupplierName = supObj.supplierName;
         this.currentSupplierID = supObj.supplierID;
-        this.getSupplierPromotion(supObj.supplierID,this.activePromoYear);
+        this.getSupplierPromotion(supObj.supplierID,this.activePromoID.toString());
       }
     }
 
@@ -159,10 +163,12 @@ export class ManagerComponent implements OnInit {
       this.promotionService.savePromotionRejectComment(this.promoComment).subscribe((response:any) => {
         console.debug("save PromotionRejectComment Call Success");
         console.log(response);
+        this.toast.showSuccess("Promotion rejected! This Supplier will be notified");
         this.refreshData();
       },
       error => { 
           console.error("ERROR! PromotionRejectModalComponent:sendMessage = "+error);
+          this.toast.showError("Something went wrong!Try again");
       });
   
       return true;
@@ -191,7 +197,7 @@ export class ManagerComponent implements OnInit {
     }
 
     private createOrUpdateBudget(ratecard,dm) {
-      //Check is rateplan is already present
+      //Check if rateplan is already present
       let itemIndex = this.productDMBudgetList.findIndex(item => item.packageName === ratecard.pname);
       if(itemIndex === -1){
         //Not present,create new

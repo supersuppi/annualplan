@@ -8,7 +8,7 @@ public class DateUtil {
 
     public static Date convertFromStringTODate(String dateToConvert) throws ParseException {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date formattedDate = null;
         try {
             formattedDate = sdf.parse(dateToConvert);
@@ -19,7 +19,7 @@ public class DateUtil {
     }
 
     public static String getNowDateInString(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(new Date());
     }
 }

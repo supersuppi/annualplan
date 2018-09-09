@@ -1,7 +1,3 @@
-<div class="container" *ngIf ="hasError">
-    <h3>No Data Found!</h3>
-</div>
-
 <div class="container" *ngIf ="pageLoaded">
 
     <div class="d-flex flex-row">
@@ -10,10 +6,12 @@
         <div class="p-2"><span class="alert alert-info"><strong>Total Budget: </strong>{{promotion.budget.allocated}}</span></div>
         <div class="p-2"><span class="alert alert-info"><strong>Used Budget: </strong>{{promotion.budget.used}}</span></div>
     </div> 
-    
+    <br>
     <div class="d-flex flex-row-reverse">
         <div class="p-2">
-            <select (change)="onSelect($event.target.value)">
+            <label class="mr-sm-2" for="inlineFormCustomSelect">Suppliers:</label>
+            <select class="custom-select mr-sm-2" (change)="onSelect($event.target.value)">
+              <option selected>Choose...</option>
               <option *ngFor="let s of suppliers" [value]="s.supplierID">
                 {{s.supplierName}}
               </option>
@@ -31,26 +29,14 @@
        <h4>Supplier : {{currentSupplierName}} </h4>
        <br>
           <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th scope="col">Package</th>
-                  <th scope="col">Code</th>
-                  <th scope="col">Rate</th>
-                  <th scope="col">DM1</th>
-                  <th scope="col">DM2</th>
-                  <th scope="col">DM3</th>
-                  <th scope="col">DM4</th>
-                  <th scope="col">DM5</th>
-                  <th scope="col">DM6</th>
-                  <th scope="col">DM7</th>
-                  <th scope="col">DM8</th>
-                  <th scope="col">DM9</th>
-                  <th scope="col">DM10</th>
-                  <th scope="col">DM11</th>
-                  <th scope="col">DM12</th>
-                  <th scope="col">DM13</th>
-                </tr>
-              </thead>
+            <thead>
+              <tr>
+                <th scope="col">Package</th>
+                <th scope="col">Code</th>
+                <th scope="col">Rate</th>
+                <th scope="col" *ngFor="let dm of dualMailers">{{dm.id}}</th>
+              </tr>
+            </thead>
               
               <tbody>
                 <tr *ngFor="let row of promotion.ratecards; let rowid = index">
@@ -91,7 +77,7 @@
 
   <ng-template #popContent>
       <div class="popupArea" *ngFor="let row of skuPromoDataList;let rowid = index">
-        <div> Promotion number is <b>{{rowid+1}}</b> and type is <b>{{row.promoType}}</b>!
+          <div> Promotion Name:<b>{{row.promoName}}</b> of type <b>{{row.promoType}}</b>
           <br></div>
           <div>
               <p><b>PRODUCTS:</b></p>

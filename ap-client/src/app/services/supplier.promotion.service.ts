@@ -38,10 +38,10 @@ export class SupplierPromotionService{
         return this.httpClient.post<AddOrRemoveProducts>( this.promotionSupplierSaveOrRemoveProductsURL, data );
     }
 
-    getSelectedProducts( promoId : Number, dmId : any, rowId : any,
+    getSelectedProducts( supplierId : Number,promoId : Number, dmId : any, rowId : any,
          promoCount: any) : Observable<Array<ProductSKU>>{
 
-        return this.httpClient.get<Array<ProductSKU>>(this.getSelectedProductsURL+promoId, {
+        return this.httpClient.get<Array<ProductSKU>>(this.getSelectedProductsURL+promoId+"/"+supplierId, {
             params: {
                 dmId : dmId+1,
                 rowId : rowId+1,

@@ -16,9 +16,13 @@ public class SupplierPromotionBudget {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id", referencedColumnName = "id")
     private Promotion promotion;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
+    private Supplier supplier;
 
     @Column(name = "promotion_budget_allocated")
     private Long budgetAllocated;

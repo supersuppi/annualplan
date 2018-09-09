@@ -4,7 +4,7 @@ import com.gxh.apserver.dto.BudgetDTO;
 import com.gxh.apserver.entity.SupplierPromotionBudget;
 
 public class BudgetCalculator {
-    public static BudgetDTO getBudget(SupplierPromotionBudget promotionBudget) {
+    public static BudgetDTO   getBudget(SupplierPromotionBudget promotionBudget) {
         BudgetDTO budgetDTO = new BudgetDTO();
 
         budgetDTO.setAllocated(promotionBudget.getBudgetAllocated());

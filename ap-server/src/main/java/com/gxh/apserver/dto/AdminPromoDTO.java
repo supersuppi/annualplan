@@ -14,4 +14,5 @@ public class AdminPromoDTO {
     private String pstatus;
     private List<AdminMailerDTO> dualmailers;
     private List<AdminRCDTO> ratecards;
+    private List<SupplierDTO> suppliers;
 }

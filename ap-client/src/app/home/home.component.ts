@@ -3,6 +3,9 @@ import {FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import {HomeService} from '../services/index'
 import { UserHomeData, SupplierHomeData, ManagerHomeData, HomeComment } from '../models/index';
+import { Promotion } from '../form-model/admin.promotion';
+import { ToastNotificationService } from '../services/toast-notification.service';
+import { Supplier } from '../models/supplier.model';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +16,9 @@ import { UserHomeData, SupplierHomeData, ManagerHomeData, HomeComment } from '..
 })
 export class HomeComponent implements OnInit {
   private homeContent:UserHomeData;
+  promotions:Array<Promotion>;
+  promotionSuppliers:Array<Supplier>;
+  private promoID:Number;
   private comments:Array<HomeComment>;
   private supplierID:Number;
   public pageLoaded:Boolean; //to avoid promotion undefined error
@@ -82,7 +88,7 @@ export class HomeComponent implements OnInit {
     }
 
   constructor(private formBuilder: FormBuilder,private homeService:HomeService,
-    private router: Router) { }
+    private router: Router,private toast:ToastNotificationService) { }
 
   ngOnInit() {
     this.timelineYear = this.someKeyboardConfig.start;
@@ -98,30 +104,40 @@ export class HomeComponent implements OnInit {
       this.homeService.getUserHomePageData(email).subscribe((homeData:SupplierHomeData) => {
         console.debug("Get getHomePageData for supplier Call Success");
         console.debug(homeData);
-        this.homeContent = homeData;
-        this.comments = (homeData.comments == null ? new Array() : homeData.comments);
+        this.initHomeData(homeData);
         localStorage.setItem('supplierID', homeData.supplierID.toString());
         this.pageLoaded =true;
+        this.toast.showInfo("Welcome "+this.homeContent.userName);
       },
       error => { 
           console.error("ERROR! HomeComponent:getHomePageData for supplier = "+error);
+          this.toast.showError("Something went wrong!Try again");
       });
     } else {
       this.homeService.getUserHomePageData(email).subscribe((homeData:ManagerHomeData) => {
         console.debug("Get getHomePageData for Manager Call Success");
         console.debug(homeData);
-        this.homeContent = homeData;
+        this.initHomeData(homeData);
         this.supplierID = homeData.suppliers[0].supplierID; //TODO:getting 1st sup for test
-        this.comments = (homeData.comments == null ? new Array() : homeData.comments);
         localStorage.setItem('managerID', homeData.managerID.toString());
-        localStorage.setItem('suppliers',JSON.stringify(homeData.suppliers));
+        localStorage.setItem('supplier',JSON.stringify(homeData.suppliers[0]));
         this.pageLoaded =true;
+        this.toast.showInfo("Welcome "+this.homeContent.userName);
       },
       error => { 
           console.error("ERROR! HomeComponent:getHomePageData for Manager = "+error);
+          this.toast.showError("Something went wrong!Try again");
       });
     }
+  }
 
+  initHomeData(homeData){
+    this.homeContent = homeData;
+    this.promotions = homeData.activePromotions;//All Active Promotions
+    this.promoID = homeData.activePromotions[0].pid;//Default Promotion ID
+    this.promotionSuppliers = homeData.activePromotions[0].suppliers;//Default suppliers of Promotion ID
+    this.comments = (homeData.comments == null ? new Array() : homeData.comments);
+    localStorage.setItem('promoID', homeData.activePromotions[0].pid.toString());
   }
 
   onSliderChange(event : any) {
@@ -129,13 +145,35 @@ export class HomeComponent implements OnInit {
     this.selectedYear = this.timelineYear;
   }
 
-  displaySupplierPromotion(){
-    let year = this.selectedYear === undefined ? new Date().toISOString().slice(0,4) : this.selectedYear;
-    console.log(year);
-    if(localStorage.getItem('role') === 'ROLE_VENDOR') {
-      this.router.navigate(['/supplier/',year+'-01-01']);
+  onSelect(pid){
+    console.log(pid);
+    if(localStorage.getItem('role') === 'ROLE_VENDOR'){
+      this.promoID = pid;
+      localStorage.setItem('promoID',this.promoID.toString());
     } else {
-      this.router.navigate(['/manager/'+this.supplierID+'/'+year+'-01-01']);
+      this.promoID = pid;
+      localStorage.setItem('promoID',this.promoID.toString());
+      let itemIndex = this.promotions.findIndex(item => item.pid == pid);
+      console.log(itemIndex);
+      this.promotionSuppliers = this.promotions[itemIndex].suppliers;
+      localStorage.setItem('suppliers',JSON.stringify(this.promotionSuppliers));
+    }
+  }
+
+  onSupplierSelect(sid){
+    console.log(sid);
+    let itemIndex = this.promotionSuppliers.findIndex(item => item.supplierID == sid);
+    console.log(itemIndex);
+    localStorage.setItem('supplier',JSON.stringify(this.promotionSuppliers[itemIndex]));
+  }
+
+  displaySupplierPromotion(){
+   // let year = this.selectedYear === undefined ? new Date().toISOString().slice(0,4) : this.selectedYear;
+   // console.log(year);
+    if(localStorage.getItem('role') === 'ROLE_VENDOR') {
+      this.router.navigate(['/supplier']);
+    } else {
+      this.router.navigate(['/manager']);
     }
   }
 

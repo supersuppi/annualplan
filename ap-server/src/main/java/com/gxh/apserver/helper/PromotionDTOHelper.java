@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.gxh.apserver.repository.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,6 @@ import com.gxh.apserver.entity.RateCard;
 import com.gxh.apserver.entity.Supplier;
 import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
-import com.gxh.apserver.repository.interfaces.DualMailerRepository;
-import com.gxh.apserver.repository.interfaces.ProductRepository;
-import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
-import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
-import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
-import com.gxh.apserver.repository.interfaces.RateCardRepository;
-import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
 import com.gxh.apserver.util.BudgetCalculator;
 
 
@@ -61,6 +55,10 @@ public class PromotionDTOHelper {
     private PromotionLevelSKURepository promotionLevelSKURepository;
     @Autowired
     private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
+    @Autowired
+    private PromotionRepository promotionRepository;
+    @Autowired
+    private SupplierRepository supplierRepository;
 
     public PromoDTO getPromoDTO(Supplier supplier, Promotion promo) throws InvalidStatusException {
         logger.info(">>> buildPromoDTO");
@@ -88,7 +86,12 @@ public class PromotionDTOHelper {
 	                promoDTO.setStatus(AnnualPromotionStatus.REJECTED);
 	                promoDTO.setIsEditable(true);
 	                return this.createDTO(promoDTO,supplier,promo,annualPromo.get());
-	                
+
+                case ACCEPTED:
+                    promoDTO.setStatus(AnnualPromotionStatus.ACCEPTED);
+                    promoDTO.setIsEditable(false);
+                    return this.createDTO(promoDTO,supplier,promo,annualPromo.get());
+
 		    	default:
 	                throw new InvalidStatusException("Invalid Status of the promotion");
 	                	
@@ -110,7 +113,7 @@ public class PromotionDTOHelper {
         List<DualMailer> dms = dualMailerRepository.findAllDMbyPromotion(promo);
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoAndAnnualPromoID(promo.getId(),annualPromo.getId());
-        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier);
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
@@ -142,17 +145,18 @@ public class PromotionDTOHelper {
             row.setPname(rateCard.getName());
             row.setPcode(rateCard.getCode());
             row.setPrate(rateCard.getRateCardDollar());
-            row.setMax_product(rateCard.getPromoMechanic().getMaxProductAllocation());
-            row.setMax_tile(rateCard.getPromoMechanic().getMaxTileAllocation());
-            row.setMin_tile(rateCard.getPromoMechanic().getMinTileAllocation());
-            row.setNash_rc(rateCard.getPromoMechanic().getTimesOfNash());
+            //TODO: promo mechanis to be added later
+//            row.setMax_product(rateCard.getPromoMechanic().getMaxProductAllocation());
+//            row.setMax_tile(rateCard.getPromoMechanic().getMaxTileAllocation());
+//            row.setMin_tile(rateCard.getPromoMechanic().getMinTileAllocation());
+//            row.setNash_rc(rateCard.getPromoMechanic().getTimesOfNash());
 
             List<DualMailerDTO> dmList = new ArrayList<>();
             for (DualMailer dm : dms) {
                 DualMailerDTO dto = null;
                 
                 dto = new DualMailerDTO();
-                dto.setId(row.getPcode()+dm.getCode());
+                dto.setId(dm.getCode());
                 if(ratecardDms.isPresent()) {
                     dto.setValue(rcdmMap.get(rateCard.getId().toString() + dm.getId().toString()));
                 } else {
@@ -167,19 +171,25 @@ public class PromotionDTOHelper {
         //Set rate cards
         promoDTO.setRatecards(rows);
         //Set Budget
+        //TODO:to add this on implementing budget for supplier
         promoDTO.setBudget(BudgetCalculator.getBudget(promoBudget.get()));
         logger.info("<<< createDTO");
         return promoDTO;
     }
     
-    public PromoSKUDTO getPromoSKUDTO(Long promoId, Long dmId, Long rowId, int promoCount)
+    public PromoSKUDTO getPromoSKUDTO(Long promoId,Long supplierId, Long dmId, Long rowId, int promoCount)
 			throws ParseException {
     	logger.info(">>> getPromoSKUDTO");
-    	PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
+        logger.info("Data:"+promoId);
+        Optional<Supplier> supplier = supplierRepository.findById(supplierId);
+        Optional<Promotion> promotion = promotionRepository.findById(promoId);
+        Optional<AnnualPromotion> annualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(),promotion.get());
+
+        PromoSKUDTO promoSKUDTO = new PromoSKUDTO();
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
-		Optional<List<Product>> prodOptionalList = productRepository.findAllSelectedProducts(promoId, dmId, rowId, promoCount);
+		Optional<List<Product>> prodOptionalList = productRepository.findAllSelectedProducts(annualPromotion.get().getId(), dmId, rowId, promoCount);
 		Optional<List<PromotionLevelSKU>> optionalPromo = promotionLevelSKURepository.findByRowData(dmId, rowId,
-				promoId, promoCount);
+                annualPromotion.get().getId(), promoCount);
 		
 		if (optionalPromo.isPresent()) {
 			List<PromotionLevelSKU> products = optionalPromo.get().stream().limit(1).collect(Collectors.toList());

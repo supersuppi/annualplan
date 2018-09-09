@@ -17,6 +17,7 @@ public class AddOrRemoveProductRequestDTO {
     private Long dmId;
     private Long rcId;
     private Long promoId;
+    private Long supplierId;
     private List<ProductDTO> productsSelected;
     private List<ProductDTO> productsDeselected;
     private String promoName;

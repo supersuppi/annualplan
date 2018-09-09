@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { Promotion } from '../../../form-model/admin.promotion';
 import { AdminService } from '../../../services/admin.service';
+import { ToastNotificationService } from '../../../services/toast-notification.service';
 
 @Component({
   selector: 'app-promotion',
@@ -11,7 +12,7 @@ import { AdminService } from '../../../services/admin.service';
 export class PromotionComponent implements OnInit {
   promoName:any;
 
-  constructor(private adminService:AdminService) { }
+  constructor(private adminService:AdminService,private toast:ToastNotificationService) { }
 
   ngOnInit() {
   }
@@ -80,9 +81,11 @@ export class PromotionComponent implements OnInit {
       this.ratecardData = [];
       this.dualmailerData = [];
       this.promoName = '';
+      this.toast.showSuccess("Promotion Saved");
     },
     error => { 
         console.error("ERROR! PromotionComponent:saveAdminPromotion = "+error);
+        this.toast.showError("Something went wrong!Try again");
     });
   }
   

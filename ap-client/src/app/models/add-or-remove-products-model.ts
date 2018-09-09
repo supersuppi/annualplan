@@ -1,7 +1,7 @@
 import { ProductSKU } from ".";
 
 export class AddOrRemoveProducts {
-    
+    public supplierId : Number;
     public promoCount : Number;
     public dmId : Number;
     public rcId : Number;

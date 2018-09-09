@@ -1,5 +1,5 @@
 package com.gxh.apserver.constants;
 
 public enum AnnualPromotionStatus {
-	SUBMITTED,REJECTED,DRAFT
+	SUBMITTED,REJECTED,DRAFT,ACCEPTED
 }

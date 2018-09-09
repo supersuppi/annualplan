@@ -1,5 +1,6 @@
 import { RateCard } from "./ratecard";
 import { DualMailer } from "./dualmalier";
+import { Supplier } from "../models/supplier.model";
 
 export class Promotion {
     name: string;
@@ -8,4 +9,5 @@ export class Promotion {
     userName:string;
     ratecards:Array<RateCard>;
     dualmailers:Array<DualMailer>;
+    suppliers:Array<Supplier>;
 }

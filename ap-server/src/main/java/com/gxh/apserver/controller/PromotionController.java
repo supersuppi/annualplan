@@ -52,14 +52,14 @@ public class PromotionController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
-	@GetMapping(value = "/product/fetch/{promoId}")
-	public ResponseEntity<PromoSKUDTO> getSelectedProducts(@PathVariable("promoId") Long promoId,
+	@GetMapping(value = "/product/fetch/{promoId}/{supplierId}")
+	public ResponseEntity<PromoSKUDTO> getSelectedProducts(@PathVariable("promoId") Long promoId,@PathVariable("supplierId") Long supplierId,
 			@RequestParam Long dmId, @RequestParam Long rowId, @RequestParam int promoCount) {
 
 		PromoSKUDTO promoSKUDTO;
 
 		try {
-			promoSKUDTO = promotionService.getSavedProductsForPromoCount(promoId, dmId, rowId, promoCount);
+			promoSKUDTO = promotionService.getSavedProductsForPromoCount(promoId,supplierId,dmId, rowId, promoCount);
 		} catch (ParseException e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

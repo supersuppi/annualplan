@@ -111,24 +111,24 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Promotion> currentPromotion = promotionRepository.findById(promoDTO.getPromo_id());
         Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), currentPromotion.get());
         Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(currentPromotion.get());
-        List<DualMailer> dms = dualMailerRepository.findAll();
+        List<DualMailer> dualMailers = dualMailerRepository.findAllDMbyPromotion(currentPromotion.get());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
-        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
+        //Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier.get());
 
         int totalBudget = 0;
         Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();
-        if(currentAnnualPromotion.isPresent()) {
+        if(currentAnnualPromotion.isPresent() && ratecardDms.isPresent()) {
             logger.info("Updating Current Annual Promotion");
             for (PromotionLevelRateCard rcdm : ratecardDms.get()) {
                 //(K,V) = (rateCardID+DuailmailerID, PromotionLevelRateCard object)
                 rcdmMap.put(rcdm.getRateCard().toString()+rcdm.getDualMailer().toString(),rcdm);
             }
-
             //loop DC:Rate card
             for(int i=0;i<rateCards.get().size();i++) {
                 RateCard rateCard = rateCards.get().get(i);
-                 for(int j=0;j<rateCards.get().size();j++) {
-                    DualMailer dm = dms.get(j);
+                 for(int j=0;j<dualMailers.size();j++) {
+                    DualMailer dm = dualMailers.get(j);
 
                     PromotionLevelRateCard prc = null;
                     prc = rcdmMap.get(rateCard.getId().toString()+dm.getId().toString());
@@ -153,6 +153,7 @@ public class PromotionServiceImpl implements PromotionService {
             SupplierPromotionBudget CurrentPromoBudget = promoBudget.get();
             CurrentPromoBudget.setTotalBudget(Long.valueOf(totalBudget));
             supplierPromotionBudgetRepository.save(CurrentPromoBudget);
+            logger.info("Updating Current Annual Promotion Done");
 
         } else {
             logger.info("Saving New Annual Promotion");
@@ -163,7 +164,6 @@ public class PromotionServiceImpl implements PromotionService {
             ap.setModifiedByUser(supplier.get().getSupplierAppUser());
             ap.setPromo(currentPromotion.get());
             ap.setSupplier(supplier.get());
-            ap.setPromo(currentPromotion.get());
             ap.setStatus(AnnualPromotionStatus.DRAFT);
             
             AnnualPromotion savedAP = annualPromotionRepository.saveAndFlush(ap);
@@ -171,8 +171,8 @@ public class PromotionServiceImpl implements PromotionService {
             //loop DC:Rate card
             for(int i=0;i<rateCards.get().size();i++) {
                 RateCard rateCard = rateCards.get().get(i);
-                for(int j=0;j<rateCards.get().size();j++) {
-                    DualMailer dm = dms.get(j);
+                for(int j=0;j<dualMailers.size();j++) {
+                    DualMailer dm = dualMailers.get(j);
 
                     PromotionLevelRateCard prc = null;
                     
@@ -193,7 +193,7 @@ public class PromotionServiceImpl implements PromotionService {
             SupplierPromotionBudget CurrentPromoBudget = promoBudget.get();
             CurrentPromoBudget.setTotalBudget(Long.valueOf(totalBudget));
             supplierPromotionBudgetRepository.save(CurrentPromoBudget);
-
+            logger.info("Saving New Annual Promotion Done");
         }
 
         return new Boolean(true);
@@ -205,13 +205,12 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<Supplier> supplier = supplierRepository.findById(promoCommentDTO.getSupplierid());
         Optional<Manager> manager = managerRepository.findById(promoCommentDTO.getManagerid());
 
-        Date promoDate = DateUtil.convertFromStringTODate(promoCommentDTO.getPromoYear());
         Optional<Promotion> currentPromotion = promotionRepository.findById(promoCommentDTO.getPromoID());
         Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), currentPromotion.get());
 
         //save comment
         PromoComments newComment = new PromoComments();
-        newComment.setPromotion(currentPromotion.get());
+        newComment.setAnnualpromotion(currentAnnualPromotion.get());
         newComment.setSupplier(supplier.get());
         newComment.setManager(manager.get());
         newComment.setComment(promoCommentDTO.getComment());
@@ -234,7 +233,7 @@ public class PromotionServiceImpl implements PromotionService {
 
         if(supplier.isPresent()) {
         	Optional<Promotion> currentPromotion = promotionRepository.findById(promoID);
-            Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), currentPromotion.get());
+            Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(),currentPromotion.get());
 
             if(currentAnnualPromotion.isPresent()) {
                 logger.info("Promotion is present");
@@ -255,7 +254,6 @@ public class PromotionServiceImpl implements PromotionService {
 		Optional<Supplier> supplier = supplierRepository.findById(statusDTO.getSupplierid());
 		
 		if(supplier.isPresent()) {
-            Date promoDate = DateUtil.convertFromStringTODate(statusDTO.getPromoYear());
             Optional<Promotion> promotion = promotionRepository.findById(statusDTO.getPromoid());
             Optional<AnnualPromotion> currentAnnualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(), promotion.get());
 
@@ -272,38 +270,68 @@ public class PromotionServiceImpl implements PromotionService {
 	@Transactional
 	@Override
 	public void saveOrRemoveSelectedProducts(AddOrRemoveProductRequestDTO requestBody) throws ParseException {
-		
-		logger.info(" Inside saveOrRemoveSelectedProducts ");
-		
+		logger.info(" Inside saveOrRemoveSelectedProducts");
 		PromotionLevelSKU levelSKU;
-		
-		for ( int i = 0; i < requestBody.getProductsSelected().size(); i++ ) {
-			levelSKU = new PromotionLevelSKU();
-			
-			levelSKU.setDualMailer(requestBody.getDmId());
-			levelSKU.setProduct(requestBody.getProductsSelected().get(i).getId());
-			levelSKU.setPromo(requestBody.getPromoId());
-			levelSKU.setRateCard(requestBody.getRcId());
-			levelSKU.setPromoCount(requestBody.getPromoCount());
-			levelSKU.setPromoName(requestBody.getPromoName());
-			levelSKU.setPromoType(requestBody.getPromoType());
-			
-			promotionLevelSKURepository.save(levelSKU);
-		}
-		
-		for ( int i = 0; i < requestBody.getProductsDeselected().size(); i++ ) {
+        Optional<Supplier> supplier = supplierRepository.findById(requestBody.getSupplierId());
+        Optional<Promotion> promotion = promotionRepository.findById(requestBody.getPromoId());
+        Optional<AnnualPromotion> annualPromotion = annualPromotionRepository.findPromotionBySupplierAndPromo(supplier.get(),promotion.get());
 
-			promotionLevelSKURepository.deleteByRowData(requestBody.getDmId(), requestBody.getRcId(),
-					requestBody.getPromoId(), requestBody.getProductsDeselected().get(i).getId(),
-					requestBody.getPromoCount());
-			
-		}
-		
+        if(annualPromotion.isPresent()) {
+            logger.info(" AnnualPromotion present");
+            for ( int i = 0; i < requestBody.getProductsSelected().size(); i++ ) {
+                levelSKU = new PromotionLevelSKU();
+                levelSKU.setDualMailer(requestBody.getDmId());
+                levelSKU.setProduct(requestBody.getProductsSelected().get(i).getId());
+                levelSKU.setPromo(annualPromotion.get().getId());
+                levelSKU.setRateCard(requestBody.getRcId());
+                levelSKU.setPromoCount(requestBody.getPromoCount());
+                levelSKU.setPromoName(requestBody.getPromoName());
+                levelSKU.setPromoType(requestBody.getPromoType());
+
+                promotionLevelSKURepository.save(levelSKU);
+            }
+            for ( int i = 0; i < requestBody.getProductsDeselected().size(); i++ ) {
+                promotionLevelSKURepository.deleteByRowData(requestBody.getDmId(), requestBody.getRcId(),
+                        annualPromotion.get().getId(), requestBody.getProductsDeselected().get(i).getId(),
+                        requestBody.getPromoCount());
+            }
+        } else {
+            logger.info(" AnnualPromotion not present.adding");
+            //Create annual promotion
+            AnnualPromotion ap = new AnnualPromotion();
+            ap.setCreatedByUser(supplier.get().getSupplierAppUser());
+            //TODO: modifiedby to br read from dto
+            ap.setModifiedByUser(supplier.get().getSupplierAppUser());
+            ap.setPromo(promotion.get());
+            ap.setSupplier(supplier.get());
+            ap.setStatus(AnnualPromotionStatus.DRAFT);
+
+            AnnualPromotion savedAP = annualPromotionRepository.saveAndFlush(ap);
+
+            for ( int i = 0; i < requestBody.getProductsSelected().size(); i++ ) {
+                levelSKU = new PromotionLevelSKU();
+                levelSKU.setDualMailer(requestBody.getDmId());
+                levelSKU.setProduct(requestBody.getProductsSelected().get(i).getId());
+                levelSKU.setPromo(savedAP.getId());
+                levelSKU.setRateCard(requestBody.getRcId());
+                levelSKU.setPromoCount(requestBody.getPromoCount());
+                levelSKU.setPromoName(requestBody.getPromoName());
+                levelSKU.setPromoType(requestBody.getPromoType());
+
+                promotionLevelSKURepository.save(levelSKU);
+            }
+            for ( int i = 0; i < requestBody.getProductsDeselected().size(); i++ ) {
+                promotionLevelSKURepository.deleteByRowData(requestBody.getDmId(), requestBody.getRcId(),
+                        savedAP.getId(), requestBody.getProductsDeselected().get(i).getId(),
+                        requestBody.getPromoCount());
+            }
+
+        }
 	}
 
 	@Override
-	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId, Long dmId, Long rowId, int promoCount)
+	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId,Long supplierId, Long dmId, Long rowId, int promoCount)
 			throws ParseException {	
-		return promotionDTOHelper.getPromoSKUDTO(promoId, dmId, rowId, promoCount);
+		return promotionDTOHelper.getPromoSKUDTO(promoId,supplierId, dmId, rowId, promoCount);
 	}
 }

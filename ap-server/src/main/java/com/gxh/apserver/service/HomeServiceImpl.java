@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class HomeServiceImpl implements HomeService {
@@ -37,9 +34,12 @@ public class HomeServiceImpl implements HomeService {
     private PromoCommentRepository promoCommentRepository;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private PromotionRepository promotionRepository;
 
     @Override
     public HomeDTO getUserHomeContent(String emailAddress) throws ResourceNotFoundException,ParseException {
+        logger.info(">>> getUserHomeContent");
         User user = userRepository.findByEmail(emailAddress);
         List<AdminPromoDTO> adminPromoDTO = adminService.getPromotionsByStatus(PromotionStatus.ACTIVE);
 
@@ -56,15 +56,15 @@ public class HomeServiceImpl implements HomeService {
             managerHomeDTO.setUserID(user.getId());
             managerHomeDTO.setUserName(user.getEmail());
             managerHomeDTO.setRole(user.getRole().getName());
-            managerHomeDTO.setActivePromotions(adminPromoDTO);
 
-            return getDetailsForManager(user,managerHomeDTO);
+            return getDetailsForManager(user,managerHomeDTO,adminPromoDTO);
         } else {
             throw new ResourceNotFoundException("No user details found");
         }
     }
 
     protected SupplierHomeDTO getDetailsForSupplier(User user,SupplierHomeDTO supHomeDTO) {
+        logger.info(">>> getDetailsForSupplier");
         Optional<Supplier> supplier = supplierRepository.findSupplierByUserID(user);
         Set<Manager> managers = supplier.get().getManagers();
 
@@ -75,41 +75,43 @@ public class HomeServiceImpl implements HomeService {
         return getSupplierDetails(supplier.get(),supHomeDTO);
     }
 
-    protected ManagerHomeDTO getDetailsForManager(User user,ManagerHomeDTO managerHomeDTO) {
+    protected ManagerHomeDTO getDetailsForManager(User user,ManagerHomeDTO managerHomeDTO,List<AdminPromoDTO> adminPromoDTO) {
+        logger.info(">>> getDetailsForManager");
         Optional<Manager> manager = managerRepository.findManagerByUserID(user);
         managerHomeDTO.setMamangerName(manager.get().getName());
         managerHomeDTO.setManagerID(manager.get().getId());
 
-        List<SupplierHomeDTO> suppliersDTO = new ArrayList<>();
+        List<SupplierHomeDTO> suppliersHomeDTO = new ArrayList<>();
         Set<Supplier> suppliers = manager.get().getSuppliers();
         suppliers.forEach(supplier -> {
-            suppliersDTO.add(getSupplierDetails(supplier,new SupplierHomeDTO()));
+            suppliersHomeDTO.add(getSupplierDetails(supplier,new SupplierHomeDTO()));
         });
 
-        managerHomeDTO.setSuppliers(suppliersDTO);
+        //Find all suppliers by promotion and add to promodto
+        adminPromoDTO.forEach((promodto)-> {
+            Optional<Promotion> promo = promotionRepository.findById(promodto.getPid());
+            List<Supplier> allSuppliersByPromotion = annualPromotionRepository.findAllSuppliersByPromotion(promo.get());
+
+            if(allSuppliersByPromotion.size()!=0){
+                List<SupplierDTO> supList = new ArrayList<>();
+                allSuppliersByPromotion.forEach(supplier -> supList.add(new SupplierDTO(supplier.getName(),supplier.getVendorAXCode(),supplier.getId())));
+                promodto.setSuppliers(supList);
+            }
+        });
+
+        managerHomeDTO.setActivePromotions(adminPromoDTO);
+        managerHomeDTO.setSuppliers(suppliersHomeDTO);
         return managerHomeDTO;
     }
 
     protected SupplierHomeDTO getSupplierDetails(Supplier supplier,SupplierHomeDTO supHomeDTO){
-        Optional<List<Promotion>> promotions = annualPromotionRepository.findAllPromotionBySupplierID(supplier);
+        logger.info(">>> getSupplierDetails");
         Optional<List<PromoComments>> comments = promoCommentRepository.findAllCommentsBySupplierID(supplier);
 
         supHomeDTO.setSupplierID(supplier.getId());
         supHomeDTO.setSupplierName(supplier.getName());
         supHomeDTO.setSupplierCode(supplier.getVendorAXCode());
 
-        List<PromoYearDetailDTO> promoYears = new ArrayList<PromoYearDetailDTO>();
-
-        promotions.get().forEach(promo -> {
-            //Set Active promo
-            if (promo.getStatus().equals(PromotionStatus.ACTIVE)){
-                supHomeDTO.setActivePromoYear(promo.getCreatedAt().toString());
-            }
-            // Set Budget
-            Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(promo);
-            promoYears.add(new PromoYearDetailDTO(promo.getCreatedAt().toString(), BudgetCalculator.getBudget(promoBudget.get())));
-        });
-        supHomeDTO.setPromoYearDetails(promoYears);
         // Set Comments
         if(comments.isPresent()) {
             List<SupManCommentDTO> commentsDTO = new ArrayList<>();

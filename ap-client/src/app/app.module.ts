@@ -41,6 +41,8 @@ import { PromotionComponent } from './dashboard/admindashboard/promotion/promoti
 import { AdminService } from './services/admin.service';
 import { ManagePromotionComponent } from './dashboard/admindashboard/promotion/manage-promotion/manage-promotion.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastNotificationService } from './services/toast-notification.service';
 
 
 @NgModule({
@@ -77,6 +79,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     BrowserAnimationsModule,
     Ng2SmartTableModule,
     NgbModule,
+    ToastrModule.forRoot(),
     ModalDialogModule.forRoot()
   ],
   //For Modal
@@ -87,7 +90,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     PromotionModalComponent,
     SkuPromotionModalComponent
   ],
-  providers: [RolesService, UserService,ServerConfig,AdminService,
+  providers: [RolesService, UserService,ServerConfig,AdminService,ToastNotificationService,
     // Adding request header interceptors.
     {
       provide:HTTP_INTERCEPTORS,

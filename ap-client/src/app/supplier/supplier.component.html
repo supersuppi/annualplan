@@ -1,8 +1,8 @@
 <div class="container" *ngIf ="hasError">
-    <h3>No Data Found!</h3>
+    <h4>Oops!Something went wrong or No Data Found!</h4>
 </div>
 
-<div class="container" *ngIf ="pageLoaded">
+<div class="container" *ngIf ="pageLoaded && !hasError">
   <div class="d-flex flex-row">
       <div class="p-2"><span class="alert alert-info"><strong>Year: </strong>{{promotion.promoyear | date: 'y'}}</span></div>
       <div class="p-2"><span class="alert alert-info"><strong>Status: </strong> {{promotion.status}}</span></div>
@@ -11,7 +11,7 @@
       <div class="p-2"><span class="alert alert-info"><strong>Budget Available: </strong>{{promotion.budget.diff}}</span></div>
   </div>
   <br>
-  <div class="d-flex flex-row-reverse" *ngIf="promotion.status === 'ACTIVE' || promotion.status === 'REJECTED'">
+  <div class="d-flex flex-row-reverse" *ngIf="promotion.status === 'DRAFT' || promotion.status === 'REJECTED'">
     <div class="p-2">
       <button class="btn btn-primary" (click)="promotion.isEditable=!promotion.isEditable" *ngIf="promotion.isEditable">Edit</button>
       <button class="btn btn-primary" *ngIf="!promotion.isEditable" (click)="promotion.isEditable=!promotion.isEditable">Save</button>
@@ -32,19 +32,7 @@
                 <th scope="col">Package</th>
                 <th scope="col">Code</th>
                 <th scope="col">Rate</th>
-                <th scope="col">DM1</th>
-                <th scope="col">DM2</th>
-                <th scope="col">DM3</th>
-                <th scope="col">DM4</th>
-                <th scope="col">DM5</th>
-                <th scope="col">DM6</th>
-                <th scope="col">DM7</th>
-                <th scope="col">DM8</th>
-                <th scope="col">DM9</th>
-                <th scope="col">DM10</th>
-                <th scope="col">DM11</th>
-                <th scope="col">DM12</th>
-                <th scope="col">DM13</th>
+                <th scope="col" *ngFor="let dm of dualMailers">{{dm.id}}</th>
               </tr>
             </thead>
             
@@ -56,8 +44,8 @@
                 <td><p>${{row.prate}}</p></td>
 
                 <td *ngFor="let dm of row.dualmailers;let i = index">
-                  <input *ngIf="!promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
-                  <p [ngbPopover]="popContent" triggers="mouseenter:mouseleave" [popoverTitle]="popTitle" (mouseenter)="onHover(rowid,i)" (mouseleave)="onHoverLeave()" *ngIf="promotion.isEditable && (promotion.status === 'ACTIVE' || promotion.status === 'REJECTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
+                  <input *ngIf="!promotion.isEditable && (promotion.status === 'DRAFT' || promotion.status === 'REJECTED') " type="text" [(ngModel)]="dm.value" [readonly]="promotion.isEditable" size="1" (change)="onValueChange(row,dm)"/>
+                  <p [ngbPopover]="popContent" triggers="mouseenter:mouseleave" [popoverTitle]="popTitle" (mouseenter)="onHover(rowid,i)" (mouseleave)="onHoverLeave()" *ngIf="promotion.isEditable && (promotion.status === 'DRAFT' || promotion.status === 'REJECTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                   <p [ngbPopover]="popContent" triggers="mouseenter:mouseleave" [popoverTitle]="popTitle" (mouseenter)="onHover(rowid,i)" (mouseleave)="onHoverLeave()" *ngIf="!promotion.isEditable && (promotion.status === 'SUBMITTED' || promotion.status === 'ACCEPTED')" (dblclick)="editDM(rowid,i)">{{dm.value}}</p>
                 </td>
               </tr>
@@ -90,7 +78,7 @@
 
   <ng-template #popContent>
     <div class="popupArea" *ngFor="let row of skuPromoDataList;let rowid = index">
-      <div> Promotion number is <b>{{rowid+1}}</b> and type is <b>{{row.promoType}}</b>!
+      <div> Promotion Name:<b>{{row.promoName}}</b> of type <b>{{row.promoType}}</b>
         <br></div>
         <div>
             <p><b>PRODUCTS:</b></p>

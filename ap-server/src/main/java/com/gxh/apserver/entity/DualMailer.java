@@ -28,14 +28,12 @@ public class DualMailer {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Promotion promotion;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "start_date")
-    @CreatedDate
     private Date startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
-    @CreatedDate
     private Date endDate;
 }
 

@@ -59,9 +59,9 @@ export class SkuPromotionModalComponent implements OnInit {
 
   constructDataToUpdate (promoName : string) {
     let productsSaveOrRemove : AddOrRemoveProducts = new AddOrRemoveProducts(); 
-
+    productsSaveOrRemove.supplierId= Number(localStorage.getItem('supplierID'));
     productsSaveOrRemove.dmId = this.dmId;
-    productsSaveOrRemove.promoId = this.promoId;
+    productsSaveOrRemove.promoId = Number(localStorage.getItem('promoID'));
     productsSaveOrRemove.rcId = this.rowId;
     productsSaveOrRemove.productsSelected = this.newSelectedProducts;
     productsSaveOrRemove.productsDeselected = this.deSelectedProducts;

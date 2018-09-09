@@ -70,6 +70,7 @@ public class AdminServiceImpl implements AdminService {
                         try {
                             newDualMailer.setStartDate(DateUtil.convertFromStringTODate(dualMailer.getStartDate()));
                             newDualMailer.setEndDate(DateUtil.convertFromStringTODate(dualMailer.getEndDate()));
+                            logger.info("Date-ssk-"+DateUtil.convertFromStringTODate(dualMailer.getStartDate()));
                         } catch (ParseException e) {
                             logger.error(e.getMessage());
                         }
@@ -85,17 +86,23 @@ public class AdminServiceImpl implements AdminService {
         logger.info(">>> getPromotionByStatus");
         Optional<List<Promotion>> promoList = promotionRepository.findAllPromotionByStatus(status);
 
-        List<AdminPromoDTO> promodtoList = new ArrayList<>();
-        promoList.get().forEach((promotion -> {
-            AdminPromoDTO pdto = new AdminPromoDTO();
-            pdto.setName(promotion.getName());
-            pdto.setPid(promotion.getId());
-            pdto.setPstatus(promotion.getStatus().toString());
+        if(promoList.isPresent()) {
+            List<AdminPromoDTO> promodtoList = new ArrayList<>();
+            promoList.get().forEach((promotion -> {
+                AdminPromoDTO pdto = new AdminPromoDTO();
+                pdto.setName(promotion.getName());
+                pdto.setPid(promotion.getId());
+                pdto.setPstatus(promotion.getStatus().toString());
 
-            promodtoList.add(pdto);
-        }));
-        logger.info("<<< getPromotionByStatus");
-        return promodtoList;
+                promodtoList.add(pdto);
+            }));
+            logger.info("<<< getPromotionByStatus");
+            return promodtoList;
+        } else {
+            logger.info("No Active promo present");
+            logger.info("<<< getPromotionByStatus");
+            return null;
+        }
     }
 
     @Override

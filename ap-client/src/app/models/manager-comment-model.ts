@@ -1,11 +1,11 @@
 export class PromoComment {
-    public  promoYear:String;
+    public  promoID:String;
     public  supplierid:Number;
     public  managerid:Number;
     public  comment:String;
 
-    constructor(promoYear:String,supplierid:Number,managerid:Number){
-        this.promoYear = promoYear;
+    constructor(promoID:String,supplierid:Number,managerid:Number){
+        this.promoID = promoID;
         this.supplierid = supplierid;
         this.managerid = managerid;
     }

@@ -7,6 +7,7 @@ import { DualMailer, Product } from '../../models';
 import { SupplierPromotionService } from '../../services/index';
 import { BrandPromotionModalComponent } from '../brand-promotion-modal/brand-promotion-modal.component';
 import { PromotionModalComponent } from '../promotion-modal/promotion-modal.component';
+import { ToastNotificationService } from '../../services/toast-notification.service';
 
 @Component({
   selector: 'app-add-promotion',
@@ -24,6 +25,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   private rowId : Number;
   private dmId : Number;
   private promoId : Number;
+  private supplierId : Number;
   private promoNameModel : string = null;
   private productsData: any;
   private addPromoEvent : any;
@@ -31,7 +33,8 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   
   constructor(private modalService: ModalService, 
     private modalDialogService: ModalDialogService,
-    private promotionService : SupplierPromotionService) { }
+    private promotionService : SupplierPromotionService,
+    private toast:ToastNotificationService) { }
 
   ngOnInit() {
     this.createTilesArray();
@@ -45,6 +48,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
     this.rowId = options.data['rowId'];
     this.dmId = options.data['dmId'];
     this.promoId = options.data['promoId'];
+    this.supplierId = options.data['supplierId'];
     // Modal needs a target on which it needs to be displayed,
     // since dialogInit will first close the existing modal and open a new one;
     // the target is lost so get a refernce of parent where it needs to be displayed
@@ -60,7 +64,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   // Selecting the promotion.
   addPromotion(event) {
 
-    this.promotionService.getSelectedProducts(
+    this.promotionService.getSelectedProducts(this.supplierId,
       this.promoId, this.dmId, this.rowId, event.target.id
     ).subscribe( (data) => {
       this.promoNameModel = data["promoName"];
@@ -68,6 +72,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
       this.showProductSelectionModal (event, data["products_selected"]);
     }, err => {
       console.log("Something went wrong");
+      this.toast.showError("Something went wrong!Try again");
     });
 
   }
