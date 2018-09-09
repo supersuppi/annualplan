@@ -28,19 +28,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onShowDashboard() {
-    console.log("Clicked on home");
     this.router.navigate(['\home']);
   }
 
   onLogout() {
-    console.log("Clicked on Logout");
     localStorage.clear();
     this.userService.setLoggedInUser();
     this.router.navigate(['\login']);
   }
 
   onShowProfile() {
-    console.log("Clicked on profile");
     this.router.navigate(['\profile']);
   }
 

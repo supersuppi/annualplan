@@ -25,7 +25,6 @@ export class UserService {
     constructor(private httpClient : HttpClient) {}
 
     setLoggedInUser() {
-        
         if (localStorage.getItem('validUser')) {
             this.userInfo.loggedIn=true;
         } else {
@@ -35,7 +34,6 @@ export class UserService {
     }
 
     registerUser(userRegisterFormValues : Object) : Observable<any>{
-
         let jsonBody = JSON.stringify(userRegisterFormValues); 
         return this.httpClient.post<any>(this.userUrl+"/register", jsonBody,
         {
@@ -44,7 +42,6 @@ export class UserService {
     }
 
     loginUser(userLoginFormValues : Object) : Observable<any>{
-
         let jsonBody = JSON.stringify(userLoginFormValues); 
         return this.httpClient.post<any>(this.userUrl+"/login", jsonBody,
         {

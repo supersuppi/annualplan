@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
             this.storeUserInLocalStorage(response, data);
             console.log("Login Success");
             if (localStorage.getItem('role') === 'ROLE_ADMIN') {
-              this.router.navigate(['/admin/register']);
+              this.router.navigate(['/admin/promotion/show']);
             } else {
               this.router.navigate(['/home']);
             }
