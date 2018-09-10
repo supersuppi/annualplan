@@ -71,8 +71,8 @@ export class PromotionComponent implements OnInit {
     let promo = new Promotion()
     promo.name = this.promoName;
     promo.userName = localStorage.getItem('username');
-    promo.ratecards = this.ratecardData;
-    promo.dualmailers = this.dualmailerData;
+    promo.ratecards = this.ratecardData.slice().reverse();//Sort
+    promo.dualmailers = this.dualmailerData.slice().reverse();//Sort
 
     console.log(promo);
     this.adminService.saveAdminPromotion(promo).subscribe((response:any) => {

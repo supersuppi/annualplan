@@ -149,16 +149,18 @@ export class HomeComponent implements OnInit {
 
   onSelect(pid){
     console.log(pid);
+    let itemIndex = this.promotions.findIndex(item => item.pid == pid);
+    console.log(itemIndex);
     if(localStorage.getItem('role') === 'ROLE_VENDOR'){
       this.promoID = pid;
       localStorage.setItem('promoID',this.promoID.toString());
+      localStorage.setItem('promoName',this.promotions[itemIndex].name);
     } else {
       this.promoID = pid;
       localStorage.setItem('promoID',this.promoID.toString());
-      let itemIndex = this.promotions.findIndex(item => item.pid == pid);
-      console.log(itemIndex);
       this.promotionSuppliers = this.promotions[itemIndex].suppliers;
       localStorage.setItem('suppliers',JSON.stringify(this.promotionSuppliers));
+      localStorage.setItem('promoName',this.promotions[itemIndex].name);
     }
   }
 

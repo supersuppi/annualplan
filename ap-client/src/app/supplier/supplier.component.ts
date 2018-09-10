@@ -24,6 +24,7 @@ export class SupplierComponent implements OnInit {
    private activePromoID:Number;
    private supplierID:Number;
    private activeAnnualPromoID:String;
+   promotionName:String;
    private products:Array<ProductSKU>;
    private productDMBudgetList:Array<CalculatedBudget>;
    private promoSaved:Boolean;
@@ -39,7 +40,7 @@ export class SupplierComponent implements OnInit {
     this.hasError = false;
     this.promoSaved = false;
     this.activePromoID = Number(localStorage.getItem('promoID'));
-   // this.activeAnnualPromoID = this._Activatedroute.snapshot.params['annualPromoID'];
+    this.promotionName = localStorage.getItem('promoName');
     this.supplierID = Number(localStorage.getItem('supplierID'))
     this.getSupplierPromotion(this.supplierID,this.activePromoID.toString());
   }

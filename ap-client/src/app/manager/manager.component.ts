@@ -31,6 +31,7 @@ export class ManagerComponent implements OnInit {
   public skuPromoDataList:Array<SKULevelPromoData>;
   dualMailers:Array<DualMailer>;
   supplier:SupplierHomeData;
+  promotionName:String;
   
   constructor(private spromotionService: SupplierPromotionService,private promotionService:ManagerPromotionService,private modalDialogService: ModalDialogService,
     private viewContainer: ViewContainerRef,private _Activatedroute:ActivatedRoute, private router: Router,private toast:ToastNotificationService) { }
@@ -40,7 +41,7 @@ export class ManagerComponent implements OnInit {
     this.suppliers = JSON.parse(localStorage.getItem('suppliers'))
     this.supplier = JSON.parse(localStorage.getItem('supplier'))
     this.activePromoID = Number(localStorage.getItem('promoID'));
- 
+    this.promotionName = localStorage.getItem('promoName');
     //Default Supplier
     let supplier:SupplierHomeData = this.supplier;
     this.currentSupplierID = supplier.supplierID;
