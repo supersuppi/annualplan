@@ -155,6 +155,7 @@ export class HomeComponent implements OnInit {
       this.promoID = pid;
       localStorage.setItem('promoID',this.promoID.toString());
       localStorage.setItem('promoName',this.promotions[itemIndex].name);
+      this.router.navigate(['/supplier']);
     } else {
       this.promoID = pid;
       localStorage.setItem('promoID',this.promoID.toString());
@@ -169,6 +170,7 @@ export class HomeComponent implements OnInit {
     let itemIndex = this.promotionSuppliers.findIndex(item => item.supplierID == sid);
     console.log(itemIndex);
     localStorage.setItem('supplier',JSON.stringify(this.promotionSuppliers[itemIndex]));
+    this.router.navigate(['/manager']);
   }
 
   displaySupplierPromotion(){
