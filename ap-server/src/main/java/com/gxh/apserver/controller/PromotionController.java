@@ -26,6 +26,9 @@ import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.service.interfaces.BudgetService;
 import com.gxh.apserver.service.interfaces.PromotionService;
 
+/*
+ * A controller class for all promotion request
+ */
 @RestController
 @RequestMapping(value = "/promotion")
 public class PromotionController extends BaseController {

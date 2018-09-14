@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gxh.apserver.dto.HomeDTO;
 import com.gxh.apserver.service.interfaces.HomeService;
 
+/*
+ * A controller class for home area
+ */
 @RestController
 @RequestMapping("/home")
 public class HomeController extends BaseController {
