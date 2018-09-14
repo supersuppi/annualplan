@@ -1,22 +1,31 @@
 package com.gxh.apserver.service;
 
-import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.dto.AdminPromoDTO;
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.exceptions.ResourceNotFoundException;
-import com.gxh.apserver.repository.interfaces.*;
-import com.gxh.apserver.service.interfaces.AdminService;
-import com.gxh.apserver.util.DateUtil;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.AdminPromoDTO;
+import com.gxh.apserver.entity.DualMailer;
+import com.gxh.apserver.entity.Notification;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.RateCard;
+import com.gxh.apserver.entity.User;
+import com.gxh.apserver.repository.interfaces.DualMailerRepository;
+import com.gxh.apserver.repository.interfaces.NotificationRepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.RateCardRepository;
+import com.gxh.apserver.repository.interfaces.UserRepository;
+import com.gxh.apserver.service.interfaces.AdminService;
+import com.gxh.apserver.util.DateUtil;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -26,8 +35,6 @@ public class AdminServiceImpl implements AdminService {
     private PromotionRepository promotionRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private AnnualPromotionRepository annualPromotionRepository;
     @Autowired
     private RateCardRepository rateCardRepository;
     @Autowired
@@ -43,7 +50,6 @@ public class AdminServiceImpl implements AdminService {
 
         if(user != null) {
             logger.info("User Found.");
-            Optional<Promotion> mainPromo = promotionRepository.findPromotionByUser(user);
 
                 logger.info("Promotion not present.Creating new.");
                 Promotion newPromo = new Promotion();

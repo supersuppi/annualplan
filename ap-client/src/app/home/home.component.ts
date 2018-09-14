@@ -183,4 +183,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  budgetClicked() {
+    this.router.navigate(['/budget']);
+  }
+
 }

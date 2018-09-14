@@ -1,20 +1,40 @@
 package com.gxh.apserver.service;
 
-import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.dto.*;
-import com.gxh.apserver.entity.*;
-import com.gxh.apserver.exceptions.ResourceNotFoundException;
-import com.gxh.apserver.repository.interfaces.*;
-import com.gxh.apserver.service.interfaces.AdminService;
-import com.gxh.apserver.service.interfaces.HomeService;
-import com.gxh.apserver.util.BudgetCalculator;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.util.*;
+import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.AdminPromoDTO;
+import com.gxh.apserver.dto.HomeDTO;
+import com.gxh.apserver.dto.ManagerDTO;
+import com.gxh.apserver.dto.ManagerHomeDTO;
+import com.gxh.apserver.dto.SupManCommentDTO;
+import com.gxh.apserver.dto.SupplierDTO;
+import com.gxh.apserver.dto.SupplierHomeDTO;
+import com.gxh.apserver.entity.Manager;
+import com.gxh.apserver.entity.Notification;
+import com.gxh.apserver.entity.PromoComments;
+import com.gxh.apserver.entity.Promotion;
+import com.gxh.apserver.entity.Supplier;
+import com.gxh.apserver.entity.User;
+import com.gxh.apserver.exceptions.ResourceNotFoundException;
+import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
+import com.gxh.apserver.repository.interfaces.ManagerRepository;
+import com.gxh.apserver.repository.interfaces.NotificationRepository;
+import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
+import com.gxh.apserver.repository.interfaces.PromotionRepository;
+import com.gxh.apserver.repository.interfaces.SupplierRepository;
+import com.gxh.apserver.repository.interfaces.UserRepository;
+import com.gxh.apserver.service.interfaces.AdminService;
+import com.gxh.apserver.service.interfaces.HomeService;
 
 @Service
 public class HomeServiceImpl implements HomeService {
@@ -26,8 +46,6 @@ public class HomeServiceImpl implements HomeService {
     private SupplierRepository supplierRepository;
     @Autowired
     private AnnualPromotionRepository annualPromotionRepository;
-    @Autowired
-    private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
     @Autowired
     private ManagerRepository managerRepository;
     @Autowired
