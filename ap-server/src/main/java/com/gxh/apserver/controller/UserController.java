@@ -24,6 +24,9 @@ import com.gxh.apserver.model.UserRequestModel;
 import com.gxh.apserver.security.SecurityConstants;
 import com.gxh.apserver.service.interfaces.UserService;
 
+/*
+ * A controller class for user management
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {

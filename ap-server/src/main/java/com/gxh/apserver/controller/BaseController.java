@@ -1,10 +1,7 @@
 package com.gxh.apserver.controller;
 
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.gxh.apserver.model.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.gxh.apserver.model.ErrorMessage;
+/*
+ * Base class with logger and global exception handling
+ */
 public class BaseController {
     /**
      * The Logger for this class.

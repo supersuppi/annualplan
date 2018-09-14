@@ -1,18 +1,21 @@
 package com.gxh.apserver.controller;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
-import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
-import com.gxh.apserver.dto.ProductDTO;
-import com.gxh.apserver.dto.PromoCommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
+import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
@@ -20,6 +23,9 @@ import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.service.interfaces.PromotionService;
 
+/*
+ * A controller class for all promotion request
+ */
 @RestController
 @RequestMapping(value = "/promotion")
 public class PromotionController extends BaseController {

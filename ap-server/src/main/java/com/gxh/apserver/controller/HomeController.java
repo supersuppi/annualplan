@@ -1,11 +1,7 @@
 package com.gxh.apserver.controller;
 
-import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.dto.AdminPromoDTO;
-import com.gxh.apserver.dto.HomeDTO;
-import com.gxh.apserver.entity.UserContact;
-import com.gxh.apserver.service.interfaces.AdminService;
-import com.gxh.apserver.service.interfaces.HomeService;
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-import java.util.List;
+import com.gxh.apserver.dto.HomeDTO;
+import com.gxh.apserver.service.interfaces.HomeService;
 
+/*
+ * A controller class for home area
+ */
 @RestController
 @RequestMapping("/home")
 public class HomeController extends BaseController {
