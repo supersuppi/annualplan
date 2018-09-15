@@ -45,7 +45,7 @@ import com.gxh.apserver.repository.interfaces.PromotionRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
 import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
 import com.gxh.apserver.repository.interfaces.SupplierRepository;
-import com.gxh.apserver.service.interfaces.AdminService;
+import com.gxh.apserver.service.interfaces.BudgetService;
 import com.gxh.apserver.service.interfaces.PromotionService;
 
 @Service(value = "promotionService")
@@ -75,7 +75,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Autowired
     private PromotionRepository promotionRepository;
     @Autowired
-    private AdminService adminService;
+    private BudgetService budgetService;
 
     @Override
     public PromoDTO getSupplierPromo(Long supplierID,Long promoID) throws ResourceNotFoundException,InvalidStatusException,ParseException {
@@ -337,13 +337,18 @@ public class PromotionServiceImpl implements PromotionService {
 		return promotionDTOHelper.getPromoSKUDTO(promoId,supplierId, dmId, rowId, promoCount);
 	}
 
+	/**
+	 * Get the promotions in active status , and the annual promotions are in 'rejected' 
+	 *  or 'draft' to allow the supplier to allocate a budget.
+	 */
 	@Override
 	public List<AdminPromoDTO> getAllActivePromotionsForSupplier(Long supplierId) throws ResourceNotFoundException,
 		ParseException{
 		
 		List<AdminPromoDTO> activePromotionList = new ArrayList<>();
 		
-		activePromotionList = adminService.getPromotionsByStatus(PromotionStatus.ACTIVE);
+		activePromotionList = budgetService.getDraftOrRejectedPromos(PromotionStatus.ACTIVE, 
+				AnnualPromotionStatus.DRAFT, AnnualPromotionStatus.REJECTED);
 		
 		return activePromotionList;
 	}

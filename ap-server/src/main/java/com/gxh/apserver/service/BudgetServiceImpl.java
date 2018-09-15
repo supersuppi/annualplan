@@ -1,6 +1,8 @@
 package com.gxh.apserver.service;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -8,6 +10,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gxh.apserver.constants.AnnualPromotionStatus;
+import com.gxh.apserver.constants.PromotionStatus;
+import com.gxh.apserver.dto.AdminPromoDTO;
 import com.gxh.apserver.dto.BudgetDTO;
 import com.gxh.apserver.entity.Promotion;
 import com.gxh.apserver.entity.Supplier;
@@ -59,6 +64,10 @@ public class BudgetServiceImpl implements BudgetService{
 		
 	}
 
+	/**
+	 * Get the budget for the promotions selected in the dropdown,
+	 * while allocating budget.
+	 */
 	@Override
 	public BudgetDTO getBudgetForPromotion(Long promotionId) throws ParseException {
 
@@ -74,5 +83,30 @@ public class BudgetServiceImpl implements BudgetService{
 		
 		return budgetDTO;
 	}
+	
+	/*
+	 * Get all the annual promotions that are either in draft or rejected status ,
+	 * to allow the supplier to provide a budget amount 
+	 */
+	 @Override
+	 public List<AdminPromoDTO> getDraftOrRejectedPromos(PromotionStatus status, AnnualPromotionStatus draftStatus, 
+			 AnnualPromotionStatus rejectedStatus) throws ParseException {
+		Optional<List<Promotion>> promoList = promotionRepository.findAllByAnnualPromotionStatuses(status, draftStatus,
+				rejectedStatus);
+        List<AdminPromoDTO> promodtoList = new ArrayList<>();
+        
+        if(promoList.isPresent()) {
+            promoList.get().forEach((promotion -> {
+                AdminPromoDTO pdto = new AdminPromoDTO();
+                pdto.setName(promotion.getName());
+                pdto.setPid(promotion.getId());
+                pdto.setPstatus(promotion.getStatus().toString());
+
+                promodtoList.add(pdto);
+            }));
+        }
+        
+        return promodtoList;
+    }
 
 }
