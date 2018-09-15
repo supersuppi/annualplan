@@ -3,47 +3,46 @@
     <div class="card-body">
       <h5>My Dashboard</h5>
       <!-- Image components -->
-      <div class="row col-lg-12">
 
-        <span class="column col-lg-2">
-          <img src="./assets/images/calendar.png" alt="pie-chart">
-          <figcaption class="imgCaption">
-            <label class="mr-sm-2" for="inlineFormCustomSelect">Promotions:</label>
-            <select class="custom-select mr-sm-2" (change)="onSelect($event.target.value)">
+  <div class="row">
+    <div class="col">
+        <img src="./assets/images/calendar.png" alt="pie-chart">
+        <figcaption class="imgCaption">
+          <label class="mr-sm-2" for="inlineFormCustomSelect">Promotions:</label>
+          <select class="custom-select mr-sm-2" (change)="onSelect($event.target.value)">
+            <option selected>Choose...</option>
+            <option *ngFor="let p of promotions" [value]="p.pid">
+              {{p.name}}
+            </option>
+          </select> 
+        </figcaption>
+        <figcaption class="imgCaption" *ngIf ="homeContent.role === 'CM'">
+            <label class="mr-sm-2" for="inlineFormCustomSelect">Suppliers:</label>
+            <select class="custom-select mr-sm-2" (change)="onSupplierSelect($event.target.value)">
               <option selected>Choose...</option>
-              <option *ngFor="let p of promotions" [value]="p.pid">
-                {{p.name}}
+              <option *ngFor="let s of promotionSuppliers" [value]="s.supplierID">
+                {{s.supplierName}}
               </option>
             </select> 
           </figcaption>
-          <figcaption class="imgCaption" *ngIf ="homeContent.role === 'CM'">
-              <label class="mr-sm-2" for="inlineFormCustomSelect">Suppliers:</label>
-              <select class="custom-select mr-sm-2" (change)="onSupplierSelect($event.target.value)">
-                <option selected>Choose...</option>
-                <option *ngFor="let s of promotionSuppliers" [value]="s.supplierID">
-                  {{s.supplierName}}
-                </option>
-              </select> 
-            </figcaption>
-        </span>
-
-        <span  class="column col-lg-2">
-          <img src="./assets/images/tags.png" alt="bar-chart">
-          <figcaption class="imgCaption">Promotional Planning</figcaption>
-        </span>
-        <span  class="column col-lg-2">
-          <img src="./assets/images/checklist.png" alt="bar-chart">
-          <figcaption class="imgCaption">New Product Form</figcaption>
-        </span>
-        <span  class="column col-lg-2">
-          <img src="./assets/images/checklist-edit.png" alt="bar-chart">
-          <figcaption class="imgCaption">Product Change Form</figcaption>
-        </span>
-        <span  class="column col-lg-2" *ngIf ="homeContent.role === 'VENDOR'" (click)="budgetClicked()">
-          <img src="./assets/images/budget.png" alt="bar-chart">
-          <figcaption class="imgCaption">Budget</figcaption>
-        </span>
-      </div>
+    </div>
+    <div class="col">
+        <img src="./assets/images/tags.png" alt="bar-chart">
+        <figcaption class="imgCaption">Promotional Planning</figcaption>
+    </div>
+    <div class="col">
+        <img src="./assets/images/checklist.png" alt="bar-chart">
+        <figcaption class="imgCaption">New Product Form</figcaption>
+    </div>
+    <div class="col">
+        <img src="./assets/images/checklist-edit.png" alt="bar-chart">
+        <figcaption class="imgCaption">Product Change Form</figcaption>
+    </div>  
+    <div class="col" *ngIf ="homeContent.role === 'VENDOR'" (click)="budgetClicked()">
+        <img src="./assets/images/budget.png" alt="bar-chart">
+        <figcaption class="imgCaption">Budget</figcaption>
+    </div>
+</div>
       <br>
       <!-- Notification Component -->
       <h5> Notifications</h5>
