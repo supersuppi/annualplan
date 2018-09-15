@@ -11,9 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BudgetDTO {
 	private Long allocated;
-    @JsonIgnore
     private Long used;
-    @JsonIgnore
     private Long diff;
     private Long supplierId;
     private Long promotionId;
