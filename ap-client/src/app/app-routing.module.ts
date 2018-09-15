@@ -14,6 +14,7 @@ import { RoleGuardService } from "./route-guards/auth-guard-roles";
 import { ProfileDataResolver } from "./route-guards/profile-resolve";
 import { PromotionComponent } from "./dashboard/admindashboard/promotion/promotion.component";
 import { ManagePromotionComponent } from "./dashboard/admindashboard/promotion/manage-promotion/manage-promotion.component";
+import { EditPromotionComponent } from "./dashboard/admindashboard/promotion/edit-promotion/edit-promotion.component";
 
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -33,6 +34,7 @@ const appRoute : Routes= [
                 profile : ProfileDataResolver
             }},
             {path: 'promotion/new', component: PromotionComponent},
+            {path: 'promotion/edit', component: EditPromotionComponent},
             {path: 'promotion/show', component: ManagePromotionComponent}
         ], data: {
             expectedRole: 'ROLE_ADMIN'

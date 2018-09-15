@@ -9,7 +9,10 @@ import { Promotion } from "../form-model/admin.promotion";
 export class AdminService{
     private adminSavePromoUrl = ServerConfig.API_ENDPOINT+"admin/promotion/save";
     private adminActivatePromoUrl = ServerConfig.API_ENDPOINT+"admin/activate/promotion";
-    private getDraftPromotionsUrl = ServerConfig.API_ENDPOINT+"admin/promotion/draft";
+    private getAllPromotionsUrl = ServerConfig.API_ENDPOINT+"admin/promotion/all";
+    private getPromotionsStatusUrl = ServerConfig.API_ENDPOINT+"admin/promotion";
+    private getPromotionByIDUrl = ServerConfig.API_ENDPOINT+"admin/promotion/find";
+    private updatePromoUrl = ServerConfig.API_ENDPOINT+"admin/promotion/update";
 
     constructor(private httpClient: HttpClient) {}
 
@@ -21,7 +24,19 @@ export class AdminService{
         return this.httpClient.get<any>(this.adminActivatePromoUrl+"/"+pid);
     }
 
-    getDraftPromotion(): Observable<Array<Promotion>>{
-        return this.httpClient.get<Array<Promotion>>(this.getDraftPromotionsUrl);
+    getAllPromotions(): Observable<Array<Promotion>>{
+        return this.httpClient.get<Array<Promotion>>(this.getAllPromotionsUrl);
+    }
+
+    getPromotionsByStatus(status:String): Observable<Array<Promotion>>{
+        return this.httpClient.get<Array<Promotion>>(this.getPromotionsStatusUrl+"/"+status);
+    }
+
+    getPromotionsByID(pid:Number): Observable<Promotion>{
+        return this.httpClient.get<Promotion>(this.getPromotionByIDUrl+"/"+pid);
+    }
+
+    updatePromotion(data:Promotion): Observable<Object>{
+        return this.httpClient.put<any>(this.updatePromoUrl,data);
     }
 }

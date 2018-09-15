@@ -1,0 +1,19 @@
+<h4>Edit Promotion Details:</h4>
+<div class="container">
+    <div class="row">
+      <div class="col">
+        <label>Promo Name:</label>
+        <input type="text" class="form-control" [(ngModel)]="promoName">
+      </div>
+    </div>
+    <br>
+    <h4>Rate Cards</h4>
+    <ng2-smart-table [settings]="ratecardSettings" [source]="ratecardData"></ng2-smart-table>
+    <br>
+    <h4>Dual Mailer</h4>
+    <ng2-smart-table [settings]="dualmailerSettings" [source]="dualmailerData"></ng2-smart-table>
+    <br>
+    <div class="row">
+      <button class="btn btn-primary" (click)="updatePromo()">Update</button>
+    </div>
+</div>

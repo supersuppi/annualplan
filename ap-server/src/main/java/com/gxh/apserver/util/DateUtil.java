@@ -22,4 +22,9 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(new Date());
     }
+
+    public static String convertDateTOString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
+    }
 }

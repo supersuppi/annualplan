@@ -1,7 +1,7 @@
 package com.gxh.apserver.service;
 
 import com.gxh.apserver.constants.PromotionStatus;
-import com.gxh.apserver.dto.AdminPromoDTO;
+import com.gxh.apserver.dto.*;
 import com.gxh.apserver.entity.*;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.repository.interfaces.*;
@@ -108,6 +108,30 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public List<AdminPromoDTO> getAllPromotions() throws ParseException {
+        logger.info(">>> getAllPromotions");
+        List<Promotion> promoList = promotionRepository.findAll();
+
+        if(promoList.size() != 0) {
+            List<AdminPromoDTO> promodtoList = new ArrayList<>();
+            promoList.forEach((promotion -> {
+                AdminPromoDTO pdto = new AdminPromoDTO();
+                pdto.setName(promotion.getName());
+                pdto.setPid(promotion.getId());
+                pdto.setPstatus(promotion.getStatus().toString());
+
+                promodtoList.add(pdto);
+            }));
+            logger.info("<<< getAllPromotions");
+            return promodtoList;
+        } else {
+            logger.info("No Active promo present");
+            logger.info("<<< getAllPromotions");
+            return null;
+        }
+    }
+
+    @Override
     public boolean activatePromotion(Long promoID) {
         logger.info(">>> activatePromotion");
         Optional<Promotion> promo = promotionRepository.findById(promoID);
@@ -128,6 +152,129 @@ public class AdminServiceImpl implements AdminService {
         }
 
         logger.info("<<< activatePromotion");
+        return false;
+    }
+
+    @Override
+    public AdminPromoDTO getPromotionByID(Long promoID) {
+        logger.info(">>> getPromotionByID");
+        Optional<Promotion> promo = promotionRepository.findById(promoID);
+        if(promo.isPresent()) {
+            logger.info("Found promotion");
+            AdminPromoDTO adminDto = new AdminPromoDTO();
+            List<RateCard> rateCards = rateCardRepository.findRateCardBYPromotionID(promo.get());
+            List<DualMailer> dms = dualMailerRepository.findAllDMbyPromotion(promo.get());
+            List<AdminRCDTO> rcdtoList = new ArrayList<>();
+            List<AdminMailerDTO> dmsdtoList = new ArrayList<>();
+
+            adminDto.setPid(promo.get().getId());
+            adminDto.setName(promo.get().getName());
+
+            rateCards.forEach(rc -> {
+                AdminRCDTO rcdto = new AdminRCDTO();
+                rcdto.setId(rc.getId());
+                rcdto.setCode(rc.getCode());
+                rcdto.setName(rc.getName());
+                rcdto.setRate(String.valueOf(rc.getRateCardDollar()));
+
+                rcdtoList.add(rcdto);
+            });
+            adminDto.setRatecards(rcdtoList);
+
+            dms.forEach(dm -> {
+                AdminMailerDTO dmDto = new AdminMailerDTO();
+                dmDto.setId(dm.getId());
+                dmDto.setCode(dm.getCode());
+                dmDto.setEndDate(DateUtil.convertDateTOString(dm.getEndDate()));
+                dmDto.setStartDate(DateUtil.convertDateTOString(dm.getStartDate()));
+
+                dmsdtoList.add(dmDto);
+            });
+            adminDto.setDualmailers(dmsdtoList);
+
+            logger.info("<<< getPromotionByID");
+            return adminDto;
+        }
+        logger.info("<<< getPromotionByID");
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public boolean updatePromotion(AdminPromoDTO adminPromoDTO) throws ParseException {
+        logger.info(">>> updatePromotion");
+        Optional<Promotion> promo = promotionRepository.findById(adminPromoDTO.getPid());
+        if (promo.isPresent()) {
+            logger.info("Found promotion.updating");
+
+            Promotion currentPromo = promo.get();
+            currentPromo.setName(adminPromoDTO.getName());
+            promotionRepository.save(currentPromo);
+            logger.info("promotion updated");
+
+            adminPromoDTO.getRatecards().forEach(rcdto -> {
+                if(rcdto.getId()!=null) {
+                    Optional<RateCard> rc = rateCardRepository.findById(rcdto.getId());
+                    if(rc.isPresent()) {
+                        logger.info("rateCard present.updating");
+                        RateCard rateCard = rc.get();
+                        rateCard.setCode(rcdto.getCode());
+                        rateCard.setName(rcdto.getName());
+                        rateCard.setRateCardDollar(Float.valueOf(rcdto.getRate()));
+
+                        rateCardRepository.save(rateCard);
+                    }
+                } else {
+                    logger.info("creating new ratecard");
+                    RateCard newRateCard = new RateCard();
+                    newRateCard.setPromotion(currentPromo);
+                    newRateCard.setCode(rcdto.getCode());
+                    newRateCard.setName(rcdto.getName());
+                    newRateCard.setRateCardDollar(Float.valueOf(rcdto.getRate()));
+                    //TODO: set proper promo mechanics
+                    rateCardRepository.save(newRateCard);
+                }
+            });
+            logger.info("rateCard updated");
+
+            adminPromoDTO.getDualmailers().forEach(dmDto -> {
+                if(dmDto.getId()!=null) {
+                    Optional<DualMailer> duailmailer = dualMailerRepository.findById(dmDto.getId());
+                    if(duailmailer.isPresent()){
+                        logger.info("duailmailer present.updating");
+                        DualMailer dm = duailmailer.get();
+                        dm.setCode(dmDto.getCode());
+                        logger.info("DTO StartDate "+dmDto.getStartDate());
+                        logger.info("DTO EndDate "+dmDto.getEndDate());
+
+                        try {
+                            dm.setStartDate(DateUtil.convertFromStringTODate(dmDto.getStartDate()));
+                            dm.setEndDate(DateUtil.convertFromStringTODate(dmDto.getEndDate()));
+                            dualMailerRepository.save(dm);
+                        } catch (ParseException e) {
+                            logger.error(e.getMessage());
+                        }
+                    }
+                } else {
+                    logger.info("creating new duailmailer");
+                    DualMailer newDualMailer = new DualMailer();
+                    newDualMailer.setPromotion(currentPromo);
+                    newDualMailer.setCode(dmDto.getCode());
+                    try {
+                        newDualMailer.setStartDate(DateUtil.convertFromStringTODate(dmDto.getStartDate()));
+                        newDualMailer.setEndDate(DateUtil.convertFromStringTODate(dmDto.getEndDate()));
+                        logger.info("Date-Start-"+DateUtil.convertFromStringTODate(dmDto.getStartDate()));
+                    } catch (ParseException e) {
+                        logger.error(e.getMessage());
+                    }
+                    dualMailerRepository.save(newDualMailer);
+                }
+            });
+            logger.info("Dualmailer updated");
+
+            logger.info("<<< updatePromotion");
+            return true;
+        }
         return false;
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gxh.apserver.model.ErrorMessage;
+
+import java.text.ParseException;
+
 /*
  * Base class with logger and global exception handling
  */

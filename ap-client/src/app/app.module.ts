@@ -43,6 +43,7 @@ import { ManagePromotionComponent } from './dashboard/admindashboard/promotion/m
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastNotificationService } from './services/toast-notification.service';
+import { EditPromotionComponent } from './dashboard/admindashboard/promotion/edit-promotion/edit-promotion.component';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { ToastNotificationService } from './services/toast-notification.service'
     GanttChartComponent,
     TruncatePipe,
     PromotionComponent,
-    ManagePromotionComponent
+    ManagePromotionComponent,
+    EditPromotionComponent
   ],
   imports: [
     BrowserModule,

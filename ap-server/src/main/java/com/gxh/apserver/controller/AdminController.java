@@ -6,12 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AdminPromoDTO;
@@ -31,7 +26,7 @@ public class AdminController extends BaseController {
         try {
             adminService.savePromotion(requestBody);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return new ResponseEntity<String>("Promotion Saved", HttpStatus.CREATED);
@@ -47,13 +42,46 @@ public class AdminController extends BaseController {
         }
     }
 
-    @GetMapping("/promotion/draft")
-    public ResponseEntity<List<AdminPromoDTO>> getDraftPromotion() {
+    @GetMapping("/promotion/{status}")
+    public ResponseEntity<List<AdminPromoDTO>> getPromotion(@PathVariable("status") String status) {
         try {
-            List<AdminPromoDTO> adminPromoDTO = adminService.getPromotionsByStatus(PromotionStatus.DRAFT);
+            List<AdminPromoDTO> adminPromoDTO = adminService.getPromotionsByStatus(PromotionStatus.valueOf(status));
             return new ResponseEntity<List<AdminPromoDTO>>(adminPromoDTO, HttpStatus.OK);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/promotion/all")
+    public ResponseEntity<List<AdminPromoDTO>> getAllPromotion() {
+        try {
+            List<AdminPromoDTO> adminPromoDTO = adminService.getAllPromotions();
+            return new ResponseEntity<List<AdminPromoDTO>>(adminPromoDTO, HttpStatus.OK);
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/promotion/find/{pid}")
+    public ResponseEntity<AdminPromoDTO> getPromotion(@PathVariable("pid") Long pid) {
+        try {
+            AdminPromoDTO adminPromoDTO = adminService.getPromotionByID(pid);
+            return new ResponseEntity<AdminPromoDTO>(adminPromoDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/promotion/update")
+    public ResponseEntity<String> updatePromotion(@RequestBody AdminPromoDTO promo) {
+        try {
+            adminService.updatePromotion(promo);
+            return new ResponseEntity<String>(new String(), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

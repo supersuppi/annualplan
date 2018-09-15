@@ -23,6 +23,7 @@ import com.gxh.apserver.security.JWTTokenFilterConfigurer;
 import com.gxh.apserver.security.JWTTokenProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * 
@@ -65,16 +66,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	public void configure(HttpSecurity http) throws Exception{
 		http.csrf()
 			.disable().cors().and()
-
 			// Creation of tokens is 'stateless' 
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().authorizeRequests()
 			// Allow '/user/login' without authentication.
 			.antMatchers("/user/login").permitAll()
-			//TODO remove this 2 lines of code during prod , this is to bypass security
-			.antMatchers(HttpMethod.POST, "/**").permitAll()
-			.antMatchers(HttpMethod.GET, "/**").permitAll()
-				.antMatchers(HttpMethod.PUT, "/**").permitAll()
+			//TODO remove this line for prod , this is to bypass security
+			.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()//allow CORS option calls
 			.anyRequest()
 			.authenticated()
 			.and()
@@ -89,8 +87,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
+//		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+//		return source;
+
+		final CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Collections.singletonList("*"));
+		configuration.setAllowedMethods(Arrays.asList("HEAD",
+				"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(Collections.singletonList("*"));
+		configuration.setExposedHeaders(Arrays.asList("X-Auth-Token","Authorization","Access-Control-Allow-Origin","Access-Control-Allow-Credentials"));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 	

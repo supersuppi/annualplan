@@ -1,6 +1,18 @@
 <h4>Promotion Details:</h4>
-<div class="container" *ngIf="promotions.length != 0">
-<div class="row">
+<div class="container">
+  <div class="row col-lg-12">
+    <div class="column col-lg-3">
+      <label class="mr-sm-2" for="inlineFormCustomSelect">Promotion Status:</label>
+      <select class="custom-select mr-sm-2" (change)="onSelect($event.target.value)">
+          <option selected>All...</option>
+          <option [value]="1">Draft</option>
+          <option [value]="2">Active</option>
+          <option [value]="3">Completed</option>
+      </select> 
+    </div>
+  </div>
+  <br>
+<div class="row" *ngIf="promotions.length != 0">
   <div class="table-responsive">
     <table class="table table-sm">
     <thead>
@@ -11,16 +23,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let promo of promotions; let i = index">
+      <tr *ngFor="let promo of promotions | filter:filter | paginate: { itemsPerPage: 8, currentPage: p }; let i = index">
         <td>{{promo.name}}</td>
         <td>{{promo.pstatus}}</td>
-        <td> <button type="button" class="btn btn-success" (click)="activatePromotion(promo.pid)">Activate</button></td>
+        <td *ngIf="promo.pstatus === 'DRAFT'"> 
+          <button type="button" class="btn btn-success" (click)="activatePromotion(promo.pid)">Activate</button>
+          <button type="button" class="btn btn-info" (click)="editPromotion(promo.pid)">Edit</button>
+        </td>
+        <td *ngIf="promo.pstatus === 'ACTIVE'"> <button type="button" class="btn btn-success" (click)="editPromotion(promo.pid)">Edit</button></td>
+        <td *ngIf="promo.pstatus === 'COMPLETED'"> <button type="button" class="btn btn-success" [disabled]="true">Edit</button></td>
       </tr>
     </tbody>
+    <br>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
     </table>
   </div>
 </div>
 </div>
 <div class="container" *ngIf="promotions.length == 0">
-  <h5>No Draft Promotion Present</h5>
+  <h5>Promotion data not found</h5>
 </div>
