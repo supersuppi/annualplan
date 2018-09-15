@@ -1,5 +1,7 @@
 export class PromotionBudget {
-    public allocated:Number;
-    public used:Number;
-    public diff:Number;  
+    public allocated? :number;
+    public used? :number;
+    public diff? :number;  
+    public supplierId? :number;
+    public promotionId? :number;
 }

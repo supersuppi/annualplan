@@ -15,6 +15,8 @@ import { ProfileDataResolver } from "./route-guards/profile-resolve";
 import { PromotionComponent } from "./dashboard/admindashboard/promotion/promotion.component";
 import { ManagePromotionComponent } from "./dashboard/admindashboard/promotion/manage-promotion/manage-promotion.component";
 import { EditPromotionComponent } from "./dashboard/admindashboard/promotion/edit-promotion/edit-promotion.component";
+import { BudgetComponent } from "./budget/budget.component";
+
 
 const appRoute : Routes= [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -25,6 +27,7 @@ const appRoute : Routes= [
     }},
     { path: 'supplier', component: SupplierComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_VENDOR'}},
     { path: 'manager', component: ManagerComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_CM'}},
+    { path: 'budget', component: BudgetComponent, canActivate: [RoleGuardService],data: {expectedRole: 'ROLE_VENDOR'}},
     { path: 'admin', component: AdmindashboardComponent,canActivate: [RoleGuardService],
         children: [
             {path: 'register', component: RegisterdashboardComponent, resolve:{

@@ -46,15 +46,15 @@
             <label for="role">Role:</label>
             <br>
             <select name="userRole" formControlName="roleId">
-              <option [ngValue]="null" disabled>Choose your profile</option>
+              <option [ngValue]="null" disabled>Choose a role</option>
               <option *ngFor="let role of rolesOb" [ngValue]="role.id">{{role.name}}</option>
             </select>
             <br>
             <span *ngIf="!userRegisterGroup.get('roleId').valid  
                     && userRegisterGroup.get('roleId').touched"
                       class="alert-danger"> Please select a role</span>
-          </div>
-      </div>
+        </div>
+    </div>
 
     <button class="btn btn-primary" type="submit"
       [disabled]="!userRegisterGroup.valid">Regiter User</button>

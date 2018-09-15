@@ -1,7 +1,7 @@
 package com.gxh.apserver.service;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.gxh.apserver.constants.AnnualPromotionStatus;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
+import com.gxh.apserver.dto.AdminPromoDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
@@ -34,19 +35,18 @@ import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.helper.PromotionDTOHelper;
+import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
 import com.gxh.apserver.repository.interfaces.DualMailerRepository;
 import com.gxh.apserver.repository.interfaces.ManagerRepository;
-import com.gxh.apserver.repository.interfaces.ProductRepository;
 import com.gxh.apserver.repository.interfaces.PromoCommentRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelRateCardRepository;
 import com.gxh.apserver.repository.interfaces.PromotionLevelSKURepository;
 import com.gxh.apserver.repository.interfaces.PromotionRepository;
-import com.gxh.apserver.repository.interfaces.AnnualPromotionRepository;
 import com.gxh.apserver.repository.interfaces.RateCardRepository;
 import com.gxh.apserver.repository.interfaces.SupplierPromotionBudgetRepository;
 import com.gxh.apserver.repository.interfaces.SupplierRepository;
+import com.gxh.apserver.service.interfaces.BudgetService;
 import com.gxh.apserver.service.interfaces.PromotionService;
-import com.gxh.apserver.util.DateUtil;
 
 @Service(value = "promotionService")
 public class PromotionServiceImpl implements PromotionService {
@@ -74,6 +74,8 @@ public class PromotionServiceImpl implements PromotionService {
     private SupplierPromotionBudgetRepository supplierPromotionBudgetRepository;
     @Autowired
     private PromotionRepository promotionRepository;
+    @Autowired
+    private BudgetService budgetService;
 
     @Override
     public PromoDTO getSupplierPromo(Long supplierID,Long promoID) throws ResourceNotFoundException,InvalidStatusException,ParseException {
@@ -113,8 +115,8 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(currentPromotion.get());
         List<DualMailer> dualMailers = dualMailerRepository.findAllDMbyPromotion(currentPromotion.get());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
-        //Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
-        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier.get());
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromotion(currentPromotion.get());
+//        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier.get());
 
         int totalBudget = 0;
         Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();
@@ -333,5 +335,21 @@ public class PromotionServiceImpl implements PromotionService {
 	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId,Long supplierId, Long dmId, Long rowId, int promoCount)
 			throws ParseException {	
 		return promotionDTOHelper.getPromoSKUDTO(promoId,supplierId, dmId, rowId, promoCount);
+	}
+
+	/**
+	 * Get the promotions in active status , and the annual promotions are in 'rejected' 
+	 *  or 'draft' to allow the supplier to allocate a budget.
+	 */
+	@Override
+	public List<AdminPromoDTO> getAllActivePromotionsForSupplier(Long supplierId) throws ResourceNotFoundException,
+		ParseException{
+		
+		List<AdminPromoDTO> activePromotionList = new ArrayList<>();
+		
+		activePromotionList = budgetService.getDraftOrRejectedPromos(PromotionStatus.ACTIVE, 
+				AnnualPromotionStatus.DRAFT, AnnualPromotionStatus.REJECTED);
+		
+		return activePromotionList;
 	}
 }

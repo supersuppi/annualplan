@@ -44,6 +44,8 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastNotificationService } from './services/toast-notification.service';
 import { EditPromotionComponent } from './dashboard/admindashboard/promotion/edit-promotion/edit-promotion.component';
+import { BudgetComponent } from './budget/budget.component';
+import { BudgetService } from './services/budget.service';
 
 
 @NgModule({
@@ -67,7 +69,8 @@ import { EditPromotionComponent } from './dashboard/admindashboard/promotion/edi
     TruncatePipe,
     PromotionComponent,
     ManagePromotionComponent,
-    EditPromotionComponent
+    EditPromotionComponent,
+    BudgetComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +102,7 @@ import { EditPromotionComponent } from './dashboard/admindashboard/promotion/edi
       useClass: HttpRequestInterceptor,
       multi: true
     }, RoleDropdownResolver, RoleGuardService, AuthService, JwtHelper, ProfileDataResolver,
-    SupplierPromotionService
+    SupplierPromotionService, BudgetService
   ],
   bootstrap: [AppComponent]
 })

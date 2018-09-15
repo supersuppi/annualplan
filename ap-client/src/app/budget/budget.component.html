@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+
+      <div class="row">
+        <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <label for="promotions">Select Promotion:</label>
+          <br>
+          <select name="activePromotion" (change)="selectPromotion($event)">
+            <option [value]="-1" disabled>Choose Promotion</option>
+            <option *ngFor="let promotion of activePromotions" 
+              [value]="promotion.pid">{{promotion.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <label for="budget">Total Budget:</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+            </div>
+            <input type="number" class="form-control" [disabled]="promotionId === -1"
+              [(ngModel)]="budgetAmount">  
+          </div>
+          
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" 
+        (click)="saveBudgetForSupplier()" [disabled]="promotionId === -1">Save Budget</button>
+      <button type="button" class="btn btn-danger marginLeft" (click)="returnToHome()">Cancel</button>
+
+    </div>
+  </div>
+</div>

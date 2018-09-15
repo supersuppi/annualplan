@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
+import com.gxh.apserver.dto.AdminPromoDTO;
+import com.gxh.apserver.dto.BudgetDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
+import com.gxh.apserver.service.interfaces.BudgetService;
 import com.gxh.apserver.service.interfaces.PromotionService;
 
 /*
@@ -31,8 +34,11 @@ import com.gxh.apserver.service.interfaces.PromotionService;
 public class PromotionController extends BaseController {
 
     @Autowired
+    private BudgetService budgetService;
+    
+    @Autowired
     PromotionService promotionService;
-
+    
     @PostMapping(value = "/save")
     public ResponseEntity<String> savePromotion(@RequestBody PromoDTO promotion) {
 
@@ -178,6 +184,68 @@ public class PromotionController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
+    /**
+     * Get the active Promotions for the given supplier.
+     * @param supplierId
+     * @return
+     */
+    @GetMapping("/active/{id}")
+    ResponseEntity<List<AdminPromoDTO>> getAllActivePromotions(@PathVariable("id") Long supplierId) {
+        List<AdminPromoDTO> activePromotionsList;
+
+        try {
+        	activePromotionsList = promotionService.getAllActivePromotionsForSupplier(supplierId);
+        } catch (ResourceNotFoundException e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (ParseException ex) {
+            logger.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        ResponseEntity<List<AdminPromoDTO>> responseEntity = new ResponseEntity<List<AdminPromoDTO>>(activePromotionsList,
+                HttpStatus.OK);
+
+        return responseEntity;
+    }
+    
+    /**
+     * Save the budget for the given promotion.
+     * 
+     * @param budgetDto
+     * @return
+     */
+    @PostMapping(value="/budget")
+    public ResponseEntity<String> saveSupplierBudgetForPromoId(@RequestBody BudgetDTO budgetDto){
+    	
+    	try {
+			budgetService.saveBudgetForPromotion(budgetDto);
+		} catch (ParseException e) {
+			logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+    	return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
+    /**
+     * Get budget for the given promotion.
+     * 
+     * @param promotionId
+     * @return
+     */
+    @GetMapping(value="/budget/{id}")
+    public ResponseEntity<BudgetDTO> getBudgetForPromotionId(@PathVariable("id") Long promotionId){
+    	
+    	BudgetDTO budgetDto;
+    	try {
+			budgetDto = budgetService.getBudgetForPromotion(promotionId);
+		} catch (ParseException e) {
+			logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+    	return new ResponseEntity<BudgetDTO>(budgetDto, HttpStatus.OK);
     }
 
 

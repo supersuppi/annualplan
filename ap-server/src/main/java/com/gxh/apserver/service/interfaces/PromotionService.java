@@ -1,11 +1,10 @@
 package com.gxh.apserver.service.interfaces;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import com.gxh.apserver.dto.AddOrRemoveProductRequestDTO;
-import com.gxh.apserver.dto.ProductDTO;
+import com.gxh.apserver.dto.AdminPromoDTO;
 import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
@@ -33,4 +32,7 @@ public interface PromotionService {
 
 	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId,Long supplierId, Long dmId, Long rowId, int promoCount)
 		throws ParseException;
+	
+	public List<AdminPromoDTO> getAllActivePromotionsForSupplier(Long supplierId) throws ResourceNotFoundException,
+		ParseException;
 }
