@@ -89,10 +89,8 @@ public class BudgetServiceImpl implements BudgetService{
 	 * to allow the supplier to provide a budget amount 
 	 */
 	 @Override
-	 public List<AdminPromoDTO> getDraftOrRejectedPromos(PromotionStatus status, AnnualPromotionStatus draftStatus, 
-			 AnnualPromotionStatus rejectedStatus) throws ParseException {
-		Optional<List<Promotion>> promoList = promotionRepository.findAllByAnnualPromotionStatuses(status, draftStatus,
-				rejectedStatus);
+	 public List<AdminPromoDTO> getPromosbyStatus(PromotionStatus status) throws ParseException {
+		Optional<List<Promotion>> promoList = promotionRepository.findAllPromotionByStatus(status);
         List<AdminPromoDTO> promodtoList = new ArrayList<>();
         
         if(promoList.isPresent()) {

@@ -344,12 +344,7 @@ public class PromotionServiceImpl implements PromotionService {
 	@Override
 	public List<AdminPromoDTO> getAllActivePromotionsForSupplier(Long supplierId) throws ResourceNotFoundException,
 		ParseException{
-		
-		List<AdminPromoDTO> activePromotionList = new ArrayList<>();
-		
-		activePromotionList = budgetService.getDraftOrRejectedPromos(PromotionStatus.ACTIVE, 
-				AnnualPromotionStatus.DRAFT, AnnualPromotionStatus.REJECTED);
-		
-		return activePromotionList;
+        logger.info("getAllActivePromotionsForSupplier");
+		return budgetService.getPromosbyStatus(PromotionStatus.ACTIVE);
 	}
 }

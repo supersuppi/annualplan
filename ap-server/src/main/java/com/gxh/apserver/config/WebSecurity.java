@@ -72,7 +72,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 			// Allow '/user/login' without authentication.
 			.antMatchers("/user/login").permitAll()
 			//TODO remove this line for prod , this is to bypass security
-			.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()//allow CORS option calls
+			.antMatchers(HttpMethod.GET,"/**").permitAll()//allow CORS option calls
+				.antMatchers(HttpMethod.POST,"/**").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()

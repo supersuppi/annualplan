@@ -1,4 +1,5 @@
 <div class="container">
+    <h4>Promotion Budget</h4>
   <div class="card">
     <div class="card-body">
 
@@ -6,7 +7,7 @@
         <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <label for="promotions">Select Promotion:</label>
           <br>
-          <select name="activePromotion" (change)="selectPromotion($event)">
+          <select class="custom-select mr-sm-2" name="activePromotion" (change)="selectPromotion($event)">
             <option [value]="-1" disabled>Choose Promotion</option>
             <option *ngFor="let promotion of activePromotions" 
               [value]="promotion.pid">{{promotion.name}}</option>

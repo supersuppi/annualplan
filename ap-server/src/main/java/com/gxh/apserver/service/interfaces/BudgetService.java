@@ -9,12 +9,7 @@ import com.gxh.apserver.dto.AdminPromoDTO;
 import com.gxh.apserver.dto.BudgetDTO;
 
 public interface BudgetService {
-
 	public void saveBudgetForPromotion(BudgetDTO budgetDto) throws ParseException;
-	
 	public BudgetDTO getBudgetForPromotion(Long promotionId) throws ParseException;
-
-	public List<AdminPromoDTO> getDraftOrRejectedPromos(PromotionStatus active, AnnualPromotionStatus draft,
-			AnnualPromotionStatus rejected) throws ParseException;
-	
+	public List<AdminPromoDTO> getPromosbyStatus(PromotionStatus status) throws ParseException;
 }

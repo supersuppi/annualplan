@@ -39,9 +39,9 @@
           <img src="./assets/images/checklist-edit.png" alt="bar-chart">
           <figcaption class="imgCaption">Product Change Form</figcaption>
         </span>
-        <span  class="column col-lg-2" *ngIf ="homeContent.role === 'VENDOR'">
-          <img src="./assets/images/checklist-edit.png" alt="bar-chart">
-          <button class="btn btn-link"><figcaption (click)="budgetClicked()" class="link imgCaption">Budget</figcaption></button>
+        <span  class="column col-lg-2" *ngIf ="homeContent.role === 'VENDOR'" (click)="budgetClicked()">
+          <img src="./assets/images/budget.png" alt="bar-chart">
+          <figcaption class="imgCaption">Budget</figcaption>
         </span>
       </div>
       <br>

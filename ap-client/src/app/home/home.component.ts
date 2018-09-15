@@ -184,6 +184,7 @@ export class HomeComponent implements OnInit {
   }
 
   budgetClicked() {
+    console.log("navigate to budget");
     this.router.navigate(['/budget']);
   }
 

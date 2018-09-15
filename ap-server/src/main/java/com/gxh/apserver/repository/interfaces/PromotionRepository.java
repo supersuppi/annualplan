@@ -17,10 +17,5 @@ public interface PromotionRepository extends JpaRepository<Promotion,Long> {
 
     @Query("select p from Promotion p where p.status = ?1")
     Optional<List<Promotion>> findAllPromotionByStatus(PromotionStatus status);
-    
-    @Query("select p from Promotion p, AnnualPromotion ap  where ap.promo=p.id and  "
-    		+ "p.status = ?1 and ( ap.status = ?2 or ap.status = ?3 )")
-    Optional<List<Promotion>> findAllByAnnualPromotionStatuses(PromotionStatus status,
-    		AnnualPromotionStatus draftStatus, AnnualPromotionStatus rejectedStatus);
 
 }

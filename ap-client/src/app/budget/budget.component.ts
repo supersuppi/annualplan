@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BudgetService } from '../services/budget.service';
 import { Promotion } from '../models';
 import { Router } from '@angular/router';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
   selector: 'app-budget',
@@ -15,7 +16,7 @@ export class BudgetComponent implements OnInit {
   private budgetAmount:number = 0;
 
   constructor(private budgetService: BudgetService,
-    private router: Router) { }
+    private router: Router,private toast:ToastNotificationService) { }
 
   ngOnInit() {
     this.getActivePromotionsForSupplier();
@@ -28,26 +29,31 @@ export class BudgetComponent implements OnInit {
         this.budgetAmount = data["allocated"];
       }, (err) => {
         console.log("Something went wrong");
+        this.toast.showError("Something went wrong!Try again");
       }
     );
   }
 
   getActivePromotionsForSupplier() {
-    this.budgetService.getAllActivePromotions().subscribe(
-      (data) => {
-        this.activePromotions = data;
-      }
-    );
+    this.budgetService.getAllActivePromotions().subscribe((data) => {
+      console.debug("Get getActivePromotionsForSupplier Call Success");
+      this.activePromotions = data;
+    },
+    error => { 
+        console.error("ERROR! BudgetComponent:getActivePromotionsForSupplier = "+JSON.stringify(error));
+        this.toast.showError("Something went wrong!Try again");
+    });
   }
 
   saveBudgetForSupplier() {
     console.log("save budget");
     this.budgetService.saveBudget(this.promotionId, this.budgetAmount).subscribe(
       () => {
-        this.router.navigate(['home']);
+        this.toast.showSuccess("Budget created.");
       },
       (err) => {
-        console.log("Error occurred");
+        console.log("Error occurred-saveBudgetForSupplier");
+        this.toast.showError("Something went wrong!Try again");
       }
     );
   }
