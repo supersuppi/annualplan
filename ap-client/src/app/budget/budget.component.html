@@ -17,14 +17,20 @@
       <div class="row">
         <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <label for="budget">Total Budget:</label>
-          <input type="number" class="form-control" [disabled]="promotionId === -1"
-            [(ngModel)]="budgetAmount">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+            </div>
+            <input type="number" class="form-control" [disabled]="promotionId === -1"
+              [(ngModel)]="budgetAmount">  
+          </div>
+          
         </div>
       </div>
 
       <button type="button" class="btn btn-primary" 
-        (click)="saveBudgetForSupplier()">Save Budget</button>
-      <button type="button" class="btn btn-danger" (click)="returnToHome()">Cancel</button>
+        (click)="saveBudgetForSupplier()" [disabled]="promotionId === -1">Save Budget</button>
+      <button type="button" class="btn btn-danger marginLeft" (click)="returnToHome()">Cancel</button>
 
     </div>
   </div>

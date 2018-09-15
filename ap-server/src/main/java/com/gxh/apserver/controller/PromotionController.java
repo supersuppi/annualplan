@@ -21,6 +21,7 @@ import com.gxh.apserver.dto.PromoCommentDTO;
 import com.gxh.apserver.dto.PromoDTO;
 import com.gxh.apserver.dto.PromoSKUDTO;
 import com.gxh.apserver.dto.StatusChangeDTO;
+import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.exceptions.ResourceNotFoundException;
 import com.gxh.apserver.service.interfaces.BudgetService;
@@ -216,6 +217,19 @@ public class PromotionController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
     	return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
+    @GetMapping(value="/budget/{id}")
+    public ResponseEntity<BudgetDTO> getBudgetForPromotionId(@PathVariable("id") Long promotionId){
+    	
+    	BudgetDTO budgetDto;
+    	try {
+			budgetDto = budgetService.getBudgetForPromotion(promotionId);
+		} catch (ParseException e) {
+			logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+    	return new ResponseEntity<BudgetDTO>(budgetDto, HttpStatus.OK);
     }
 
 

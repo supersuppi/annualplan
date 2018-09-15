@@ -115,8 +115,8 @@ public class PromotionServiceImpl implements PromotionService {
         Optional<List<RateCard>> rateCards = rateCardRepository.findAllRateCardBYPromotionID(currentPromotion.get());
         List<DualMailer> dualMailers = dualMailerRepository.findAllDMbyPromotion(currentPromotion.get());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoID(currentPromotion.get().getId());
-        //Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromoID(currentPromotion.get());
-        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier.get());
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromotion(currentPromotion.get());
+//        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier.get());
 
         int totalBudget = 0;
         Map<String,PromotionLevelRateCard> rcdmMap = new HashMap<>();

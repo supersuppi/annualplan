@@ -8,4 +8,6 @@ public interface BudgetService {
 
 	public void saveBudgetForPromotion(BudgetDTO budgetDto) throws ParseException;
 	
+	public BudgetDTO getBudgetForPromotion(Long promotionId) throws ParseException;
+	
 }

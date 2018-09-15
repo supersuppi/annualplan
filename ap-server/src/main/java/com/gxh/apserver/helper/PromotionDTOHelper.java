@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.gxh.apserver.constants.AnnualPromotionStatus;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.BrandProductDTO;
+import com.gxh.apserver.dto.BudgetDTO;
 import com.gxh.apserver.dto.DualMailerDTO;
 import com.gxh.apserver.dto.ProductDTO;
 import com.gxh.apserver.dto.PromoDTO;
@@ -113,7 +114,7 @@ public class PromotionDTOHelper {
         List<DualMailer> dms = dualMailerRepository.findAllDMbyPromotion(promo);
         Optional<List<Product>> products = productRepository.findproductsBySupplierAXCode(supplier.getVendorAXCode());
         Optional<List<PromotionLevelRateCard>> ratecardDms = promotionLevelRateCardRepository.findAllByPromoAndAnnualPromoID(promo.getId(),annualPromo.getId());
-        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findBySupplierID(supplier);
+        Optional<SupplierPromotionBudget> promoBudget = supplierPromotionBudgetRepository.findByPromotion(promo);
 
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
@@ -171,8 +172,18 @@ public class PromotionDTOHelper {
         //Set rate cards
         promoDTO.setRatecards(rows);
         //Set Budget
-        //TODO:to add this on implementing budget for supplier
-        promoDTO.setBudget(BudgetCalculator.getBudget(promoBudget.get()));
+        if (promoBudget.isPresent()) {
+        	promoDTO.setBudget(BudgetCalculator.getBudget(promoBudget.get()));
+        } else {
+        	BudgetDTO budgetDTO = new BudgetDTO();
+
+            budgetDTO.setAllocated(0L);
+            budgetDTO.setUsed(0L);
+            budgetDTO.setDiff(0L);
+            
+        	promoDTO.setBudget(budgetDTO);
+        }
+        
         logger.info("<<< createDTO");
         return promoDTO;
     }

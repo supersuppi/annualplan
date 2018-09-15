@@ -16,13 +16,17 @@ export class BudgetService {
         return this.httpClient.get(this.activePromotionUrl+"/"+supplierId);
     }
 
-    saveBudget(promotionId:Number, budgetAllocated:Number): Observable<any> {
+    saveBudget(promotionId:number, budgetAllocated:number): Observable<any> {
         let promoBudget: PromotionBudget = new PromotionBudget();
         promoBudget.promotionId = promotionId;
         promoBudget.supplierId = +(localStorage.getItem('supplierID'));
         promoBudget.allocated = budgetAllocated;
 
         return this.httpClient.post(this.budgetUrl, promoBudget);
+    }
+
+    getPromotionBudget(promotionId : number) : Observable<PromotionBudget>{
+        return this.httpClient.get(this.budgetUrl+"/"+promotionId);
     }
 
 }

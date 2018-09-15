@@ -1,6 +1,9 @@
 package com.gxh.apserver.service;
 
 import java.text.ParseException;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class BudgetServiceImpl implements BudgetService{
 	 * update the budget amount.
 	 */
 	@Override
+	@Transactional
 	public void saveBudgetForPromotion(BudgetDTO budgetDto) throws ParseException {
 		
 		SupplierPromotionBudget promotionBudget = new SupplierPromotionBudget();
@@ -45,14 +49,30 @@ public class BudgetServiceImpl implements BudgetService{
 		promotionBudget.setBudgetAllocated(budgetDto.getAllocated());
 		promotionBudget.setTotalBudget(0L);
 		
-		SupplierPromotionBudget savedPromoBudget = budgetRepository.findByPromotion(promotion);
+		Optional<SupplierPromotionBudget> savedPromoBudget = budgetRepository.findByPromotion(promotion);
 		
-		if (savedPromoBudget == null ) {
+		if ( !savedPromoBudget.isPresent() ) {
 			budgetRepository.save(promotionBudget);
 		} else {
 			budgetRepository.updateBudget(promotionBudget.getPromotion(), promotionBudget.getSupplier(), promotionBudget.getBudgetAllocated());
 		}
 		
+	}
+
+	@Override
+	public BudgetDTO getBudgetForPromotion(Long promotionId) throws ParseException {
+
+		Optional<Promotion> promotion = promotionRepository.findById(promotionId);
+		Optional<SupplierPromotionBudget> budget = budgetRepository.findByPromotion(promotion.get());
+		BudgetDTO budgetDTO = new BudgetDTO();
+		
+		if (budget.isPresent()) {
+			budgetDTO.setAllocated(budget.get().getBudgetAllocated());
+		} else {
+			budgetDTO.setAllocated(0L);
+		}
+		
+		return budgetDTO;
 	}
 
 }
