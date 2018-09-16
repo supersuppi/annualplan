@@ -73,6 +73,7 @@ export class BudgetComponent implements OnInit {
     this.budgetService.saveBudget(this.promotionId, this.budgetAmount).subscribe(
       () => {
         this.toast.showSuccess("Budget created.");
+        this.router.navigate(['home']);
       },
       (err) => {
         console.log("Error occurred-saveBudgetForSupplier");
