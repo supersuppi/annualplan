@@ -1,5 +1,6 @@
 package com.gxh.apserver.repository.interfaces;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,8 +13,7 @@ import com.gxh.apserver.entity.SupplierPromotionBudget;
 
 public interface SupplierPromotionBudgetRepository extends JpaRepository<SupplierPromotionBudget,Long> {
 
-	@Query("select budget from SupplierPromotionBudget budget where budget.supplier = ?1")
-    Optional<SupplierPromotionBudget> findBySupplierID(Supplier promo);
+    Optional<List<SupplierPromotionBudget>> findBySupplier(Supplier supplier);
 	
     Optional<SupplierPromotionBudget> findByPromotion(Promotion promotion);
     

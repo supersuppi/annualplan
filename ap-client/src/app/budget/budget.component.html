@@ -33,6 +33,33 @@
         (click)="saveBudgetForSupplier()" [disabled]="promotionId === -1">Save Budget</button>
       <button type="button" class="btn btn-danger marginLeft" (click)="returnToHome()">Cancel</button>
 
+      <div class="row marginTop">
+        <div class="col-md-12 col-lg-12">
+            <div class="row col-lg-12" *ngIf="supplierBudgets.length != 0">
+              <div class="table-responsive" >
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Promotion Name</th>
+                        <th>Budget Allocated</th>
+                        <th>Budget Used</th>
+                        <th>Varience</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of supplierBudgets; let i = index;">
+                        <td>{{row.promotionName}}</td>
+                        <td>{{row.budgetAllocated}}</td>
+                        <td>{{row.budgetUtilized}}</td>
+                        <td>{{row.budgetRemaining}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

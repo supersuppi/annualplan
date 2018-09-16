@@ -8,12 +8,18 @@ import { PromotionBudget } from "../models";
 export class BudgetService {
     private activePromotionUrl = ServerConfig.API_ENDPOINT+"promotion/active";
     private budgetUrl = ServerConfig.API_ENDPOINT+"promotion/budget";
+    private supplierBudgetUrl = ServerConfig.API_ENDPOINT+"budget";
 
     constructor(private httpClient: HttpClient) {}
 
     getAllActivePromotions() : Observable<any> {
         let supplierId = +(localStorage.getItem('supplierID'));
         return this.httpClient.get(this.activePromotionUrl+"/"+supplierId);
+    }
+
+    getAllBudgetForSupplier() : Observable<any> {
+        let supplierId = +(localStorage.getItem('supplierID'));
+        return this.httpClient.get(this.supplierBudgetUrl+"/"+supplierId);
     }
 
     saveBudget(promotionId:number, budgetAllocated:number): Observable<any> {

@@ -14,6 +14,7 @@ import com.gxh.apserver.constants.AnnualPromotionStatus;
 import com.gxh.apserver.constants.PromotionStatus;
 import com.gxh.apserver.dto.AdminPromoDTO;
 import com.gxh.apserver.dto.BudgetDTO;
+import com.gxh.apserver.dto.PromoBudgetDTO;
 import com.gxh.apserver.entity.Promotion;
 import com.gxh.apserver.entity.Supplier;
 import com.gxh.apserver.entity.SupplierPromotionBudget;
@@ -89,22 +90,51 @@ public class BudgetServiceImpl implements BudgetService{
 	 * to allow the supplier to provide a budget amount 
 	 */
 	 @Override
-	 public List<AdminPromoDTO> getPromosbyStatus(PromotionStatus status) throws ParseException {
-		Optional<List<Promotion>> promoList = promotionRepository.findAllPromotionByStatus(status);
-        List<AdminPromoDTO> promodtoList = new ArrayList<>();
-        
-        if(promoList.isPresent()) {
-            promoList.get().forEach((promotion -> {
-                AdminPromoDTO pdto = new AdminPromoDTO();
-                pdto.setName(promotion.getName());
-                pdto.setPid(promotion.getId());
-                pdto.setPstatus(promotion.getStatus().toString());
-
-                promodtoList.add(pdto);
-            }));
-        }
-        
-        return promodtoList;
+	public List<AdminPromoDTO> getPromosbyStatus(PromotionStatus status) throws ParseException {
+	   Optional<List<Promotion>> promoList = promotionRepository.findAllPromotionByStatus(status);
+	   List<AdminPromoDTO> promodtoList = new ArrayList<>();
+	    
+	   if(promoList.isPresent()) {
+	       promoList.get().forEach((promotion -> {
+	           AdminPromoDTO pdto = new AdminPromoDTO();
+	           pdto.setName(promotion.getName());
+	           pdto.setPid(promotion.getId());
+	           pdto.setPstatus(promotion.getStatus().toString());
+	
+	           promodtoList.add(pdto);
+	       }));
+	   }
+	    
+	    return promodtoList;
     }
+
+	@Override
+	public List<PromoBudgetDTO> getAllBudgets(Long supplierId) throws ParseException {
+		
+		List<PromoBudgetDTO> budgetDTOList = new ArrayList<>();
+		Optional<Supplier> supplier = supplierRepository.findById(supplierId);
+		
+		if (supplier.isPresent()) {
+			Optional<List<SupplierPromotionBudget>> budgetListOptional = budgetRepository.findBySupplier(supplier.get());
+			if (budgetListOptional.isPresent()) {
+				budgetListOptional.get().forEach(budget -> {
+					
+					PromoBudgetDTO budgetDTO = new PromoBudgetDTO();
+					budgetDTO.setPromotionName(budget.getPromotion().getName());
+					budgetDTO.setBudgetAllocated(budget.getBudgetAllocated());
+					budgetDTO.setBudgetUtilized(budget.getTotalBudget());
+					budgetDTO.setBudgetRemaining(
+							budget.getBudgetAllocated() - budget.getTotalBudget()
+							);
+					
+					budgetDTOList.add(budgetDTO);
+				});
+			}
+		}
+		
+		return budgetDTOList;
+	}
+	 
+	
 
 }
