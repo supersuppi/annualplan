@@ -22,9 +22,9 @@ public class AdminController extends BaseController {
     private AdminService adminService;
 
     @PostMapping(value = "/promotion/save")
-    public ResponseEntity<String> saveSelectedProducts(@RequestBody AdminPromoDTO requestBody) {
+    public ResponseEntity<String> saveSelectedProducts(@RequestBody AdminPromoDTO promo) {
         try {
-            adminService.savePromotion(requestBody);
+            adminService.savePromotion(promo);
         } catch (ParseException e) {
             logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

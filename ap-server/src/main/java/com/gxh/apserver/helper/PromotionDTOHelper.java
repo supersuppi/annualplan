@@ -37,7 +37,9 @@ import com.gxh.apserver.entity.SupplierPromotionBudget;
 import com.gxh.apserver.exceptions.InvalidStatusException;
 import com.gxh.apserver.util.BudgetCalculator;
 
-
+/*
+    A Helper class to generate dto for promotion
+*/
 @Component
 public class PromotionDTOHelper {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -61,6 +63,13 @@ public class PromotionDTOHelper {
     @Autowired
     private SupplierRepository supplierRepository;
 
+    /**
+     *
+     * @param supplier
+     * @param promo
+     * @return PromoDTO
+     * @throws InvalidStatusException
+     */
     public PromoDTO getPromoDTO(Supplier supplier, Promotion promo) throws InvalidStatusException {
         logger.info(">>> buildPromoDTO");
         PromoDTO promoDTO = new PromoDTO();
@@ -98,7 +107,7 @@ public class PromotionDTOHelper {
 	                	
         	}
         } else {
-        	//new annual promotion set as draft
+        	//new annual promotion, set as draft
         	promoDTO.setStatus(AnnualPromotionStatus.DRAFT);
             promoDTO.setIsEditable(true);
             return this.createDTO(promoDTO,supplier,promo,new AnnualPromotion());
@@ -106,6 +115,14 @@ public class PromotionDTOHelper {
 
     }
 
+    /**
+     *  Function to build promo dto body
+     * @param promoDTO
+     * @param supplier
+     * @param promo
+     * @param annualPromo
+     * @return PromoDTO
+     */
     @Transactional
     private PromoDTO createDTO(PromoDTO promoDTO,Supplier supplier,Promotion promo,AnnualPromotion annualPromo) {
         logger.info(">>> createDTO");
@@ -119,6 +136,7 @@ public class PromotionDTOHelper {
         List<RateCardDTO> rows = new ArrayList<RateCardDTO>();
         Map<String,Integer> rcdmMap = new HashMap<>();
 
+        // create a map with key - ratecardID+dualmailerID, value-tile value. this is for retrival of tile value selected
         if(ratecardDms.isPresent()) {
             logger.info("Promotion is present - Getting Level 1 promotion");
             ratecardDms.get().forEach(promotionLevelRateCard ->
@@ -127,7 +145,7 @@ public class PromotionDTOHelper {
         
         Map<String, List<ProductDTO>> mapProduct = new HashMap<>();
         List<BrandProductDTO> brandProductDTOS = new ArrayList<>();
-
+        // get products
         for (Product product : products.get()) {
             List<ProductDTO> productDTOs = mapProduct.get(product.getBrand().getName());
             if(!mapProduct.containsKey(product.getBrand().getName())) {
