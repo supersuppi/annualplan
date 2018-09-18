@@ -12,16 +12,27 @@ export class BudgetService {
 
     constructor(private httpClient: HttpClient) {}
 
+    /**
+     * Get all active promotions for a supplier.
+     */
     getAllActivePromotions() : Observable<any> {
         let supplierId = +(localStorage.getItem('supplierID'));
         return this.httpClient.get(this.activePromotionUrl+"/"+supplierId);
     }
 
+    /**
+     * Fetch the budgets created by supplier in a table format.
+     */
     getAllBudgetForSupplier() : Observable<any> {
         let supplierId = +(localStorage.getItem('supplierID'));
         return this.httpClient.get(this.supplierBudgetUrl+"/"+supplierId);
     }
 
+    /**
+     * Save the budgets for a promotion.
+     * @param promotionId 
+     * @param budgetAllocated 
+     */
     saveBudget(promotionId:number, budgetAllocated:number): Observable<any> {
         let promoBudget: PromotionBudget = new PromotionBudget();
         promoBudget.promotionId = promotionId;
@@ -31,6 +42,10 @@ export class BudgetService {
         return this.httpClient.post(this.budgetUrl, promoBudget);
     }
 
+    /**
+     * Fetch a budget information for a promotion.
+     * @param promotionId 
+     */
     getPromotionBudget(promotionId : number) : Observable<PromotionBudget>{
         return this.httpClient.get(this.budgetUrl+"/"+promotionId);
     }

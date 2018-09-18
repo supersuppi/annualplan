@@ -51,6 +51,11 @@ public class PromotionController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
+    /**
+     * Save the products for a promotion.
+     * @param requestBody
+     * @return
+     */
     @PostMapping(value = "/product/save")
     public ResponseEntity<String> saveSelectedProducts(@RequestBody AddOrRemoveProductRequestDTO requestBody) {
     	
@@ -64,6 +69,15 @@ public class PromotionController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
+    /**
+     * Fetch the selected products based on promotion id and supplier id.
+     * @param promoId
+     * @param supplierId
+     * @param dmId
+     * @param rowId
+     * @param promoCount
+     * @return
+     */
 	@GetMapping(value = "/product/fetch/{promoId}/{supplierId}")
 	public ResponseEntity<PromoSKUDTO> getSelectedProducts(@PathVariable("promoId") Long promoId,@PathVariable("supplierId") Long supplierId,
 			@RequestParam Long dmId, @RequestParam Long rowId, @RequestParam int promoCount) {

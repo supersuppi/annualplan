@@ -5,6 +5,9 @@ import { Observable } from "rxjs";
 import { UserService } from "../services/user.service";
 import { JwtHelper } from "../helper/JWTHelper";
 
+/**
+ * Fetch the user data before displaying to the user.
+ */
 @Injectable()
 export class ProfileDataResolver implements Resolve<UserContact> {
 

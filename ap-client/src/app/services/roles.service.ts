@@ -11,6 +11,9 @@ export class RolesService{
 
     constructor(private httpClient: HttpClient) {}
 
+    /**
+     * Get all the available roles to be allocated to the user.
+     */
     getUserRoles(): Observable<Roles[]>{
         return this.httpClient.get<Roles[]>(this.rolesUrl, {
             responseType: 'json'

@@ -45,8 +45,11 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private JWTTokenProvider jwtTokenProvider;
 	
+	/**
+	 * Get roles available for new user.
+	 */
 	public Collection<Role> getAllRoles() {
-		
+		// remove admin role.
 		Collection<Role> roles = (rolesRepository.findAll()).stream()
 			.filter(role -> !role.getName().equalsIgnoreCase("ADMIN"))
 			.collect(Collectors.toList());
@@ -54,6 +57,9 @@ public class UserServiceImpl implements UserService{
 		return roles;
 	}
 	
+	/**
+	 * Get the user from request body.
+	 */
 	@Override
 	public UserContact getUserFromRequestBody(UserRequestModel requestBody) {
 		
@@ -74,6 +80,9 @@ public class UserServiceImpl implements UserService{
 		return userContact;
 	}
 	
+	/**
+	 * Register a user.
+	 */
 	public void registerUser(UserContact userContact) throws EmailAlreadyExistException {
 		
 		if(isUserEmailAddressUnique(userContact.getUser().getEmail())) {
@@ -83,6 +92,9 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	/**
+	 * Check for unique email address.
+	 */
 	@Override
 	public boolean isUserEmailAddressUnique(String emailAddress) {
 		
@@ -93,6 +105,9 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	/**
+	 * Login a user.
+	 */
 	@Override
 	public String loginUser(String emailAddress, String password)
 			throws CustomException, InvalidEmailPasswordException {
@@ -106,6 +121,9 @@ public class UserServiceImpl implements UserService{
 		} 
 	}
 
+	/**
+	 * Get the user profile.
+	 */
 	@Override
 	public UserDTO getUserProfile(String emailAddress) {
 		

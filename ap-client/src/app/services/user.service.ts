@@ -24,6 +24,9 @@ export class UserService {
 
     constructor(private httpClient : HttpClient) {}
 
+    /**
+     * name to be display in header once the user is logged in.
+     */
     setLoggedInUser() {
         if (localStorage.getItem('validUser')) {
             this.userInfo.loggedIn=true;
@@ -33,6 +36,9 @@ export class UserService {
         this.userLoggedIn.next(this.userInfo);
     }
 
+    /**
+     * Register a user.
+     */
     registerUser(userRegisterFormValues : Object) : Observable<any>{
         let jsonBody = JSON.stringify(userRegisterFormValues); 
         return this.httpClient.post<any>(this.userUrl+"/register", jsonBody,
@@ -41,6 +47,10 @@ export class UserService {
         });
     }
 
+    /**
+     * Login a user.
+     * @param userLoginFormValues 
+     */
     loginUser(userLoginFormValues : Object) : Observable<any>{
         let jsonBody = JSON.stringify(userLoginFormValues); 
         return this.httpClient.post<any>(this.userUrl+"/login", jsonBody,
@@ -49,6 +59,10 @@ export class UserService {
         });
     }
 
+    /**
+     * Get the user profile.
+     * @param emailAddress 
+     */
     getUserProfile(emailAddress: string): Observable<UserContact> {
         return this.httpClient.get<UserContact>(this.userUrl+"/profile/"+emailAddress);
     }

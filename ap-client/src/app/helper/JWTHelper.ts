@@ -1,5 +1,9 @@
 import { Injectable } from "@angular/core";
 
+/**
+ * JWT helper to fetch the user email and roles from 
+ * JWT token returned from backend once a successful login.
+ */
 @Injectable()
 export class JwtHelper {
     private urlBase64Decode(str: string) {

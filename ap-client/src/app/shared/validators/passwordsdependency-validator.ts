@@ -1,5 +1,9 @@
 import { FormGroup } from "@angular/forms";
 
+/**
+ * If old password field is entered then a new password is necessary.
+ * @param formGroup 
+ */
 export function ProfilePasswordUpdatesValidator (formGroup : FormGroup) {
 
     let oldPassword = formGroup.controls.oldPassword;

@@ -34,6 +34,9 @@ export class ProfileComponent implements OnInit {
     console.log("Profile submit is clicked");
   }
 
+  /**
+   * Pre-loading the profile page with user data. 
+   */
   presetFormValues() {
 
     this.userEmailAddress = this.tokenHelper.decodeToken(localStorage.getItem('token')).sub;

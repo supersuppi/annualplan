@@ -34,11 +34,20 @@ public class UserController extends BaseController {
 	@Autowired
 	private UserService userService;
 	
+	/**
+	 * Get all the available roles for new users by admin.
+	 * @return
+	 */
 	@GetMapping(value="/role")
 	public ResponseEntity<Collection<Role>> getUserRoles(){
 		return new ResponseEntity<Collection<Role>>(userService.getAllRoles(), HttpStatus.OK);
 	}
 	
+	/**
+	 * Register a user.
+	 * @param body
+	 * @return
+	 */
 	@PostMapping(value="/register")
 	public ResponseEntity<?> registerUser(@RequestBody UserRequestModel body){
 		
@@ -53,6 +62,12 @@ public class UserController extends BaseController {
 		
 	}
 	
+	/**
+	 * Login a user.
+	 * @param res
+	 * @param payload
+	 * @return
+	 */
 	@PostMapping(value="/login")
 	public ResponseEntity<?> loginUser(HttpServletResponse res,
 			@RequestBody UserRequestModel payload) {
@@ -72,12 +87,22 @@ public class UserController extends BaseController {
 		
 	}
 	
+	/**
+	 * Get user profile.
+	 * @param emailAddress
+	 * @return
+	 */
 	@GetMapping(value="/profile/{email}")
 	public ResponseEntity<UserDTO> userProfile(@PathVariable("email") String emailAddress ) {
 		UserDTO userDTO = userService.getUserProfile(emailAddress);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 	
+	/**
+	 * Get user information by email.
+	 * @param emailAddress
+	 * @return
+	 */
 	@GetMapping(value="/{email}")
 	public ResponseEntity<UserDTO> getUserInfo( @PathVariable("email") String emailAddress ) {
 		UserDTO userDTO = userService.getUserProfile(emailAddress);

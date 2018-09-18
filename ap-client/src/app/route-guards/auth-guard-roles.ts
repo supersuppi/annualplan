@@ -4,6 +4,10 @@ import { AuthService } from "../services/auth.service";
 import { JwtHelper } from "../helper/JWTHelper";
 import { UserService } from "../services/user.service";
 
+/**
+ * 1) Validate a user before making a request to server.
+ * 2) Assign permission to certain roles.  
+ */
 @Injectable()
 export class RoleGuardService implements CanActivate{
 
@@ -13,6 +17,7 @@ export class RoleGuardService implements CanActivate{
 
     canActivate(route: ActivatedRouteSnapshot): boolean{
 
+        // Fetch the user role from route from Route.
         const expectedUserRole = route.data.expectedRole;
 
         const token = localStorage.getItem('token');

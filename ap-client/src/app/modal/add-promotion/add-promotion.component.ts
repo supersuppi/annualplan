@@ -1,7 +1,6 @@
 import { Component, OnInit, ComponentRef, ViewContainerRef } from '@angular/core';
 import { IModalDialog, IModalDialogOptions, ModalDialogService } from 'ngx-modal-dialog';
 import { Subject, Observable, Subscription } from 'rxjs';
-import { ModalService } from '../../shared/modal-services/ModalService';
 import { ProductSKU } from '../../models/product-sku-model';
 import { DualMailer, Product } from '../../models';
 import { SupplierPromotionService } from '../../services/index';
@@ -31,7 +30,7 @@ export class AddPromotionComponent implements OnInit, IModalDialog {
   private addPromoEvent : any;
   private promoType : string;
   
-  constructor(private modalService: ModalService, 
+  constructor(
     private modalDialogService: ModalDialogService,
     private promotionService : SupplierPromotionService,
     private toast:ToastNotificationService) { }

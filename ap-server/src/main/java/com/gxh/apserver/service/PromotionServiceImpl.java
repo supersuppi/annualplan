@@ -269,6 +269,9 @@ public class PromotionServiceImpl implements PromotionService {
 		}
 	}
 
+	/**
+	 * Save or delete products for a promo id and supplier id.
+	 */
 	@Transactional
 	@Override
 	public void saveOrRemoveSelectedProducts(AddOrRemoveProductRequestDTO requestBody) throws ParseException {
@@ -331,6 +334,9 @@ public class PromotionServiceImpl implements PromotionService {
         }
 	}
 
+	/**
+	 * Fetch the saved products for the given promo id.
+	 */
 	@Override
 	public PromoSKUDTO getSavedProductsForPromoCount(Long promoId,Long supplierId, Long dmId, Long rowId, int promoCount)
 			throws ParseException {	

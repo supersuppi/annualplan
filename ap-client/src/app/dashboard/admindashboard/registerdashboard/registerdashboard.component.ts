@@ -41,6 +41,9 @@ export class RegisterdashboardComponent implements OnInit {
 
   }
 
+  /**
+   * Register a user.
+   */
   registerUser() {
     this.userService.registerUser(this.userRegisterGroup.value).subscribe();
   }
